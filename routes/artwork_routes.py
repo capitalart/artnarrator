@@ -215,7 +215,14 @@ def _run_ai_analysis(img_path: Path, provider: str) -> dict:
         raise ValueError(f"Unknown provider: {provider}")
 
     logger.info("[DEBUG] Subprocess cmd: %s", " ".join(cmd))
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired as e:
+        logger.error("AI analysis timed out: %s", e)
+        raise RuntimeError("AI analysis timed out") from e
+    except FileNotFoundError as e:
+        logger.error("Analysis script not found: %s", e)
+        raise RuntimeError("Analysis script not found") from e
 
     if result.returncode != 0:
         msg = (result.stderr or "Unknown error").strip()
