@@ -1,0 +1,52 @@
+# .gitignore for ArtNarrator
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Environment & Sensitive Files ---
+.env
+
+# --- Database ---
+# We are intentionally TRACKING the database for this project's backup.
+# If you want to ignore it, uncomment the line below.
+# *.sqlite3
+
+# --- Logs & Temporary Files ---
+*.log
+logs/
+CODEX-LOGS/
+.cache/
+*.tmp
+*.bak
+*.swp
+
+# --- OS & Editor Specific ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Build & Distribution ---
+dist/
+build/
+*.egg-info/
+
+# --- Large Generated Folders ---
+# We ignore the contents of these, but keep the folders themselves
+# by tracking a .gitkeep file inside them.
+outputs/*
+art-processing/processed-artwork/*
+art-processing/finalised-artwork/*
+art-processing/artwork-vault/*
+
+# Keep the empty directory structures by not ignoring .gitkeep files
+!*/.gitkeep

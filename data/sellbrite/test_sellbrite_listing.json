@@ -1,0 +1,15 @@
+{
+  "sku": "ARTNARRATOR-TEST-001",
+  "name": "Test Artwork Listing from ArtNarrator",
+  "brand": "Art Narrator",
+  "price": "99.00",
+  "weight": "1.0",
+  "weight_unit": "lb",
+  "description": "This is a test listing to validate Sellbrite API integration from ArtNarrator (DreamArtMachine).",
+  "tags": ["wall art", "Aboriginal art", "digital download"],
+  "materials": ["digital", "JPEG", "high-resolution"],
+  "primary_colour": "blue",
+  "secondary_colour": "white",
+  "seo_filename": "test-artwork-1234",
+  "images": []
+}
