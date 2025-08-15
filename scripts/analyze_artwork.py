@@ -214,7 +214,7 @@ def generate_ai_listing(image_path: Path, aspect: str, assigned_sku: str) -> tup
 
     try:
         logger.info("Sending request to OpenAI ChatCompletion API...")
-        response = client.chat.completions.create(model=config.OPENAI_MODEL, messages=messages, max_tokens=2100, temperature=0.92, timeout=60, response_format={"type": "json_object"})
+        response = client.chat.completions.create(model=config.OPENAI_MODEL, messages=messages, max_tokens=2100, temperature=0.92, timeout=180, response_format={"type": "json_object"})
         
         raw_text = response.choices[0].message.content
         if raw_text is None:
