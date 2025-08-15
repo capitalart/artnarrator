@@ -151,7 +151,7 @@ FILENAME_TEMPLATES = {
 # 6. FILE TYPES, LIMITS, & IMAGE SIZES
 # =============================================================================
 ALLOWED_EXTENSIONS = set(os.getenv("ALLOWED_EXTENSIONS", "jpg,jpeg,png").split(","))
-MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "50"))
+MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "100"))
 ANALYSE_MAX_DIM = int(os.getenv("ANALYSE_MAX_DIM", "2400"))
 ANALYSE_MAX_MB = int(os.getenv("ANALYSE_MAX_MB", "5"))
 THUMB_WIDTH = int(os.getenv("THUMB_WIDTH", "400"))

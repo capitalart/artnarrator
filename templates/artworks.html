@@ -27,7 +27,7 @@
           <div class="button-row">
             <button class="btn btn-primary btn-analyze" data-provider="openai">Analyze with OpenAI</button>
             <button class="btn btn-secondary btn-sign" data-base="{{ art.base }}">Sign Artwork</button>
-            <form method="post" action="{{ url_for('artwork.delete_artwork', seo_folder=art.base) }}" style="display:inline;" onsubmit="return confirm('Delete this artwork and all files? This cannot be undone.');">
+            <form method="post" action="{{ url_for('artwork.delete_unanalysed', base_name=art.base) }}" style="display:inline;" onsubmit="return confirm('Delete this artwork and all files? This cannot be undone.');">
               <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </div>

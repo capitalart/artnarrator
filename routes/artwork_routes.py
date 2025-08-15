@@ -216,7 +216,7 @@ def _run_ai_analysis(img_path: Path, provider: str) -> dict:
 
     logger.info("[DEBUG] Subprocess cmd: %s", " ".join(cmd))
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     except subprocess.TimeoutExpired as e:
         logger.error("AI analysis timed out: %s", e)
         raise RuntimeError("AI analysis timed out") from e
@@ -705,6 +705,31 @@ def approve_composites(seo_folder):
 # Routes for the final step of the workflow: moving an artwork to the
 # 'finalised' directory, and viewing the finalised/locked galleries.
 # ---------------------------------------------------------------------------------
+@bp.post("/delete-unanalysed/<base_name>")
+def delete_unanalysed(base_name: str):
+    """Finds and deletes an unanalysed artwork folder by its base name."""
+    user = session.get("username", "unknown")
+    try:
+        # Security: Sanitize the base_name to prevent directory traversal
+        if ".." in base_name or "/" in base_name:
+            flash("Invalid folder name.", "danger")
+            return redirect(url_for("artwork.artworks"))
+
+        # Find the folder in the unanalysed directory
+        target_folder = next(config.UNANALYSED_ROOT.glob(f"{base_name}*/"), None)
+
+        if target_folder and target_folder.is_dir():
+            shutil.rmtree(target_folder)
+            log_action("delete", target_folder.name, user, "Deleted unanalysed artwork folder.")
+            flash(f"Artwork '{target_folder.name}' deleted successfully.", "success")
+        else:
+            flash(f"Could not find artwork folder for '{base_name}'.", "danger")
+
+    except Exception as exc:
+        log_action("delete", base_name, user, str(exc), status="fail")
+        flash(f"An error occurred during deletion: {exc}", "danger")
+
+    return redirect(url_for("artwork.artworks"))
 
 # --- [ 11a: finalise_artwork | artwork-routes-py-11a ] ---
 @bp.route("/finalise-artwork/<seo_folder>", methods=["POST"])
