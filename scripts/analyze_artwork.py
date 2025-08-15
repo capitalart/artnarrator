@@ -179,7 +179,7 @@ def get_dominant_colours(img_path: Path, n: int = 2) -> list[str]:
         with Image.open(img_path) as img:
             img = img.convert("RGB").resize((100, 100))
             arr = np.asarray(img).reshape(-1, 3)
-        kmeans = KMeans(n_clusters=max(3, n + 1), n_init='auto', random_state=42).fit(arr)
+        kmeans = KMeans(n_clusters=max(3, n + 1), n_init=10, random_state=42).fit(arr)
         counts = np.bincount(kmeans.labels_)
         sorted_idx = np.argsort(counts)[::-1]
         
