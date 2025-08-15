@@ -139,10 +139,10 @@ PENDING_MOCKUPS_QUEUE_FILE = PROCESSED_ROOT / "pending_mockups.json"
 # 5. FILENAME TEMPLATES
 # =============================================================================
 FILENAME_TEMPLATES = {
-    "artwork": "{seo_slug}.jpg",
+    "artwork": "{seo_slug}-original.jpg",
     "mockup": "{seo_slug}-MU-{num:02d}.jpg",
-    "thumbnail": "{seo_slug}-THUMB.jpg",
-    "analyse": "{seo_slug}-ANALYSE.jpg",
+    "thumbnail": "{seo_slug}-thumb.jpg",
+    "analyse": "{seo_slug}-analyse.jpg",
     "listing_json": "{seo_slug}-listing.json",
     "qc_json": "{seo_slug}.qc.json",
 }
@@ -187,7 +187,7 @@ SESSION_TIMEOUT_SECONDS = 7200  # 2 hours
 # --- [ 7.3: SKU Configuration ] ---
 SKU_CONFIG = {
     "PREFIX": "RJC-",
-    "DIGITS": 4
+    "DIGITS": 5
 }
 
 # --- [ 7.4: Sellbrite Export Defaults ] ---
