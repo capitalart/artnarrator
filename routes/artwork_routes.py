@@ -107,8 +107,6 @@ import re
 import config
 from helpers.listing_utils import (
     resolve_listing_paths,
-    create_unanalysed_subfolder,
-    cleanup_unanalysed_folders,
     load_json_file_safe,
     generate_public_image_urls,
     remove_artwork_from_registry,
@@ -333,9 +331,8 @@ def upload_artwork():
         user = session.get("username")
         
         for f in files:
-            folder = create_unanalysed_subfolder(f.filename)
             try:
-                res = _process_upload_file(f, folder)
+                res = _process_upload_file(f)
             except Exception as exc:
                 logging.getLogger(__name__).error("Upload failed for %s: %s", f.filename, exc)
                 res = {"original": f.filename, "success": False, "error": str(exc)}
@@ -433,106 +430,75 @@ def analyze_artwork_route(aspect, filename):
     Runs AI analysis on a given artwork file. This can be a fresh analysis
     from the 'unanalysed' folder or a re-analysis of a 'processed' artwork.
     """
-    logger, provider = logging.getLogger(__name__), request.form.get("provider", "openai").lower()
-    base_name = Path(filename).name
-    _write_analysis_status("starting", 0, base_name, status="analyzing")
+    logger = logging.getLogger(__name__)
+    provider = request.form.get("provider", "openai").lower()
     is_ajax = "XMLHttpRequest" in request.headers.get("X-Requested-With", "")
 
-    src_path = next((p for p in config.UNANALYSED_ROOT.rglob(base_name) if p.is_file()), None)
-    
-    old_processed_folder_path = None
-    is_reanalysis = False
-    
-    if not src_path:
-        try:
-            seo_folder = utils.find_seo_folder_from_filename(aspect, filename)
-            potential_path = config.PROCESSED_ROOT / seo_folder / f"{seo_folder}.jpg"
-            if potential_path.exists():
-                src_path = potential_path
-                is_reanalysis = True
-                old_processed_folder_path = src_path.parent
-        except FileNotFoundError: pass
-
-    if not src_path or not src_path.exists():
-        flash(f"Artwork file not found: {filename}", "danger")
-        if is_ajax: return jsonify({"success": False, "error": "Artwork file not found"}), 404
+    sku_match = re.search(rf"{config.SKU_CONFIG['PREFIX']}\d{{{config.SKU_CONFIG['DIGITS']}}}", filename)
+    if not sku_match:
+        flash("Invalid filename for analysis", "danger")
+        if is_ajax:
+            return jsonify({"success": False, "error": "Invalid filename"}), 400
         return redirect(url_for("artwork.artworks"))
 
-    try:
-        analysis_result = _run_ai_analysis(src_path, provider)
-        new_seo_folder_name = Path(analysis_result.get("processed_folder", "")).name
-        
-        if not new_seo_folder_name: raise RuntimeError("Analysis script did not return a valid folder name.")
+    sku = sku_match.group(0)
+    analyse_path = config.UNANALYSED_ROOT / sku / f"{sku}-analyse.jpg"
+    src_folder = analyse_path.parent
 
+    if not analyse_path.exists():
+        analyse_path = config.PROCESSED_ROOT / sku / f"{sku}-analyse.jpg"
+        src_folder = analyse_path.parent
+
+    if not analyse_path.exists():
+        flash(f"Artwork file not found: {filename}", "danger")
+        if is_ajax:
+            return jsonify({"success": False, "error": "Artwork file not found"}), 404
+        return redirect(url_for("artwork.artworks"))
+
+    _write_analysis_status("starting", 0, analyse_path.name, status="analyzing")
+
+    try:
+        analysis_result = _run_ai_analysis(analyse_path, provider)
+        listing = analysis_result.get("listing", {})
+        dest_folder = config.PROCESSED_ROOT / sku
+
+        if config.UNANALYSED_ROOT in src_folder.parents:
+            shutil.move(str(src_folder), str(dest_folder))
+        dest_folder.mkdir(parents=True, exist_ok=True)
+
+        listing_path = dest_folder / f"{sku}-listing.json"
+        listing.setdefault("sku", sku)
+        listing.setdefault("filename", f"{sku}-original.jpg")
+        listing.setdefault("aspect_ratio", analysis_result.get("aspect_ratio"))
+        listing_path.write_text(json.dumps(listing, indent=2), encoding="utf-8")
+
+        # Queue for mockup generation
+        queue_file = config.PENDING_MOCKUPS_QUEUE_FILE
+        queue = json.loads(queue_file.read_text()) if queue_file.exists() else []
+        main_image = dest_folder / f"{sku}-original.jpg"
+        if str(main_image) not in queue:
+            queue.append(str(main_image))
+            queue_file.write_text(json.dumps(queue, indent=2))
+
+        update_artwork_registry(sku, dest_folder, "processed")
         _generate_composites(uuid.uuid4().hex)
-        
-        if config.UNANALYSED_ROOT in src_path.parents:
-            shutil.rmtree(src_path.parent, ignore_errors=True)
-            log_action("cleanup", src_path.parent.name, session.get("username"), "Deleted unanalysed artwork folder.")
-            logger.info(f"Cleaned up unanalysed source folder: {src_path.parent}")
-        
-        new_folder_path = config.PROCESSED_ROOT / new_seo_folder_name
-        if is_reanalysis and old_processed_folder_path and old_processed_folder_path.exists() and old_processed_folder_path != new_folder_path:
-            shutil.rmtree(old_processed_folder_path)
-            log_action("cleanup", old_processed_folder_path.name, session.get("username"), "Deleted old folder after re-analysis.")
-            logger.info(f"Cleaned up old processed folder after re-analysis: {old_processed_folder_path}")
 
     except Exception as exc:
         logger.error(f"Error running analysis for {filename}: {exc}", exc_info=True)
         flash(f"❌ Error running analysis: {exc}", "danger")
-        if is_ajax: return jsonify({"success": False, "error": str(exc)}), 500
+        if is_ajax:
+            return jsonify({"success": False, "error": str(exc)}), 500
         return redirect(url_for("artwork.artworks"))
 
-    redirect_filename = f"{new_seo_folder_name}.jpg"
+    redirect_filename = f"{sku}-original.jpg"
     redirect_url = url_for("artwork.edit_listing", aspect=aspect, filename=redirect_filename)
 
     if is_ajax:
-        return jsonify({
-            "success": True,
-            "message": "Analysis complete.",
-            "redirect_url": redirect_url
-        })
-    
+        return jsonify({"success": True, "message": "Analysis complete.", "redirect_url": redirect_url})
+
     return redirect(redirect_url)
 
 
-# --- [ 7b: analyze_upload | artwork-routes-py-7b ] ---
-@bp.post("/analyze-upload/<base>")
-def analyze_upload(base):
-    """(DEPRECATED) Legacy route to analyze an uploaded image from the unanalysed folder."""
-    uid, rec = utils.get_record_by_base(base)
-    if not rec:
-        flash("Artwork not found", "danger")
-        return redirect(url_for("artwork.artworks"))
-        
-    folder = Path(rec["current_folder"])
-    qc_path = folder / f"{base}.qc.json"
-    qc = load_json_file_safe(qc_path)
-    orig_path = folder / f"{base}.{qc.get('extension', 'jpg')}"
-    provider = request.form.get("provider", "openai")
-    
-    _write_analysis_status("starting", 0, orig_path.name, status="analyzing")
-    try:
-        analysis_result = _run_ai_analysis(orig_path, provider)
-        processed_folder_path = Path(analysis_result.get("processed_folder", ""))
-        seo_folder = processed_folder_path.name
-        
-        if not seo_folder:
-            raise RuntimeError("Analysis script did not return a valid folder name.")
-            
-        _write_analysis_status("generating", 60, orig_path.name, status="analyzing")
-        _generate_composites(uuid.uuid4().hex)
-        
-    except Exception as e:
-        flash(f"❌ Error running analysis: {e}", "danger")
-        _write_analysis_status("failed", 100, orig_path.name, status="failed", error=str(e))
-        return redirect(url_for("artwork.artworks"))
-    
-    cleanup_unanalysed_folders()
-    _write_analysis_status("done", 100, orig_path.name, status="complete")
-    
-    redirect_filename = f"{seo_folder}.jpg"
-    return redirect(url_for("artwork.edit_listing", aspect=qc.get("aspect_ratio", ""), filename=redirect_filename))
 
 
 # === [ Section 8: Artwork Editing and Listing Management | artwork-routes-py-8 ] ===
@@ -628,11 +594,11 @@ def serve_mockup_thumb(filepath: str):
 
 
 # --- [ 9e: unanalysed_image | artwork-routes-py-9e ] ---
-@bp.route(f"/{config.UNANALYSED_IMG_URL_PREFIX}/<filename>")
-def unanalysed_image(filename: str):
+@bp.route(f"/{config.UNANALYSED_IMG_URL_PREFIX}/<sku>/<filename>")
+def unanalysed_image(sku: str, filename: str):
     """Serves images from the 'unanalysed-artwork' directory."""
-    path = next((p for p in config.UNANALYSED_ROOT.rglob(filename) if p.is_file()), None)
-    if path:
+    path = config.UNANALYSED_ROOT / sku / filename
+    if path.is_file():
         return send_from_directory(path.parent, path.name)
     abort(404)
 
@@ -710,15 +676,13 @@ def delete_unanalysed(base_name: str):
     """Finds and deletes an unanalysed artwork folder by its base name."""
     user = session.get("username", "unknown")
     try:
-        # Security: Sanitize the base_name to prevent directory traversal
         if ".." in base_name or "/" in base_name:
             flash("Invalid folder name.", "danger")
             return redirect(url_for("artwork.artworks"))
 
-        # Find the folder in the unanalysed directory
-        target_folder = next(config.UNANALYSED_ROOT.glob(f"{base_name}*/"), None)
+        target_folder = config.UNANALYSED_ROOT / base_name
 
-        if target_folder and target_folder.is_dir():
+        if target_folder.is_dir():
             shutil.rmtree(target_folder)
             log_action("delete", target_folder.name, user, "Deleted unanalysed artwork folder.")
             flash(f"Artwork '{target_folder.name}' deleted successfully.", "success")
@@ -946,21 +910,21 @@ def reset_sku(aspect, filename):
 
 
 # --- [ 13c: delete_artwork | artwork-routes-py-13c ] ---
-@bp.route("/delete-artwork/<seo_folder>", methods=["POST"])
-def delete_artwork(seo_folder: str):
+@bp.route("/delete-artwork/<sku>", methods=["POST"])
+def delete_artwork(sku: str):
     """Completely remove an artwork folder and registry entry."""
     user = session.get("username", "unknown")
-    log_action("delete", seo_folder, user, f"Initiating delete for '{seo_folder}'")
+    log_action("delete", sku, user, f"Initiating delete for '{sku}'")
     try:
-        if delete_artwork_files(seo_folder):
-            flash(f"Artwork '{seo_folder}' deleted successfully.", "success")
-            log_action("delete", seo_folder, user, "Delete process completed.")
+        if delete_artwork_files(sku):
+            flash(f"Artwork '{sku}' deleted successfully.", "success")
+            log_action("delete", sku, user, "Delete process completed.")
         else:
-            flash(f"Failed to delete artwork '{seo_folder}'.", "danger")
-            log_action("delete", seo_folder, user, "Delete failed", status="fail")
+            flash(f"Failed to delete artwork '{sku}'.", "danger")
+            log_action("delete", sku, user, "Delete failed", status="fail")
     except Exception as exc:
         flash(f"An error occurred during deletion: {exc}", "danger")
-        log_action("delete", seo_folder, user, str(exc), status="fail")
+        log_action("delete", sku, user, str(exc), status="fail")
     return redirect(url_for("artwork.artworks"))
 
 
@@ -1006,49 +970,62 @@ def preview_next_sku():
 
 
 # --- [ 14b: _process_upload_file | artwork-routes-py-14b ] ---
-def _process_upload_file(file_storage, dest_folder):
-    """Validates, saves, and preprocesses a single uploaded file."""
+def _process_upload_file(file_storage):
+    """Assigns a new SKU and stores upload files under that SKU."""
     filename = file_storage.filename
-    if not filename: return {"original": filename, "success": False, "error": "No filename"}
+    if not filename:
+        return {"original": filename, "success": False, "error": "No filename"}
 
     ext = Path(filename).suffix.lower().lstrip(".")
     if ext not in config.ALLOWED_EXTENSIONS:
         return {"original": filename, "success": False, "error": "Invalid file type"}
-    
+
     data = file_storage.read()
     if len(data) > config.MAX_UPLOAD_SIZE_MB * 1024 * 1024:
         return {"original": filename, "success": False, "error": "File too large"}
 
-    safe, unique, uid = utils.prettify_slug(Path(filename).stem), uuid.uuid4().hex[:8], uuid.uuid4().hex
-    base = f"{safe}-{unique}"
+    sku = utils.get_next_sku(config.SKU_TRACKER)
+    uid = uuid.uuid4().hex
+    dest_folder = config.UNANALYSED_ROOT / sku
     dest_folder.mkdir(parents=True, exist_ok=True)
-    orig_path = dest_folder / f"{base}.{ext}"
+
+    orig_path = dest_folder / f"{sku}-original.{ext}"
+    thumb_path = dest_folder / f"{sku}-thumb.jpg"
+    analyse_path = dest_folder / f"{sku}-analyse.jpg"
 
     try:
         orig_path.write_bytes(data)
         with Image.open(orig_path) as img:
             width, height = img.size
-            thumb_path = dest_folder / f"{base}-thumb.jpg"
             thumb = img.copy()
             thumb.thumbnail((config.THUMB_WIDTH, config.THUMB_HEIGHT))
             thumb.save(thumb_path, "JPEG", quality=80)
-            analyse_path = dest_folder / f"{base}-analyse.jpg"
             utils.resize_for_analysis(img, analyse_path)
     except Exception as exc:
         logging.getLogger(__name__).error("Image processing failed: %s", exc)
         return {"original": filename, "success": False, "error": "Image processing failed"}
-    
+
     qc_data = {
-        "original_filename": filename, "extension": ext, "image_shape": [width, height],
-        "filesize_bytes": len(data), "aspect_ratio": aa.get_aspect_ratio(orig_path),
+        "original_filename": filename,
+        "extension": ext,
+        "image_shape": [width, height],
+        "filesize_bytes": len(data),
+        "aspect_ratio": aa.get_aspect_ratio(orig_path),
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
-    qc_path = dest_folder / f"{base}.qc.json"
+    qc_path = dest_folder / f"{sku}.qc.json"
     qc_path.write_text(json.dumps(qc_data, indent=2))
 
-    utils.register_new_artwork(uid, f"{base}.{ext}", dest_folder, [orig_path.name, thumb_path.name, analyse_path.name, qc_path.name], "unanalysed", base)
-    
-    return {"success": True, "base": base, "aspect": qc_data["aspect_ratio"], "uid": uid, "original": filename}
+    utils.register_new_artwork(
+        uid,
+        orig_path.name,
+        dest_folder,
+        [orig_path.name, thumb_path.name, analyse_path.name, qc_path.name],
+        "unanalysed",
+        sku,
+    )
+
+    return {"success": True, "base": sku, "aspect": qc_data["aspect_ratio"], "uid": uid, "original": filename}
 
 
 # === [ Section 15: Artwork Signing Route | artwork-routes-py-15 ] ===
