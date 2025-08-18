@@ -7,11 +7,15 @@ on:
     branches: ["**"]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     name: Unit & Integration
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     strategy:
       matrix:
@@ -42,25 +46,40 @@ jobs:
           elif [ -f pyproject.toml ]; then
             pip install poetry
             poetry install
-          else
+          else:
             echo "No requirements.txt or pyproject.toml found."
             exit 1
 
-      - name: Show environment
-        run: |
-          python --version
-          pip list
-
-      - name: Run pytest (strict teardown)
+      - name: Run pytest (strict teardown, junit, coverage)
         env:
           STRICT_TEARDOWN: "1"
           PYTHONPATH: "."
         run: |
-          pytest -q --maxfail=1 --disable-warnings --durations=10
+          mkdir -p reports
+          pytest -q --maxfail=1 --disable-warnings --durations=10 \
+            --junitxml=reports/junit.xml \
+            --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
 
-      - name: Upload pytest cache (optional)
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit
+          path: reports/junit.xml
+          if-no-files-found: ignore
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
+
+      - name: Upload pytest cache
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pytest-cache
           path: .pytest_cache
+          if-no-files-found: ignore
