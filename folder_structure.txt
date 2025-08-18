@@ -1,5 +1,11 @@
 artnarrator.com
 ├── .env
+├── .env.bak.2025-08-18-184202
+├── .env.bak.2025-08-18-184404
+├── .env.bak.2025-08-18-191112
+├── .github
+│   └── workflows
+│       └── tests.yml
 ├── .gitignore
 ├── .vscode
 │   └── settings.json
@@ -39,19 +45,18 @@ artnarrator.com
 │   ├── finalised-artwork
 │   ├── master-artwork-paths.json
 │   ├── processed-artwork
-│   │   ├── artwork-rjc-0489-by-robin-custance-rjc-rjc-0489
-│   │   │   ├── artwork-rjc-0489-by-robin-custance-rjc-rjc-0489-listing.json
-│   │   │   └── artwork-rjc-0489-by-robin-custance-rjc-rjc-0489.jpg
-│   │   ├── artwork-rjc-0490-by-robin-custance-rjc-rjc-0490
-│   │   │   ├── artwork-rjc-0490-by-robin-custance-rjc-rjc-0490-listing.json
-│   │   │   └── artwork-rjc-0490-by-robin-custance-rjc-rjc-0490.jpg
+│   │   ├── .keep
+│   │   ├── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506
+│   │   │   ├── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506-listing.json
+│   │   │   └── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506.jpg
 │   │   └── pending_mockups.json
 │   └── unanalysed-artwork
-│       └── temp
 ├── backup_excludes.txt
 ├── backup_includes.txt
 ├── backups
-│   └── backup_Sun-17-Aug-2025-04-31-PM.tar.gz
+│   ├── backup_Sun-17-Aug-2025-04-31-PM.tar.gz
+│   ├── local_backup_Mon-18-Aug-2025-06-20-PM.tar.gz
+│   └── local_backup_Mon-18-Aug-2025-06-21-PM.tar.gz
 ├── code-stacker.sh
 ├── code-stacks
 │   ├── full-code-stack
@@ -60,6 +65,9 @@ artnarrator.com
 │   │   ├── code-stack-MON-18-AUGUST-2025-01-12-PM.md
 │   │   ├── code-stack-MON-18-AUGUST-2025-01-16-PM.md
 │   │   ├── code-stack-MON-18-AUGUST-2025-02-02-PM.md
+│   │   ├── code-stack-MON-18-AUGUST-2025-06-20-PM.md
+│   │   ├── code-stack-MON-18-AUGUST-2025-06-22-PM.md
+│   │   ├── code-stack-MON-18-AUGUST-2025-07-17-PM.md
 │   │   ├── code-stack-SAT-16-AUGUST-2025-06-06-PM.md
 │   │   ├── code-stack-SAT-16-AUGUST-2025-12-02-PM.md
 │   │   ├── code-stack-SUN-17-AUGUST-2025-02-59-PM.md
@@ -74,6 +82,8 @@ artnarrator.com
 │   │   ├── log-stack-FRI-15-AUGUST-2025-06-27-PM.md
 │   │   ├── log-stack-Mon-18-August-2025-01-05-PM.md
 │   │   ├── log-stack-Mon-18-August-2025-01-12-PM.md
+│   │   ├── log-stack-Mon-18-August-2025-02-02-PM.md
+│   │   ├── log-stack-Mon-18-August-2025-06-22-PM.md
 │   │   ├── log-stack-SAT-16-AUGUST-2025-05-57-PM.md
 │   │   ├── log-stack-SAT-16-AUGUST-2025-07-15-PM.md
 │   │   ├── log-stack-SUN-17-AUGUST-2025-03-00-PM.md
@@ -90,6 +100,9 @@ artnarrator.com
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-01-12-PM.md
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-01-16-PM.md
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-02-02-PM.md
+│       ├── root-files-code-stack-MON-18-AUGUST-2025-06-20-PM.md
+│       ├── root-files-code-stack-MON-18-AUGUST-2025-06-22-PM.md
+│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-17-PM.md
 │       ├── root-files-code-stack-SAT-16-AUGUST-2025-06-06-PM.md
 │       ├── root-files-code-stack-SAT-16-AUGUST-2025-12-02-PM.md
 │       ├── root-files-code-stack-SUN-17-AUGUST-2025-02-59-PM.md
@@ -101,10 +114,17 @@ artnarrator.com
 │       ├── root-files-code-stack-SUN-17-AUGUST-2025-06-30-PM.md
 │       └── root-files-code-stack-SUN-17-AUGUST-2025-07-02-PM.md
 ├── config.py
+├── config.py.bak.2025-08-18-184202
+├── config.py.bak.2025-08-18-184404
+├── config.py.bak.2025-08-18-191112
+├── config.py.bak.2025-08-18-191329
 ├── conftest.py
 ├── cron-backup.sh
 ├── data
 │   ├── artnarrator.sqlite3
+│   ├── artnarrator.sqlite3.bak.2025-08-18-184202
+│   ├── artnarrator.sqlite3.bak.2025-08-18-184404
+│   ├── artnarrator.sqlite3.bak.2025-08-18-191112
 │   ├── gdws_content
 │   │   ├── 16x9
 │   │   │   ├── about_art_style
@@ -674,18 +694,7 @@ artnarrator.com
 │   │   │   ├── 1x1-Mockup-73.json
 │   │   │   ├── 1x1-Mockup-74.json
 │   │   │   ├── 1x1-Mockup-8.json
-│   │   │   ├── 1x1-Mockup-9.json
-│   │   │   ├── Bedroom
-│   │   │   ├── Closeup
-│   │   │   ├── Dining-Room
-│   │   │   ├── Display
-│   │   │   ├── Gallery-Wall
-│   │   │   ├── Gift
-│   │   │   ├── Hallway
-│   │   │   ├── Living Room
-│   │   │   ├── Nursery
-│   │   │   ├── Office
-│   │   │   └── Outdoors
+│   │   │   └── 1x1-Mockup-9.json
 │   │   ├── 2x3
 │   │   │   ├── 2x3-Mockup-1.json
 │   │   │   ├── 2x3-Mockup-10.json
@@ -1145,18 +1154,6 @@ artnarrator.com
 │   │   │       ├── 4x5-mockup-95.png
 │   │   │       └── 4x5-mockup-99.png
 │   │   ├── categorised
-│   │   │   ├── 1x1
-│   │   │   │   ├── Bedroom
-│   │   │   │   ├── Closeup
-│   │   │   │   ├── Dining-Room
-│   │   │   │   ├── Display
-│   │   │   │   ├── Gallery-Wall
-│   │   │   │   ├── Gift
-│   │   │   │   ├── Hallway
-│   │   │   │   ├── Living Room
-│   │   │   │   ├── Nursery
-│   │   │   │   ├── Office
-│   │   │   │   └── Outdoors
 │   │   │   └── 4x5
 │   │   │       ├── Bedroom
 │   │   │       │   ├── 4x5-mockup-10.png
@@ -1343,6 +1340,7 @@ artnarrator.com
 │   ├── Master-Etsy-Listing-Description-Writing-Onboarding.txt
 │   ├── mockup_categoriser_prompt.txt
 │   ├── security_settings.json
+│   ├── session_tracker.json
 │   ├── sku_tracker.json
 │   └── users.json
 ├── static
@@ -2948,6 +2946,7 @@ artnarrator.com
 │   ├── upload.html
 │   └── upload_results.html
 ├── tests
+│   ├── _session_cleaner.py
 │   ├── google-analysys-tests
 │   │   ├── test-artwork-analysis-01
 │   │   │   ├── test-image-01-for-analyse-google-2025-07-29_12-36-31.json
@@ -2977,6 +2976,7 @@ artnarrator.com
 │   ├── test_artwork_lifecycle.py
 │   ├── test_assets
 │   │   └── cassowary-test-01.jpg
+│   ├── test_live_analyze.py
 │   ├── test_logger_utils.py
 │   ├── test_public_urls.py
 │   ├── test_registry.py
@@ -2985,11 +2985,13 @@ artnarrator.com
 │   ├── test_session_limits.py
 │   ├── test_sku_assigner.py
 │   ├── test_sku_tracker.py
+│   ├── test_teardown_report.py
 │   ├── test_upload.py
 │   └── test_utils_cleaning.py
 ├── tmp_test_vips.png
 ├── tmp_test_vips_thumb.jpg
 ├── tools.sh
+├── unanalysed-artwork
 └── utils
     ├── __init__.py
     ├── ai_services.py

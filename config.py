@@ -7,10 +7,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # --- Load .env file from project root ---
-load_dotenv()
 
 # === PROJECT ROOT ===
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
 # =============================================================================
 # 1. ENV/BRANDING/ADMIN
