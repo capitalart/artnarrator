@@ -56,7 +56,8 @@ artnarrator.com
 ├── backups
 │   ├── backup_Sun-17-Aug-2025-04-31-PM.tar.gz
 │   ├── local_backup_Mon-18-Aug-2025-06-20-PM.tar.gz
-│   └── local_backup_Mon-18-Aug-2025-06-21-PM.tar.gz
+│   ├── local_backup_Mon-18-Aug-2025-06-21-PM.tar.gz
+│   └── local_backup_Mon-18-Aug-2025-07-18-PM.tar.gz
 ├── code-stacker.sh
 ├── code-stacks
 │   ├── full-code-stack
@@ -68,6 +69,8 @@ artnarrator.com
 │   │   ├── code-stack-MON-18-AUGUST-2025-06-20-PM.md
 │   │   ├── code-stack-MON-18-AUGUST-2025-06-22-PM.md
 │   │   ├── code-stack-MON-18-AUGUST-2025-07-17-PM.md
+│   │   ├── code-stack-MON-18-AUGUST-2025-07-18-PM.md
+│   │   ├── code-stack-MON-18-AUGUST-2025-07-20-PM.md
 │   │   ├── code-stack-SAT-16-AUGUST-2025-06-06-PM.md
 │   │   ├── code-stack-SAT-16-AUGUST-2025-12-02-PM.md
 │   │   ├── code-stack-SUN-17-AUGUST-2025-02-59-PM.md
@@ -84,6 +87,7 @@ artnarrator.com
 │   │   ├── log-stack-Mon-18-August-2025-01-12-PM.md
 │   │   ├── log-stack-Mon-18-August-2025-02-02-PM.md
 │   │   ├── log-stack-Mon-18-August-2025-06-22-PM.md
+│   │   ├── log-stack-Mon-18-August-2025-07-17-PM.md
 │   │   ├── log-stack-SAT-16-AUGUST-2025-05-57-PM.md
 │   │   ├── log-stack-SAT-16-AUGUST-2025-07-15-PM.md
 │   │   ├── log-stack-SUN-17-AUGUST-2025-03-00-PM.md
@@ -103,6 +107,8 @@ artnarrator.com
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-06-20-PM.md
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-06-22-PM.md
 │       ├── root-files-code-stack-MON-18-AUGUST-2025-07-17-PM.md
+│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-18-PM.md
+│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-20-PM.md
 │       ├── root-files-code-stack-SAT-16-AUGUST-2025-06-06-PM.md
 │       ├── root-files-code-stack-SAT-16-AUGUST-2025-12-02-PM.md
 │       ├── root-files-code-stack-SUN-17-AUGUST-2025-02-59-PM.md

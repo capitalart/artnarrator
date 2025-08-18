@@ -159,7 +159,7 @@ def handle_build_error(err):
 
 @app.route("/health")
 @app.route("/healthz")
-def health_check():
+def healthz():
     return "OK", 200
 
 
