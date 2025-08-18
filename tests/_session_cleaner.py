@@ -57,11 +57,30 @@ def _is_under(child: Path, parent: Path) -> bool:
 
 @contextmanager
 def session_cleaner_context(stdout_logger=print):
+    """
+    Session-wide snapshot/restore for repo artifacts.
+
+    Handles BOTH pending files:
+      - art-processing/pending_mockups.json
+      - art-processing/processed-artwork/pending_mockups.json
+    plus removes processed subfolders created during tests and restores
+    master-artwork-paths.json.
+
+    Env flags:
+      STRICT_TEARDOWN=1 -> raise if cleanup failures
+      KEEP_TEST_ARTIFACTS=1 -> skip cleanup (just snapshot)
+      TEST_SNAPSHOT_PATHS="path1,path2" -> additional paths to snapshot/restore
+    """
     repo = _repo_root()
     art_processing = repo / "art-processing"
     master_json = art_processing / "master-artwork-paths.json"
-    pending_json = art_processing / "pending_mockups.json"
     processed_dir = art_processing / "processed-artwork"
+
+    # 🔑 Handle both legacy & nested pending files
+    pending_candidates = [
+        art_processing / "pending_mockups.json",
+        processed_dir / "pending_mockups.json",
+    ]
 
     extra_paths = _resolve_paths_from_env("TEST_SNAPSHOT_PATHS", repo)
     strict = os.getenv("STRICT_TEARDOWN", "").lower() in {"1", "true", "yes"}
@@ -70,13 +89,20 @@ def session_cleaner_context(stdout_logger=print):
     baseline: Dict[str, Any] = {
         "master_present": master_json.exists(),
         "master_json": _read_json_safely(master_json) if master_json.exists() else None,
-        "pending_present": pending_json.exists(),
-        "pending_json": _read_json_safely(pending_json) if pending_json.exists() else None,
         "processed_present": processed_dir.exists(),
         "processed_subdirs": _list_subdirs(processed_dir),
         "extra": {},
+        "pending": {},
     }
 
+    # Snapshot both pending files
+    for p in pending_candidates:
+        baseline["pending"][str(p)] = {
+            "present": p.exists(),
+            "json": _read_json_safely(p) if p.exists() else None,
+        }
+
+    # Snapshot extra paths (optional)
     for p in extra_paths:
         if p.exists():
             if p.is_dir():
@@ -92,7 +118,10 @@ def session_cleaner_context(stdout_logger=print):
                     "bytes": p.read_bytes(),
                 }
         else:
-            baseline["extra"][str(p)] = {"type": ("dir" if p.suffix == "" else "file"), "present": False}
+            baseline["extra"][str(p)] = {
+                "type": ("dir" if p.suffix == "" else "file"),
+                "present": False,
+            }
 
     stdout_logger("[session_files_cleanup] Snapshot complete")
     try:
@@ -112,7 +141,7 @@ def session_cleaner_context(stdout_logger=print):
             if keep_artifacts:
                 _log_action("KEEP_TEST_ARTIFACTS=1 set — skipping teardown.")
             else:
-                # master
+                # Restore or delete master JSON
                 if baseline["master_present"]:
                     try:
                         _atomic_write_json(master_json, baseline["master_json"])
@@ -127,17 +156,17 @@ def session_cleaner_context(stdout_logger=print):
                         except Exception as e:
                             _log_fail(f"delete {master_json}: {e}")
 
-                # pending (sanitize if no baseline)
+                # Sanitiser for pending lists
                 tmp_root = Path(tempfile.gettempdir())
 
                 def sanitize_pending_list(lst: List[str]) -> List[str]:
                     out: List[str] = []
                     for s in lst:
                         p = Path(s)
-                        if _is_under(p, tmp_root):
+                        # Drop tmp/pytest paths
+                        if _is_under(p, tmp_root) or "pytest-of-" in s:
                             continue
-                        if "pytest-of-" in s:
-                            continue
+                        # Keep only entries that live under processed_dir and still exist
                         if not _is_under(p, processed_dir):
                             continue
                         if not p.exists():
@@ -145,29 +174,35 @@ def session_cleaner_context(stdout_logger=print):
                         out.append(str(p))
                     return out
 
-                if baseline["pending_present"]:
-                    try:
-                        _atomic_write_json(pending_json, baseline["pending_json"])
-                        _log_action(f"restored {pending_json}")
-                    except Exception as e:
-                        _log_fail(f"restore {pending_json}: {e}")
-                else:
-                    if pending_json.exists():
+                # Restore/sanitize both pending files
+                for pending_path_str, meta in baseline["pending"].items():
+                    p = Path(pending_path_str)
+                    was_present = meta["present"]
+                    if was_present:
                         try:
-                            current = _read_json_safely(pending_json) or []
-                            if not isinstance(current, list):
-                                current = []
-                            filtered = sanitize_pending_list(current)
-                            if filtered:
-                                _atomic_write_json(pending_json, filtered)
-                                _log_action(f"sanitized {pending_json} (kept {len(filtered)}, removed {len(current)-len(filtered)})")
-                            else:
-                                pending_json.unlink()
-                                _log_action(f"deleted {pending_json} (no baseline and no valid entries)")
+                            _atomic_write_json(p, meta["json"])
+                            _log_action(f"restored {p}")
                         except Exception as e:
-                            _log_fail(f"sanitize/delete {pending_json}: {e}")
+                            _log_fail(f"restore {p}: {e}")
+                    else:
+                        if p.exists():
+                            try:
+                                current = _read_json_safely(p) or []
+                                if not isinstance(current, list):
+                                    current = []
+                                filtered = sanitize_pending_list(current)
+                                if filtered:
+                                    _atomic_write_json(p, filtered)
+                                    _log_action(
+                                        f"sanitized {p} (kept {len(filtered)}, removed {len(current)-len(filtered)})"
+                                    )
+                                else:
+                                    p.unlink()
+                                    _log_action(f"deleted {p} (no baseline and no valid entries)")
+                            except Exception as e:
+                                _log_fail(f"sanitize/delete {p}: {e}")
 
-                # processed subdirs
+                # Remove processed subfolders created during tests
                 if processed_dir.exists():
                     current = set(_list_subdirs(processed_dir))
                     baseline_set = set(baseline["processed_subdirs"])
@@ -186,7 +221,7 @@ def session_cleaner_context(stdout_logger=print):
                         except Exception as e:
                             _log_fail(f"rmtree {processed_dir}: {e}")
 
-                # extra paths
+                # Extra paths
                 for s, meta in baseline["extra"].items():
                     p = Path(s)
                     was_present = meta["present"]
