@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
-    # 👇 Force prod behavior everywhere in the job
+    # Force prod behavior everywhere in the job
     env:
       STRICT_TEARDOWN: "1"
       PYTHONPATH: "."
@@ -49,6 +49,11 @@ jobs:
           else
             python -m pip install pytest
           fi
+
+      - name: Show CI env
+        run: |
+          echo "ENVIRONMENT=$ENVIRONMENT"
+          echo "TEST_ENV=$TEST_ENV"
 
       - name: Run pytest (strict teardown)
         run: |
