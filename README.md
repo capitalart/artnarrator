@@ -17,6 +17,9 @@ This system helps artists like me (Robin Custance — Aboriginal Aussie artist a
 
 ---
 
+![Tests](https://github.com/capitalart/artnarrator/actions/workflows/tests.yml/badge.svg)
+
+
 ## 📁 Folder Structure
 
 ```bash
