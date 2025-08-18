@@ -1,9 +1,6 @@
-import json
-import uuid
+import json, uuid
 from pathlib import Path
-
 from tests._session_cleaner import session_cleaner_context
-
 
 def test_session_cleaner_context_restores_and_removes():
     repo_root = Path(__file__).resolve().parent.parent
@@ -14,13 +11,11 @@ def test_session_cleaner_context_restores_and_removes():
     uniq = uuid.uuid4().hex[:8]
 
     with session_cleaner_context():
-        # Create a new processed subdir that should be removed by teardown
         processed.mkdir(parents=True, exist_ok=True)
         test_folder = processed / f"pytest-temp-to-remove-{uniq}"
         test_folder.mkdir(parents=True, exist_ok=True)
         (test_folder / "dummy.txt").write_text("hello", encoding="utf-8")
 
-        # Add a unique marker to master JSON (create if missing)
         art_proc.mkdir(parents=True, exist_ok=True)
         if master.exists():
             try:
@@ -35,10 +30,7 @@ def test_session_cleaner_context_restores_and_removes():
             data = {f"__pytest_test_marker__{uniq}": "created"}
         master.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
-    # Assert: folder removed
     assert not test_folder.exists(), f"Residual test folder still exists: {test_folder}"
-
-    # Assert: master restored (no unique marker)
     if master.exists():
         data = json.loads(master.read_text(encoding="utf-8"))
         assert f"__pytest_test_marker__{uniq}" not in data, "Master JSON still contains test marker"
