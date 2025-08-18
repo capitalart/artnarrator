@@ -58,9 +58,21 @@ def register_session(username: str, session_id: str) -> bool:
         data = _cleanup_expired(data)
         sessions = data.get(username, [])
         if len(sessions) >= MAX_SESSIONS:
-            logger.warning(f"Session registration denied for '{username}': limit of {MAX_SESSIONS} reached.")
-            return False
-        
+            # In production we enforce the limit strictly. In non-prod (dev/test)
+            # allow a new login by evicting the oldest session so developers
+            # and automated test runs are not blocked by stale sessions.
+            if getattr(config, "ENVIRONMENT", "dev") == "prod":
+                logger.warning(f"Session registration denied for '{username}': limit of {MAX_SESSIONS} reached.")
+                return False
+            # Evict the oldest session (FIFO) to make room for the new one.
+            try:
+                evicted = sessions.pop(0)
+                logger.info(f"Evicting oldest session {evicted.get('session_id')} for user '{username}' to allow new login (dev mode).")
+            except Exception:
+                # If anything goes wrong, deny registration to be safe.
+                logger.exception("Failed to evict oldest session; denying new session registration.")
+                return False
+
         sessions.append({
             "session_id": session_id,
             "timestamp": datetime.datetime.utcnow().isoformat()
