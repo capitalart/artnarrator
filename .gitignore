@@ -49,4 +49,13 @@ art-processing/finalised-artwork/*
 art-processing/artwork-vault/*
 
 # Keep the empty directory structures by not ignoring .gitkeep files
-!*/.gitkeep
+!*/.gitkeep# Test/CI artifacts
+art-processing/processed-artwork/**
+!art-processing/processed-artwork/.keep
+
+# Pending lists created by tests
+art-processing/pending_mockups.json
+art-processing/processed-artwork/pending_mockups.json
+
+# Pytest cache
+.pytest_cache/
