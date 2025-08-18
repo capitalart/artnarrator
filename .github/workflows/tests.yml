@@ -43,9 +43,14 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
+            # ensure coverage tooling for the pytest --cov flags
+            pip install pytest-cov coverage
           elif [ -f pyproject.toml ]; then
             pip install poetry
             poetry install
+            # install coverage tooling into the poetry env and mark for later
+            poetry run pip install pytest-cov coverage
+            echo "USE_POETRY=1" >> $GITHUB_ENV
           else:
             echo "No requirements.txt or pyproject.toml found."
             exit 1
@@ -56,9 +61,15 @@ jobs:
           PYTHONPATH: "."
         run: |
           mkdir -p reports
-          pytest -q --maxfail=1 --disable-warnings --durations=10 \
-            --junitxml=reports/junit.xml \
-            --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
+          if [ "${USE_POETRY:-0}" = "1" ]; then
+            poetry run pytest -q --maxfail=1 --disable-warnings --durations=10 \
+              --junitxml=reports/junit.xml \
+              --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
+          else
+            pytest -q --maxfail=1 --disable-warnings --durations=10 \
+              --junitxml=reports/junit.xml \
+              --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
+          fi
 
       - name: Upload JUnit report
         if: always()
