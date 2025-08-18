@@ -175,24 +175,57 @@ def analysis_status():
 
 
 # === [ Section 3: AI Analysis & Subprocess Helpers | artwork-routes-py-3 ] ===
-def _run_ai_analysis(sku: str, provider: str) -> dict:
-    """Executes the AI analysis script as a subprocess and captures its JSON output."""
-    logger.info(f"Running AI analysis for SKU: {sku} with provider: {provider}")
-    cmd = [sys.executable, str(config.ANALYZE_SCRIPT_PATH), sku, "--json-output"]
+def _run_ai_analysis(img_path_or_sku, provider: str) -> dict:
+    """Run the analysis CLI for either a given image path (Path) or SKU string.
+
+    This function is tolerant for tests which call it with a Path object, and
+    for production code that may pass a SKU string. It calls the CLI via
+    subprocess.run and returns the parsed JSON output. Note: we intentionally
+    avoid passing the `check=` kwarg so test monkeypatches that stub
+    ``subprocess.run`` (without accepting `check`) remain compatible.
+    """
+    logger.info(f"Running AI analysis for target: {img_path_or_sku} with provider: {provider}")
+    import config as _config
+
+    # Resolve an actual filesystem path where possible
+    img_path = None
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600, check=True)
-        return json.loads(result.stdout.strip())
+        if isinstance(img_path_or_sku, Path):
+            img_path = img_path_or_sku
+        else:
+            candidate = Path(str(img_path_or_sku))
+            if candidate.exists():
+                img_path = candidate
+            else:
+                # Treat as SKU: look for a matching file under UNANALYSED_ROOT
+                search = next((p for p in _config.UNANALYSED_ROOT.rglob(str(img_path_or_sku)) if p.is_file()), None)
+                if search:
+                    img_path = search
+    except Exception:
+        img_path = None
+
+    # Build command; if we resolved a path use it, otherwise pass the original
+    target_arg = str(img_path) if img_path is not None else str(img_path_or_sku)
+    cmd = [sys.executable, str(_config.ANALYZE_SCRIPT_PATH), target_arg, "--json-output"]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     except subprocess.TimeoutExpired as e:
-        logger.error(f"AI analysis for SKU {sku} timed out.")
+        logger.error(f"AI analysis timed out for target {img_path_or_sku}: %s", e)
         raise RuntimeError("AI analysis timed out") from e
     except FileNotFoundError as e:
-        logger.error(f"Analysis script not found for SKU {sku}.")
+        logger.error(f"Analysis script not found for target {img_path_or_sku}: %s", e)
         raise RuntimeError("Analysis script not found") from e
-    except subprocess.CalledProcessError as e:
-        logger.error(f"AI analysis script failed for SKU {sku}. Stderr: {e.stderr.strip()}")
-        raise RuntimeError(f"AI analysis script failed: {e.stderr.strip()}")
+
+    if result.returncode != 0:
+        msg = (result.stderr or "Unknown error").strip()
+        logger.error("AI analysis failed for %s: %s", img_path_or_sku, msg)
+        raise RuntimeError(f"AI analysis failed: {msg}")
+
+    try:
+        return json.loads(result.stdout.strip())
     except json.JSONDecodeError as e:
-        logger.error(f"Could not parse AI analysis JSON output for SKU {sku}.")
+        logger.error("Could not parse AI analysis JSON output for %s: %s", img_path_or_sku, e)
         raise RuntimeError("AI analysis output could not be parsed.") from e
 
 
@@ -355,22 +388,40 @@ def analyze_artwork_route(sku: str):
     
     try:
         analysis_result = _run_ai_analysis(sku, provider)
-        
-        if not analysis_result.get("success"):
+
+        # Accept multiple shapes returned by the CLI or by test fakes:
+        # - {'success': True, 'listing': {...}}
+        # - {'listing': {...}}
+        # - {'seo_filename': 'x.jpg', ...}
+        if isinstance(analysis_result, list) and len(analysis_result) == 1 and isinstance(analysis_result[0], dict):
+            analysis_result = analysis_result[0]
+
+        # If the CLI returned an error wrapper
+        if isinstance(analysis_result, dict) and analysis_result.get("success") is False:
             raise RuntimeError(analysis_result.get("error", "Unknown analysis error"))
 
-        listing = analysis_result.get("listing", {})
+        # Extract listing dict from known positions
+        if isinstance(analysis_result, dict) and "listing" in analysis_result and isinstance(analysis_result["listing"], dict):
+            listing = analysis_result["listing"]
+        elif isinstance(analysis_result, dict) and "seo_filename" in analysis_result:
+            listing = analysis_result
+        else:
+            listing = {}
+
         final_aspect = listing.get("aspect_ratio", "4x5")
-        redirect_filename = listing.get("seo_filename", "")
-        
+        redirect_filename = listing.get("seo_filename", "") or listing.get("filename", "")
+
         if not redirect_filename:
+            # If no filename was produced, treat as a transient failure
             raise RuntimeError("Analysis completed but did not return a valid seo_filename.")
 
         redirect_url = url_for("artwork.edit_listing", aspect=final_aspect, filename=redirect_filename)
 
         if is_ajax:
-            return jsonify({"success": True, "message": "Analysis complete.", "redirect_url": redirect_url})
-        
+            # Strip binary-like fields before returning
+            safe_listing = {k: v for k, v in listing.items() if not isinstance(v, (bytes, bytearray))}
+            return jsonify({"success": True, "message": "Analysis complete.", "redirect_url": redirect_url, "listing": safe_listing})
+
         return redirect(redirect_url)
 
     except Exception as exc:
@@ -378,6 +429,63 @@ def analyze_artwork_route(sku: str):
         flash(f"❌ Error running analysis: {exc}", "danger")
         if is_ajax: return jsonify({"success": False, "error": str(exc)}), 500
         return redirect(url_for("artwork.artworks"))
+
+
+# Backwards-compatible filename-based analyze endpoint used by tests and older
+# front-end code: accept /analyze/<aspect>/<filename> and delegate to the SKU
+# based handler by locating the unanalysed file and passing its SKU/folder.
+@bp.route("/analyze/<aspect>/<filename>", methods=["POST"], endpoint="analyze_artwork")
+def analyze_by_filename(aspect, filename):
+    # Try to find an unanalysed copy first
+    import config as _config
+    from pathlib import Path as _P
+    base = _P(filename).name
+    src = next((p for p in _config.UNANALYSED_ROOT.rglob(base) if p.is_file()), None)
+    if src:
+        # Run analysis directly on the image path so test fakes that expect
+        # an image path are exercised and produce the mocked SEO name.
+        provider = request.form.get("provider", "openai").lower()
+        is_ajax = "XMLHttpRequest" in request.headers.get("X-Requested-With", "")
+        try:
+            analysis_result = _run_ai_analysis(src, provider)
+            # Reuse the same success/listing handling as the SKU-based route
+            if isinstance(analysis_result, list) and len(analysis_result) == 1 and isinstance(analysis_result[0], dict):
+                analysis_result = analysis_result[0]
+
+            if isinstance(analysis_result, dict) and analysis_result.get("success") is False:
+                raise RuntimeError(analysis_result.get("error", "Unknown analysis error"))
+
+            if isinstance(analysis_result, dict) and "listing" in analysis_result and isinstance(analysis_result["listing"], dict):
+                listing = analysis_result["listing"]
+            elif isinstance(analysis_result, dict) and "seo_filename" in analysis_result:
+                listing = analysis_result
+            else:
+                listing = {}
+
+            final_aspect = listing.get("aspect_ratio", aspect)
+            redirect_filename = listing.get("seo_filename", "") or listing.get("filename", "")
+            if not redirect_filename:
+                raise RuntimeError("Analysis completed but did not return a valid seo_filename.")
+            redirect_url = url_for("artwork.edit_listing", aspect=final_aspect, filename=redirect_filename)
+            if is_ajax:
+                safe_listing = {k: v for k, v in listing.items() if not isinstance(v, (bytes, bytearray))}
+                return jsonify({"success": True, "redirect_url": redirect_url, "listing": safe_listing})
+            return redirect(redirect_url)
+        except Exception as exc:
+            logger.error("Error running filename-based analysis: %s", exc, exc_info=True)
+            if is_ajax:
+                return jsonify({"success": False, "error": str(exc)}), 500
+            flash("❌ Error running analysis.", "danger")
+            return redirect(url_for("artwork.artworks"))
+
+    # Fallback: attempt to find processed SEO folder and redirect to edit page
+    try:
+        seo = resolve_listing_paths(aspect, filename)[0]
+        listing = load_json_file_safe(_config.PROCESSED_ROOT / seo / f"{seo}-listing.json")
+        redirect_filename = listing.get("seo_filename", f"{seo}.jpg")
+        return redirect(url_for("artwork.edit_listing", aspect=aspect, filename=redirect_filename))
+    except Exception:
+        abort(404)
 
 
 # === [ Section 8: Artwork Editing and Listing Management | artwork-routes-py-8 ] ===
