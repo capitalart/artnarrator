@@ -15,11 +15,7 @@ jobs:
   tests:
     name: Unit & Integration
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    strategy:
-      matrix:
-        python-version: ["3.11"]
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -28,69 +24,32 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml', '**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
-            # ensure coverage tooling for the pytest --cov flags
-            pip install pytest-cov coverage
           elif [ -f pyproject.toml ]; then
             pip install poetry
             poetry install
-            # install coverage tooling into the poetry env and mark for later
-            poetry run pip install pytest-cov coverage
             echo "USE_POETRY=1" >> $GITHUB_ENV
-          else:
-            echo "No requirements.txt or pyproject.toml found."
-            exit 1
+          fi
+          # Ensure pytest is present either way
+          if [ "${USE_POETRY:-0}" = "1" ]; then
+            poetry run python -m pip install pytest
+          else
+            python -m pip install pytest
+          fi
 
-      - name: Run pytest (strict teardown, junit, coverage)
+      - name: Run pytest (strict teardown)
         env:
           STRICT_TEARDOWN: "1"
           PYTHONPATH: "."
         run: |
-          mkdir -p reports
           if [ "${USE_POETRY:-0}" = "1" ]; then
-            poetry run pytest -q --maxfail=1 --disable-warnings --durations=10 \
-              --junitxml=reports/junit.xml \
-              --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
+            poetry run pytest -q --maxfail=1 --disable-warnings
           else
-            pytest -q --maxfail=1 --disable-warnings --durations=10 \
-              --junitxml=reports/junit.xml \
-              --cov=. --cov-report=term-missing:skip-covered --cov-report=xml:coverage.xml
+            pytest -q --maxfail=1 --disable-warnings
           fi
-
-      - name: Upload JUnit report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit
-          path: reports/junit.xml
-          if-no-files-found: ignore
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-xml
-          path: coverage.xml
-          if-no-files-found: ignore
-
-      - name: Upload pytest cache
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-cache
-          path: .pytest_cache
-          if-no-files-found: ignore
