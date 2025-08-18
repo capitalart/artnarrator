@@ -3,13 +3,9 @@ from __future__ import annotations
 import json, os, shutil, sys, tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-# -----------------------------
-# Internal helpers
-# -----------------------------
 def _repo_root() -> Path:
-    # conftest.py lives at repo_root/conftest.py, tests/ is under repo_root/tests/
     return Path(__file__).resolve().parents[1]
 
 def _read_json_safely(p: Path):
@@ -59,15 +55,8 @@ def _is_under(child: Path, parent: Path) -> bool:
     except Exception:
         return False
 
-# -----------------------------
-# Main context manager (used by fixture)
-# -----------------------------
 @contextmanager
 def session_cleaner_context(stdout_logger=print):
-    """
-    Snapshots key repo artifacts and restores them at exit.
-    Also sanitizes pending_mockups.json to remove pytest tmp entries and dead paths.
-    """
     repo = _repo_root()
     art_processing = repo / "art-processing"
     master_json = art_processing / "master-artwork-paths.json"
@@ -78,7 +67,6 @@ def session_cleaner_context(stdout_logger=print):
     strict = os.getenv("STRICT_TEARDOWN", "").lower() in {"1", "true", "yes"}
     keep_artifacts = os.getenv("KEEP_TEST_ARTIFACTS", "").lower() in {"1", "true", "yes"}
 
-    # Baseline snapshot
     baseline: Dict[str, Any] = {
         "master_present": master_json.exists(),
         "master_json": _read_json_safely(master_json) if master_json.exists() else None,
@@ -124,7 +112,7 @@ def session_cleaner_context(stdout_logger=print):
             if keep_artifacts:
                 _log_action("KEEP_TEST_ARTIFACTS=1 set — skipping teardown.")
             else:
-                # ---- master JSON ----
+                # master
                 if baseline["master_present"]:
                     try:
                         _atomic_write_json(master_json, baseline["master_json"])
@@ -139,27 +127,25 @@ def session_cleaner_context(stdout_logger=print):
                         except Exception as e:
                             _log_fail(f"delete {master_json}: {e}")
 
-                # ---- pending_mockups.json ----
+                # pending (sanitize if no baseline)
                 tmp_root = Path(tempfile.gettempdir())
+
                 def sanitize_pending_list(lst: List[str]) -> List[str]:
                     out: List[str] = []
                     for s in lst:
                         p = Path(s)
-                        # Drop if under system tmp or looks like pytest-of-* or not under repo processed dir
                         if _is_under(p, tmp_root):
                             continue
                         if "pytest-of-" in s:
                             continue
                         if not _is_under(p, processed_dir):
                             continue
-                        # Drop non-existent targets
                         if not p.exists():
                             continue
                         out.append(str(p))
                     return out
 
                 if baseline["pending_present"]:
-                    # Always restore to exact baseline to avoid drift
                     try:
                         _atomic_write_json(pending_json, baseline["pending_json"])
                         _log_action(f"restored {pending_json}")
@@ -167,7 +153,6 @@ def session_cleaner_context(stdout_logger=print):
                         _log_fail(f"restore {pending_json}: {e}")
                 else:
                     if pending_json.exists():
-                        # Sanitize or delete
                         try:
                             current = _read_json_safely(pending_json) or []
                             if not isinstance(current, list):
@@ -182,7 +167,7 @@ def session_cleaner_context(stdout_logger=print):
                         except Exception as e:
                             _log_fail(f"sanitize/delete {pending_json}: {e}")
 
-                # ---- processed-artwork subdirs ----
+                # processed subdirs
                 if processed_dir.exists():
                     current = set(_list_subdirs(processed_dir))
                     baseline_set = set(baseline["processed_subdirs"])
@@ -201,7 +186,7 @@ def session_cleaner_context(stdout_logger=print):
                         except Exception as e:
                             _log_fail(f"rmtree {processed_dir}: {e}")
 
-                # ---- extra paths ----
+                # extra paths
                 for s, meta in baseline["extra"].items():
                     p = Path(s)
                     was_present = meta["present"]
