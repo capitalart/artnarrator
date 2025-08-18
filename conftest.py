@@ -4,8 +4,9 @@
 # - Session-wide snapshot/cleanup (autouse) via tests._session_cleaner.session_cleaner_context
 # - Pytest hooks for "live" tests gating
 # - Isolated filesystem per test (managed_artwork_paths)
-# - Test Flask client with patched config + session cleanup
+# - Test Flask client with patched config (TEST_ENV controls behavior: default 'prod')
 # - Subprocess stubs to prevent real background/CLI execution
+# - NEW: per-test teardown that clears user sessions (skips the session-limit module)
 # =============================================================================
 
 from __future__ import annotations
@@ -48,6 +49,29 @@ def session_files_cleanup():
     with session_cleaner_context():
         yield
 
+# --- Reset session tracker at session start/end so first test doesn't hit the cap ---
+@pytest.fixture(scope="session", autouse=True)
+def _reset_sessions_at_session_boundaries():
+    """
+    Ensure a clean slate for session-tracked logins:
+    - Before the test session starts: remove any persisted 'robbie' sessions.
+    - After the session ends: remove any sessions created during testing.
+    """
+    try:
+        from utils import session_tracker as _st  # type: ignore
+        for s in _st.active_sessions("robbie"):
+            _st.remove_session("robbie", s["session_id"])
+    except Exception:
+        pass
+
+    yield
+
+    try:
+        from utils import session_tracker as _st  # type: ignore
+        for s in _st.active_sessions("robbie"):
+            _st.remove_session("robbie", s["session_id"])
+    except Exception:
+        pass
 
 # =============================================================================
 # SECTION 1: PYTEST HOOKS
@@ -101,6 +125,31 @@ def managed_artwork_paths(tmp_path_factory):
 
 
 # =============================================================================
+# NEW: CLEAR SESSIONS AFTER EACH TEST (SKIP THE SESSION-LIMIT MODULE)
+# =============================================================================
+
+@pytest.fixture(autouse=True)
+def _clear_sessions_after_each_test(request):
+    """
+    Ensures other tests don't hit the global session cap by cleaning up
+    'robbie' sessions AFTER each test. We skip the session-limit module so it
+    can assert the 403 path without interference.
+    """
+    yield
+    try:
+        # Don't interfere with the explicit session-limit tests
+        node_path = str(getattr(request.node, "fspath", ""))
+        if node_path.endswith("tests/test_session_limits.py"):
+            return
+        from utils import session_tracker as _st  # type: ignore
+        for s in _st.active_sessions("robbie"):
+            _st.remove_session("robbie", s["session_id"])
+    except Exception:
+        # If session tracker isn't available in a branch, ignore silently
+        pass
+
+
+# =============================================================================
 # SECTION 3: FLASK TEST CLIENT (PATCHED CONFIG)
 # =============================================================================
 
@@ -108,16 +157,20 @@ def managed_artwork_paths(tmp_path_factory):
 def client(managed_artwork_paths, monkeypatch):
     """
     Master fixture: returns a Flask test client with config patched to the
-    per-test temp filesystem. Ensures tests run in 'dev' environment so the
-    session eviction utility is permitted.
+    per-test temp filesystem.
+
+    IMPORTANT:
+    - Tests default to prod behavior (TEST_ENV can override to 'dev' if needed).
+    - We do NOT clear sessions pre-login (so session-limit tests can assert 403).
     """
     # Patch config used by the app
     monkeypatch.setattr(config, "BASE_DIR", managed_artwork_paths.base)
     monkeypatch.setattr(config, "UNANALYSED_ROOT", managed_artwork_paths.unanalysed)
     monkeypatch.setattr(config, "PROCESSED_ROOT", managed_artwork_paths.processed)
-    monkeypatch.setattr(config, "ENVIRONMENT", "dev")
+    import os as _os
+    monkeypatch.setattr(config, "ENVIRONMENT", _os.getenv("TEST_ENV", "prod"))
 
-    # Mirror into Flask config (if the app consults flask_app.config)
+    # Mirror into Flask config
     flask_app.config.update(
         TESTING=True,
         BASE_DIR=managed_artwork_paths.base,
@@ -130,16 +183,7 @@ def client(managed_artwork_paths, monkeypatch):
         monkeypatch.setattr(config, "ANALYZE_SCRIPT_PATH", REPO_ROOT / "scripts" / "analyze_artwork.py")
 
     with flask_app.test_client() as test_client:
-        # Try to clear any pre-existing sessions for the test user
-        try:
-            from utils import session_tracker as _st  # type: ignore
-            for s in _st.active_sessions("robbie"):
-                _st.remove_session("robbie", s["session_id"])
-        except Exception:
-            # No session tracker or nothing to clear — safe to continue
-            pass
-
-        # Perform a test login (ignore failures silently; routes may vary between branches)
+        # Perform a test login (ignore failures; routes may vary)
         try:
             test_client.post(
                 "/login",
@@ -161,15 +205,6 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
     """
     Prevents tests from launching real background subprocesses and provides
     predictable fake outputs for analysis calls.
-
-    Stubs:
-      - subprocess.Popen   -> _DummyPopen
-      - subprocess.run     -> _fake_run
-
-    Behavior for analyze CLI:
-      - Creates a processed folder under the test's processed root
-      - Writes <seo>-listing.json and a tiny .jpg
-      - Returns JSON payload on stdout consistent with the app's expectations
     """
 
     class _DummyPopen:
@@ -177,14 +212,9 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
             self.args = args
             self.returncode = 0
 
-        def poll(self):
-            return self.returncode
-
-        def wait(self, timeout=None):
-            return self.returncode
-
-        def kill(self):
-            pass
+        def poll(self): return self.returncode
+        def wait(self, timeout=None): return self.returncode
+        def kill(self): pass
 
         def communicate(self, input=None, timeout=None):
             cmd = self.args[0]
@@ -198,14 +228,12 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
                 if img_arg and img_arg.exists() and img_arg.is_file():
                     seo_name = f"mocked-artwork-from-{img_arg.stem}-by-test-RJC-MOCK"
                 else:
-                    # If not given a file, derive a name from the arg itself
                     fallback = str(cmd[2]) if len(cmd) > 2 else "mocked-artwork"
                     seo_name = Path(fallback).stem or "mocked-artwork"
 
                 processed_dir = managed_artwork_paths.processed / seo_name
                 processed_dir.mkdir(parents=True, exist_ok=True)
 
-                # Ensure there's a file in the dir (copy source or write tiny jpg)
                 if img_arg and img_arg.exists() and img_arg.is_file():
                     try:
                         shutil.copy(img_arg, processed_dir / f"{seo_name}.jpg")
@@ -214,29 +242,18 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
                 else:
                     (processed_dir / f"{seo_name}.jpg").write_bytes(b"\xff\xd8\xff\xd9")
 
-                listing_data = {
-                    "title": "Mocked Title",
-                    "seo_filename": f"{seo_name}.jpg",
-                    "aspect_ratio": "4x5",
-                }
-                (processed_dir / f"{seo_name}-listing.json").write_text(
-                    json.dumps(listing_data), encoding="utf-8"
-                )
+                listing_data = {"title": "Mocked Title", "seo_filename": f"{seo_name}.jpg", "aspect_ratio": "4x5"}
+                (processed_dir / f"{seo_name}-listing.json").write_text(json.dumps(listing_data), encoding="utf-8")
 
                 payload = {
-                    "success": True,
-                    "processed_folder": str(processed_dir),
-                    "listing": listing_data,
-                    "sku": "RJC-MOCK-01",
+                    "success": True, "processed_folder": str(processed_dir),
+                    "listing": listing_data, "sku": "RJC-MOCK-01"
                 }
                 return (json.dumps(payload).encode("utf-8"), b"")
             return (b"", b"")
 
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc, tb):
-            return False
+        def __enter__(self): return self
+        def __exit__(self, exc_type, exc, tb): return False
 
     monkeypatch.setattr(subprocess, "Popen", _DummyPopen)
 
@@ -247,7 +264,6 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
             self.stderr = stderr
 
     def _fake_run(cmd, capture_output=True, text=True, cwd=None, timeout=None, check=False):
-        # Determine "analyze" invocation robustly
         analyze_script = getattr(config, "ANALYZE_SCRIPT_PATH", REPO_ROOT / "scripts" / "analyze_artwork.py")
         script_str = ""
         try:
@@ -271,7 +287,6 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
                     except Exception:
                         (processed_dir / f"{seo_name}.jpg").write_bytes(b"\xff\xd8\xff\xd9")
                 else:
-                    # Treat target as folder/sku name
                     seo_name = P(str(target)).stem or "mocked-artwork"
                     processed_dir = managed_artwork_paths.processed / seo_name
                     processed_dir.mkdir(parents=True, exist_ok=True)
@@ -282,21 +297,10 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
                 processed_dir.mkdir(parents=True, exist_ok=True)
                 (processed_dir / f"{seo_name}.jpg").write_bytes(b"\xff\xd8\xff\xd9")
 
-            listing = {
-                "title": "Mocked Title",
-                "seo_filename": f"{seo_name}.jpg",
-                "aspect_ratio": "4x5",
-            }
-            (processed_dir / f"{seo_name}-listing.json").write_text(
-                json.dumps(listing), encoding="utf-8"
-            )
+            listing = {"title": "Mocked Title", "seo_filename": f"{seo_name}.jpg", "aspect_ratio": "4x5"}
+            (processed_dir / f"{seo_name}-listing.json").write_text(json.dumps(listing), encoding="utf-8")
 
-            payload = {
-                "success": True,
-                "listing": listing,
-                "sku": seo_name,
-                "processed_folder": str(processed_dir),
-            }
+            payload = {"success": True, "listing": listing, "sku": seo_name, "processed_folder": str(processed_dir)}
             stdout = json.dumps(payload)
             return _FakeCompletedProcess(
                 returncode=0,
@@ -304,7 +308,6 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
                 stderr=("" if text else b""),
             )
 
-        # Default noop result for other subprocess.run calls
         return _FakeCompletedProcess(
             returncode=0,
             stdout=("" if text else b""),
@@ -313,5 +316,4 @@ def prevent_background_processes(monkeypatch, managed_artwork_paths):
 
     monkeypatch.setattr(subprocess, "run", _fake_run)
 
-    # Ensure test environment allows session eviction
-    monkeypatch.setattr(config, "ENVIRONMENT", "dev")
+    # Keep ENVIRONMENT under test control via TEST_ENV (default 'prod')
