@@ -6,6 +6,7 @@ Processes a single artwork to add a colour-contrasting signature.
 from pathlib import Path
 import random
 from PIL import Image, ImageDraw, ImageFilter
+from helpers.image_utils import make_working_copy
 import numpy as np
 from sklearn.cluster import KMeans
 import config
@@ -78,7 +79,10 @@ def add_smart_signature(source_path: Path, destination_path: Path) -> tuple[bool
     Returns a tuple of (success_boolean, message).
     """
     try:
-        with Image.open(source_path).convert("RGB") as img:
+        # Work on a reasonably sized optimized copy to keep memory use bounded
+        temp_dir = config.UNANALYSED_ROOT / "temp"
+        working = make_working_copy(source_path, temp_dir, long_edge=6000, quality=95)
+        with Image.open(working).convert("RGB") as img:
             width, height = img.size
             choose_right = random.choice([True, False])
 

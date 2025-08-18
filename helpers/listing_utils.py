@@ -89,23 +89,37 @@ def resolve_artwork_stage(seo_folder: str) -> tuple[str, Path] | tuple[None, Non
 def generate_public_image_urls(seo_folder: str, stage: str) -> list[str]:
     """Return absolute, public URLs for all images of an artwork."""
     import config
-    stage_root_map = {
-        "unanalysed": config.UNANALYSED_ROOT,
+    # Prefer processed assets when available, otherwise use the requested
+    # stage as a fallback (unanalysed/finalised/vault). This ensures templates
+    # show the canonical processed images when present.
+    roots = {
         "processed": config.PROCESSED_ROOT,
+        "unanalysed": config.UNANALYSED_ROOT,
         "finalised": config.FINALISED_ROOT,
         "vault": config.ARTWORK_VAULT_ROOT,
     }
-    root = stage_root_map.get(stage)
-    if not root:
-        return []
 
-    folder_path = root / seo_folder
-    if stage == "vault" and not folder_path.exists():
-        folder_path = root / f"LOCKED-{seo_folder}"
-    if not folder_path.exists():
-        return []
+    # If the caller explicitly asked for a stage, try that first, otherwise
+    # try processed -> finalised -> unanalysed order.
+    candidates = []
+    if stage:
+        candidates.append(stage)
+    # Ensure processed is preferred
+    for s in ("processed", "finalised", "unanalysed"):
+        if s not in candidates:
+            candidates.append(s)
 
-    return [config.resolve_image_url(img) for img in sorted(folder_path.glob("*.jpg"))]
+    for s in candidates:
+        root = roots.get(s)
+        if not root:
+            continue
+        folder_path = root / seo_folder
+        if s == "vault" and not folder_path.exists():
+            folder_path = root / f"LOCKED-{seo_folder}"
+        if folder_path.exists():
+            return [config.resolve_image_url(img) for img in sorted(folder_path.glob("*.jpg"))]
+
+    return []
 
 def find_seo_folder_from_filename(aspect: str, filename: str) -> str:
     """Return the best matching SEO folder name for a given artwork filename."""
@@ -121,10 +135,24 @@ def find_seo_folder_from_filename(aspect: str, filename: str) -> str:
             slug = folder.name.replace("LOCKED-", "")
             listing_file = folder / f"{slug}-listing.json"
             if listing_file.exists():
-                data = load_json_file_safe(listing_file)
-                stems = {Path(data.get(k, "")).stem.lower() for k in ("filename", "seo_filename")} | {slug.lower()}
-                if basename in stems:
-                    candidates.append((listing_file.stat().st_mtime, slug))
+                try:
+                    data = load_json_file_safe(listing_file)
+                except Exception:
+                    # Corrupt or unreadable listing file — skip it
+                    continue
+                # Safely extract filename stems; tolerate missing keys
+                file_candidates = set()
+                for k in ("filename", "seo_filename"):
+                    v = data.get(k)
+                    if v:
+                        file_candidates.add(Path(str(v)).stem.lower())
+                file_candidates.add(slug.lower())
+                if basename in file_candidates:
+                    try:
+                        mtime = listing_file.stat().st_mtime
+                    except OSError:
+                        mtime = 0
+                    candidates.append((mtime, slug))
     if not candidates:
         raise FileNotFoundError(f"Could not find a matching SEO folder for filename: {filename}")
     return max(candidates, key=lambda x: x[0])[1]
@@ -156,10 +184,15 @@ def resolve_listing_paths(aspect: str, filename: str, allow_locked: bool = False
 def create_unanalysed_subfolder(original_filename: str) -> Path:
     """Creates a unique subfolder in the unanalysed directory for a new upload."""
     import config
-    safe_base = re.sub(r'[^\w\-]+', '', Path(original_filename).stem).strip()
+    def _slugify(s: str, max_len: int = 40) -> str:
+        s = re.sub(r'[^\w\-\s]', '', s or '')
+        s = re.sub(r'\s+', '-', s).strip('-').lower()
+        return s[:max_len]
+
+    safe_base = _slugify(Path(original_filename).stem)
     unique_id = uuid.uuid4().hex[:8]
-    folder_name = f"{safe_base}-{unique_id}"
-    folder_path = config.UNANALYSED_ROOT / folder_name
+    folder_name = f"{safe_base}-{unique_id}" if safe_base else unique_id
+    folder_path = Path(config.UNANALYSED_ROOT) / folder_name
     folder_path.mkdir(parents=True, exist_ok=True)
     return folder_path
 
@@ -183,7 +216,11 @@ def update_artwork_registry(seo_folder: str, new_path: Path, new_status: str) ->
         new_status: Workflow status (e.g. ``processed`` or ``locked``).
     """
     import config
-    registry = Path(config.OUTPUT_JSON)
+    registry = getattr(config, 'OUTPUT_JSON', None)
+    if not registry:
+        logger.warning("No OUTPUT_JSON configured; skipping registry update for %s", seo_folder)
+        return
+    registry = Path(registry)
     with master_json_lock:
         data = load_json_file_safe(registry)
         key = next((k for k, v in data.items() if v.get("base") == seo_folder), None)
@@ -202,7 +239,11 @@ def update_artwork_registry(seo_folder: str, new_path: Path, new_status: str) ->
 def remove_artwork_from_registry(seo_folder: str, registry_path: Path | None = None) -> bool:
     """Remove any entry referencing ``seo_folder`` from the master registry JSON."""
     import config
-    registry = Path(registry_path or config.OUTPUT_JSON)
+    registry_cfg = registry_path or getattr(config, 'OUTPUT_JSON', None)
+    if not registry_cfg:
+        logger.info("No OUTPUT_JSON configured; nothing to remove for %s", seo_folder)
+        return True
+    registry = Path(registry_cfg)
     if not registry.exists():
         return True
     with master_json_lock:
@@ -229,10 +270,10 @@ def delete_artwork(seo_folder: str) -> bool:
     if stage_info:
         _stage, folder_path = stage_info
     else:
-        import config
-        registry = load_json_file_safe(config.OUTPUT_JSON)
-        entry = next((v for v in registry.values() if v.get("base") == seo_folder), None)
-        folder_path = Path(entry.get("current_folder", "")) if entry else None
+        # If the artwork was not found in any stage, we cannot locate it without
+        # a master registry. Log and abort the deletion.
+        logger.warning("Artwork '%s' not found in any stage; aborting delete without registry.", seo_folder)
+        return False
 
     if folder_path and folder_path.exists():
         try:
@@ -279,7 +320,15 @@ def assemble_gdws_description(aspect_ratio: str) -> str:
     order_file = aspect_path / "order.json"
     
     final_order = [title for title in pinned_start if title in all_blocks]
-    middle_order = load_json_file_safe(order_file).get("order", []) if order_file.exists() else []
+    middle_order = []
+    if order_file.exists():
+        raw_order = load_json_file_safe(order_file)
+        if isinstance(raw_order, dict):
+            middle_order = raw_order.get("order", [])
+        elif isinstance(raw_order, list):
+            middle_order = raw_order
+        else:
+            middle_order = []
     
     final_order.extend([t for t in middle_order if t in all_blocks and t not in final_order])
     remaining = [t for t in all_blocks if t not in final_order and t not in pinned_end]

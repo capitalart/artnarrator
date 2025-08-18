@@ -76,6 +76,8 @@
       <div class="mockup-preview-grid">
         {% for m in mockups %}
           <div class="mockup-card" id="mockup-card-{{ m.index }}">
+            {# Accessibility: per-card live region for swap status updates (screen-reader only) #}
+            <div class="sr-only swap-live" aria-live="polite" aria-atomic="true"></div>
             {% if m.exists and m.thumb_exists %}
               {# Sub-subsection: Load mockup thumb and full mockup image depending on state #}
               {% if is_locked_in_vault %}
@@ -91,13 +93,19 @@
 
               <a href="{{ full_url ~ '?t=' ~ cache_ts }}" class="mockup-img-link" id="mockup-link-{{ m.index }}" data-img="{{ full_url ~ '?t=' ~ cache_ts }}">
                 <img id="mockup-img-{{ m.index }}" src="{{ thumb_url ~ '?t=' ~ cache_ts }}" data-fallback="{{ full_url ~ '?t=' ~ cache_ts }}" class="mockup-thumb-img" alt="Mockup preview {{ loop.index }}">
-                <div class="mockup-overlay">
-                  <img src="{{ url_for('static', filename='icons/svg/light/arrows-clockwise-light.svg') }}" class="spinner-icon" alt="Loading...">
+                <div class="mockup-overlay" aria-hidden="true">
+                  <img src="{{ url_for('static', filename='icons/svg/light/arrows-clockwise-light.svg') }}" class="spinner-icon" alt="">
                 </div>
               </a>
               <div class="thumb-note">Click to preview full-size</div>
             {% else %}
-              <img src="{{ url_for('static', filename='img/default-mockup.jpg') }}" class="mockup-thumb-img" alt="Default mockup placeholder">
+              {# Ensure the overlay exists even for placeholders so swapping UI is consistent #}
+              <a href="#" class="mockup-img-link" id="mockup-link-{{ m.index }}" data-img="">
+                <img id="mockup-img-{{ m.index }}" src="{{ url_for('static', filename='img/default-mockup.jpg') }}" class="mockup-thumb-img" alt="Default mockup placeholder">
+                <div class="mockup-overlay" aria-hidden="true" style="display:none;">
+                  <img src="{{ url_for('static', filename='icons/svg/light/arrows-clockwise-light.svg') }}" class="spinner-icon" alt="">
+                </div>
+              </a>
               <div class="thumb-note">Mockup not found</div>
             {% endif %}
 
@@ -110,7 +118,11 @@
                   {% endfor %}
                 </select>
                 <div class="swap-btn-container">
-                  <button type="button" class="btn btn-sm swap-btn" data-index="{{ m.index }}">Swap</button>
+                  <button type="button" class="btn btn-sm swap-btn" data-index="{{ m.index }}" aria-controls="mockup-card-{{ m.index }}">
+                    <span class="swap-spinner" aria-hidden="true"></span>
+                    <span class="swap-label">Swap</span>
+                  </button>
+                  <div class="swap-status" aria-hidden="true" style="display:none; margin-top:.4rem; font-size:0.9em;"></div>
                 </div>
               </div>
             {% endif %}

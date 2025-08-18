@@ -54,7 +54,7 @@ from config import (
 import scripts.analyze_artwork as aa
 
 # --- Third-Party Imports ---
-from PIL import Image
+from helpers.image_utils import get_image_dimensions
 import io
 import google.generativeai as genai
 from flask import (
@@ -68,10 +68,30 @@ from . import utils
 from .utils import (
     ALLOWED_COLOURS_LOWER, relative_to_base, read_generic_text, clean_terms, infer_sku_from_filename,
     sync_filename_with_sku, is_finalised_image, get_allowed_colours,
-    load_json_file_safe, generate_mockups_for_listing,
+    load_json_file_safe,
 )
 
 bp = Blueprint("artwork", __name__)
+
+# Compatibility wrapper: some upload handlers live in `routes.artwork_routes`.
+# Import the canonical implementation if available and expose a thin wrapper
+# named `_process_upload_file(...)` so existing callers in this module work
+# and Pylance doesn't report an undefined variable.
+try:
+    from .artwork_routes import _process_upload_file as _ar_process_upload_file
+except Exception:
+    _ar_process_upload_file = None
+
+def _process_upload_file(file_storage, folder=None):
+    """Delegate to artwork_routes._process_upload_file when available.
+
+    The original artwork implementation expects only a single `file_storage`
+    argument; older call sites passed a `folder` as a second parameter. The
+    wrapper accepts both forms and forwards to the canonical function.
+    """
+    if _ar_process_upload_file:
+        return _ar_process_upload_file(file_storage)
+    raise RuntimeError("Upload processing helper not available")
 
 # ===========================================================================
 # 2. Health Checks and Status API
@@ -86,7 +106,11 @@ def health_openai():
     """Return status of OpenAI connection."""
     logger = logging.getLogger(__name__)
     try:
-        aa.client.models.list()
+        from utils.ai_services import get_openai_client
+        client = get_openai_client()
+        if client is None:
+            raise RuntimeError("OpenAI client not configured or failed to initialise")
+        client.models.list()
         return jsonify({"ok": True})
     except Exception as exc:
         logger.error("OpenAI health check failed: %s", exc)
@@ -299,6 +323,14 @@ def analyze_artwork_route(aspect, filename):
 
     try:
         analysis_result = _run_ai_analysis(src_path, provider)
+
+        # Defensive: ensure a dict. Some error modes return a single-item
+        # list containing the dict; coerce that case. Otherwise raise.
+        if isinstance(analysis_result, list) and len(analysis_result) == 1 and isinstance(analysis_result[0], dict):
+            analysis_result = analysis_result[0]
+        if not isinstance(analysis_result, dict):
+            raise RuntimeError(f"AI analysis returned unexpected type: {type(analysis_result)}")
+
         seo_folder = Path(analysis_result.get("processed_folder", "")).name
         
         if not seo_folder: raise RuntimeError("Analysis script did not return a valid folder name.")
@@ -360,114 +392,11 @@ def edit_listing(aspect, filename):
     )
 
 
-# ==============================================================================
-# SECTION 9: ADMIN + ANALYSIS API ROUTES
-# ==============================================================================
+# NOTE: A FastAPI-style API block was previously present here (APIRouter + async
+# endpoints). That block was mistakenly pasted into this Flask blueprint file and
+# introduced many undefined names (router, Depends, Request, JSONResponse, etc.).
+# The Flask equivalents live elsewhere in the codebase; remove the FastAPI block
+# to restore import-time stability. If you want FastAPI endpoints, re-add them in
+# a dedicated FastAPI routes module with proper imports.
 
-# ------------------------------------------------------------------------------
-# 9.1: Admin View of Individual Artwork
-# ------------------------------------------------------------------------------
-
-@router.get("/admin/artwork/{artwork_id}", response_class=HTMLResponse, name="admin_artwork_detail_page")
-async def admin_artwork_detail_route(
-    artwork_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
-):
-    """(Admin) Displays a detailed view of an individual artwork."""
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required.")
-
-    artwork = _get_artwork_or_404(artwork_id, db, current_user)
-    context = {"page_title": f"Admin View: {artwork.original_filename}", "artwork": artwork}
-    return templates.TemplateResponse(request, "artwork_admin_details.html", context)
-
-
-# ------------------------------------------------------------------------------
-# 9.2: API – Get Artworks for Gallery Display
-# ------------------------------------------------------------------------------
-
-@router.get("/artworks-for-analysis", response_model=Optional[List[Dict[str, Any]]], name="json_artworks_for_analysis_gallery")
-async def get_artworks_for_analysis_gallery_api(
-    request: Request,
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
-) -> Optional[List[Dict[str, Any]]]:
-    """
-    Returns artwork metadata for the Analyze Gallery grid.
-    Filters by multiple artwork statuses.
-    """
-    gallery_statuses = [
-        "qc_passed",
-        "analyzed_pending_acceptance",
-        "analysis_rejected",
-        "finalized",
-        "ready_for_export",
-    ]
-    artworks_db = crud.get_artworks_by_statuses(
-        db,
-        statuses=gallery_statuses,
-        owner_id=None if current_user.is_superuser else current_user.id,
-    )
-
-    return [
-        {
-            "id": art.id,
-            "original_filename": art.original_filename,
-            "thumb_url": get_artwork_display_url(request, art.thumb_path, art.status),
-            "status_raw": art.status or "unknown",
-            "status_display": (art.status or "Unknown").replace("_", " ").title(),
-            "generated_title_display": art.generated_title or get_short_prompt_hint(art.original_filename),
-            "sku_display": art.sku,
-            "resolution": art.resolution,
-            "dpi": str(art.dpi) if art.dpi is not None else None,
-        }
-        for art in artworks_db
-    ]
-
-
-# ------------------------------------------------------------------------------
-# 9.3: API – Update Artwork Status
-# ------------------------------------------------------------------------------
-
-@router.post("/artwork/{artwork_id}/update-status", name="update_artwork_status_api_analyze")
-async def update_artwork_status_api_route_analyze(
-    artwork_id: int,
-    new_status: str = Form(...),
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
-) -> JSONResponse:
-    """
-    Updates the status of an artwork via the Analyze section.
-    Only allows transitions to pre-defined valid statuses.
-    """
-    artwork = _get_artwork_or_404(artwork_id, db, current_user)
-    valid_statuses = [
-        "uploaded_pending_qc",
-        "qc_passed",
-        "qc_failed_metrics",
-        "analyzed_pending_acceptance",
-        "analysis_rejected",
-        "finalized",
-        "ready_for_export",
-    ]
-
-    if new_status not in valid_statuses:
-        return JSONResponse(status_code=400, content={"error": f"Invalid status: {new_status}"})
-
-    artwork.status = new_status
-    artwork.updated_at = datetime.now(timezone.utc)
-
-    try:
-        db.commit()
-        db.refresh(artwork)
-        return JSONResponse(content={"message": "Status updated", "new_status": new_status})
-    except Exception as e_db:
-        db.rollback()
-        logger.error(f"DB error updating status for ArtID {artwork_id}: {e_db}", exc_info=True)
-        return JSONResponse(status_code=500, content={"error": "Database error on status update."})
-
-# ==============================================================================
-# END OF FILE — analyze_routes.py
-# ==============================================================================
+# End of analyze_routes.py (Flask blueprint). Remaining Flask routes are above.

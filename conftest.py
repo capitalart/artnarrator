@@ -1,50 +1,26 @@
-# =============================================================================
-# conftest.py
-# =============================================================================
-# Table of Contents
-#   1. Imports & Configuration (imports-config-1)
-#   2. Pytest Hooks (pytest-hooks-2)
-#       2a. pytest_addoption (pytest-hooks-2a)
-#       2b. pytest_configure (pytest-hooks-2b)
-#       2c. pytest_collection_modifyitems (pytest-hooks-2c)
-#   3. Fixtures (fixtures-3)
-#       3a. cleanup_tests (fixtures-3a)
-# =============================================================================
-
-"""Central pytest configuration and test cleanup logic."""
-
-# -----------------------------------------------------------------------------
-# 1. Imports & Configuration (imports-config-1)
-# -----------------------------------------------------------------------------
 import pytest
 import shutil
 import json
 from pathlib import Path
 import sys
+from types import SimpleNamespace
+import subprocess
 
-# Add project root to path to allow imports
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config
+from app import app as flask_app
 
-
-# -----------------------------------------------------------------------------
-# 2. Pytest Hooks (pytest-hooks-2)
-# -----------------------------------------------------------------------------
+# =============================================================================
+# SECTION 1: PYTEST HOOKS
+# =============================================================================
 
 def pytest_addoption(parser):
-    """Adds the ``--run-live-tests`` option to pytest."""  # (pytest-hooks-2a)
-    parser.addoption(
-        "--run-live-tests", action="store_true", default=False, help="run live API tests"
-    )
-
+    parser.addoption("--run-live-tests", action="store_true", default=False, help="run live API tests")
 
 def pytest_configure(config):
-    """Registers the ``live`` marker."""  # (pytest-hooks-2b)
-    config.addinivalue_line("markers", "live: marks tests as live")
-
+    config.addinivalue_line("markers", "live: marks tests as live (skipped by default)")
 
 def pytest_collection_modifyitems(config, items):
-    """Skips tests marked as ``live`` unless ``--run-live-tests`` is provided."""  # (pytest-hooks-2c)
     if config.getoption("--run-live-tests"):
         return
     skip_live = pytest.mark.skip(reason="need --run-live-tests option to run")
@@ -52,47 +28,81 @@ def pytest_collection_modifyitems(config, items):
         if "live" in item.keywords:
             item.add_marker(skip_live)
 
+# =============================================================================
+# SECTION 2: CORE FIXTURES
+# =============================================================================
 
-# -----------------------------------------------------------------------------
-# 3. Fixtures (fixtures-3)
-# -----------------------------------------------------------------------------
+@pytest.fixture
+def managed_artwork_paths(tmp_path_factory):
+    """Creates a temporary, isolated directory structure for each test function."""
+    base_dir = tmp_path_factory.mktemp("art_processing")
+    paths = {
+        "base": base_dir, # The root of our temporary world
+        "unanalysed": base_dir / "unanalysed-artwork",
+        "processed": base_dir / "processed-artwork",
+    }
+    for path in paths.values():
+        if path.name != "base": # No need to create the base dir again
+            path.mkdir(parents=True, exist_ok=True)
+    yield SimpleNamespace(**paths)
 
-@pytest.fixture(scope="session", autouse=True)
-def cleanup_tests(request):  # (fixtures-3a)
-    """Clean up test files/folders and master JSON after the test session."""
+@pytest.fixture
+def client(managed_artwork_paths, monkeypatch):
+    """
+    The MASTER fixture. Provides a test client with a fully isolated and
+    correctly patched filesystem configuration.
+    """
+    # --- THIS IS THE FINAL FIX ---
+    # Patch ALL relevant filesystem config variables to point to our temp world.
+    monkeypatch.setattr(config, 'BASE_DIR', managed_artwork_paths.base)
+    monkeypatch.setattr(config, 'UNANALYSED_ROOT', managed_artwork_paths.unanalysed)
+    monkeypatch.setattr(config, 'PROCESSED_ROOT', managed_artwork_paths.processed)
+    
+    flask_app.config["TESTING"] = True
+    flask_app.config['BASE_DIR'] = managed_artwork_paths.base
+    flask_app.config['UNANALYSED_ROOT'] = managed_artwork_paths.unanalysed
+    flask_app.config['PROCESSED_ROOT'] = managed_artwork_paths.processed
+    
+    with flask_app.test_client() as test_client:
+        test_client.post('/login', data={'username': 'robbie', 'password': 'kangaroo123'}, follow_redirects=True)
+        yield test_client
 
-    def final_cleanup() -> None:
-        patterns = ["test-", "sample-", "good-", "bad-", "cassowary-test-01-test-run"]
+@pytest.fixture
+def prevent_background_processes(monkeypatch, managed_artwork_paths):
+    """
+    Prevents tests from launching real background subprocesses.
+    """
+    class _DummyPopen:
+        def __init__(self, *args, **kwargs):
+            self.args = args 
+            self.returncode = 0
+        def poll(self): return self.returncode
+        def wait(self, timeout=None): return self.returncode
+        def kill(self): pass
 
-        roots_to_clean = [
-            Path(config.UNANALYSED_ROOT),
-            Path(config.PROCESSED_ROOT),
-        ]
+        def communicate(self, input=None, timeout=None):
+            command_list = self.args[0]
+            if len(command_list) > 1 and 'analyze_artwork.py' in command_list[1]:
+                img_path = Path(command_list[2])
+                seo_name = f"mocked-artwork-from-{img_path.stem}-by-test-RJC-MOCK"
+                processed_dir = managed_artwork_paths.processed / seo_name
+                processed_dir.mkdir(exist_ok=True)
+                
+                shutil.copy(img_path, processed_dir / f"{seo_name}.jpg")
+                
+                listing_data = {"title": "Mocked Title", "seo_filename": f"{seo_name}.jpg"}
+                listing_file = processed_dir / f"{seo_name}-listing.json"
+                listing_file.write_text(json.dumps(listing_data))
 
-        for root in roots_to_clean:
-            if not root.exists():
-                continue
-
-            for item in root.iterdir():
-                if item.is_dir() and any(p in item.name for p in patterns):
-                    try:
-                        shutil.rmtree(item)
-                        print(f"✅ Cleaned up test folder: {item}")
-                    except Exception as e:  # pragma: no cover - defensive
-                        print(f"⚠️ Could not delete test folder {item}: {e}")
-
-        master_json_path = config.ART_PROCESSING_DIR / "master-artwork-paths.json"
-        if master_json_path.exists():
-            with open(master_json_path, "r+") as f:
-                data = json.load(f)
-                cleaned_data = {
-                    k: v
-                    for k, v in data.items()
-                    if not any(p in v.get("base", "") for p in patterns)
+                payload = {
+                    "success": True, "processed_folder": str(processed_dir),
+                    "listing": listing_data, "sku": "RJC-MOCK-01"
                 }
-                f.seek(0)
-                json.dump(cleaned_data, f, indent=2)
-                f.truncate()
-            print("✅ Cleaned up test entries from master-artwork-paths.json")
+                return (json.dumps(payload).encode('utf-8'), b"")
+            else:
+                return (b"", b"")
 
-    request.addfinalizer(final_cleanup)
+        def __enter__(self): return self
+        def __exit__(self, exc_type, exc, tb): return False
+
+    monkeypatch.setattr(subprocess, "Popen", _DummyPopen)

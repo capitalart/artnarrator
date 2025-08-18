@@ -13,16 +13,37 @@ INDEX
 # 1. Imports & Client Initialisation
 # ===========================================================================
 import logging
-from openai import OpenAI
 import config
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-# Initialize the OpenAI client using configuration from config.py
-client = OpenAI(
-    api_key=config.OPENAI_API_KEY,
-    project=config.OPENAI_PROJECT_ID,
-)
+
+# Lazy-initialised OpenAI client. Creating the client at import-time can
+# cause worker boot failures under Gunicorn if environment variables are
+# not available or if the client triggers network/IO during construction.
+_openai_client: Optional[object] = None
+
+
+def get_openai_client():
+    """Return a cached OpenAI client, initialising it on first use.
+
+    This keeps module import cheap and avoids side-effects during Gunicorn
+    worker initialisation.
+    """
+    global _openai_client
+    if _openai_client is not None:
+        return _openai_client
+
+    try:
+        # Import here to avoid importing the OpenAI package at module import-time
+        from openai import OpenAI
+        _openai_client = OpenAI(api_key=config.OPENAI_API_KEY, project=config.OPENAI_PROJECT_ID)
+        return _openai_client
+    except Exception as e:
+        logger.error("Failed to initialise OpenAI client: %s", e)
+        _openai_client = None
+        return None
 
 
 # ===========================================================================
@@ -36,6 +57,9 @@ def call_ai_to_generate_title(paragraph_content: str) -> str:
             f"Generate a short, compelling heading (5 words or less) for the following paragraph. "
             f"Respond only with the heading text, nothing else.\n\nPARAGRAPH:\n\"{paragraph_content}\""
         )
+        client = get_openai_client()
+        if client is None:
+            raise RuntimeError("OpenAI client is not configured or failed to initialize.")
         response = client.chat.completions.create(
             model=config.OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
@@ -56,6 +80,9 @@ def call_ai_to_rewrite(prompt: str, provider: str = "openai") -> str:
         return "Error: Only OpenAI is currently supported for rewriting."
 
     try:
+        client = get_openai_client()
+        if client is None:
+            raise RuntimeError("OpenAI client is not configured or failed to initialize.")
         response = client.chat.completions.create(
             model=config.OPENAI_MODEL,
             messages=[
@@ -99,6 +126,9 @@ def call_ai_to_reword_text(provider: str, artwork_description: str, generic_text
 
     if provider == "openai":
         try:
+            client = get_openai_client()
+            if client is None:
+                raise RuntimeError("OpenAI client is not configured or failed to initialize.")
             response = client.chat.completions.create(
                 model=config.OPENAI_MODEL,
                 messages=[

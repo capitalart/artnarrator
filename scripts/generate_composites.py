@@ -28,14 +28,16 @@ import logging
 import sys
 from pathlib import Path
 
+# --- MODIFIED: Ensure project root is on sys.path for local imports ---
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 # Third-party imports
+from helpers.image_utils import make_working_copy, get_image_dimensions
 from PIL import Image
 import cv2
 import numpy as np
 
 # Local application imports
-# Ensure project root is on sys.path for `config` import when run directly
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config
 
 Image.MAX_IMAGE_PIXELS = None
@@ -131,7 +133,10 @@ def _process_queued_artwork(img_path_str: str, total_in_queue: int, current_inde
         logger.warning(f"Missing mockups or coordinates directory for aspect: {aspect}")
         return
 
-    art_img = Image.open(img_path)
+    # Create an optimized working copy to avoid loading massive originals into memory
+    temp_dir = Path(config.UNANALYSED_ROOT) / "temp"
+    working_art_path = make_working_copy(img_path, temp_dir, long_edge=6000, quality=90)
+    art_w, art_h = get_image_dimensions(working_art_path)
     mockup_entries = []
     
     categories = [d for d in mockups_cat_dir.iterdir() if d.is_dir()]
@@ -167,29 +172,34 @@ def _process_queued_artwork(img_path_str: str, total_in_queue: int, current_inde
 
         try:
             coords_data = json.loads(coord_path.read_text(encoding="utf-8"))
-            mockup_img = Image.open(mockup_file)
-            composite = apply_perspective_transform(art_img, mockup_img, coords_data["corners"])
+
+            # Open the working artwork and the mockup template as PIL images
+            art_img = Image.open(working_art_path).convert("RGBA")
+            mockup_img = Image.open(mockup_file).convert("RGBA")
+
+            # Apply perspective transform using the coordinates file
+            composite = apply_perspective_transform(art_img, mockup_img, coords_data.get("corners", []))
 
             # Use the loop index 'i' for a clean, sequential number
             output_filename = config.FILENAME_TEMPLATES["mockup"].format(seo_slug=seo_name, num=i + 1)
             output_path = folder / output_filename
             composite.convert("RGB").save(output_path, "JPEG", quality=90)
-            
+
             # --- CREATE THUMBNAIL LOGIC ---
             thumb_dir = folder / config.THUMB_SUBDIR
             thumb_dir.mkdir(parents=True, exist_ok=True)
             thumb_name = f"{output_path.stem}-thumb.jpg"
             thumb_path = thumb_dir / thumb_name
-            with composite.copy() as thumb_img:
-                thumb_img.thumbnail((config.THUMB_WIDTH, config.THUMB_HEIGHT))
-                thumb_img.convert("RGB").save(thumb_path, "JPEG", quality=85)
+            thumb_img = composite.copy()
+            thumb_img.thumbnail((config.THUMB_WIDTH, config.THUMB_HEIGHT))
+            thumb_img.convert("RGB").save(thumb_path, "JPEG", quality=85)
             # --- END THUMBNAIL LOGIC ---
 
             mockup_entries.append({
                 "category": cat_dir.name,
                 "source": str(mockup_file.relative_to(config.MOCKUPS_INPUT_DIR)),
                 "composite": output_filename,
-                "thumbnail": thumb_name, # Add the thumbnail name to the listing data
+                "thumbnail": thumb_name,
             })
             logger.info(f"   - Mockup created: {output_filename} (from category '{cat_dir.name}')")
         except Exception as e:

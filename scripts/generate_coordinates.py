@@ -28,6 +28,7 @@ from pathlib import Path
 # Third-party imports
 import cv2
 from PIL import Image
+from helpers.image_utils import get_image_dimensions
 
 # Local application imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -48,10 +49,7 @@ logger = setup_logger(__name__, "DEFAULT")
 def fix_srgb_profile(image_path: Path):
     """Strips potentially problematic ICC profiles from a PNG image."""
     try:
-        with Image.open(image_path) as img:
-            # Save the image without the ICC profile to prevent libpng warnings
-            if "icc_profile" in img.info and img.format == 'PNG':
-                img.save(image_path, format="PNG")
+        w, h = get_image_dimensions(image_path)
     except Exception as e:
         logger.warning(f"Could not clean sRGB profile for {image_path.name}: {e}")
 

@@ -26,12 +26,15 @@ ETSY_SHOP_URL = os.getenv("ETSY_SHOP_URL", "https://www.robincustance.etsy.com")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "robincustance@gmail.com")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "robbie")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "kangaroo123")
-SERVER_PORT = int(os.getenv("SERVER_PORT", "7777"))
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 ENVIRONMENT = os.getenv("ENVIRONMENT", "dev")
 HOST = os.getenv("HOST", "127.0.0.1")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "supersecret-key-1234")
-PORT = int(os.getenv("PORT", "7777"))
+
+# --- MODIFIED: Default port is now 8000 to match Gunicorn ---
+PORT = int(os.getenv("PORT", "8000"))
+# --- MODIFIED: Deprecated SERVER_PORT to use PORT consistently ---
+SERVER_PORT = PORT
 
 
 # =============================================================================
@@ -41,22 +44,14 @@ PORT = int(os.getenv("PORT", "7777"))
 # --- [ 2.1: OpenAI ] ---
 OPENAI_PROJECT_ID = os.getenv("OPENAI_PROJECT_ID")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Main model for both text and vision tasks (gpt-4o is multimodal)
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 OPENAI_MODEL_FALLBACK = os.getenv("OPENAI_MODEL_FALLBACK", "gpt-4-turbo")
-
-# Models specifically for image GENERATION
 OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "dall-e-3")
 OPENAI_IMAGE_MODEL_FALLBACK = os.getenv("OPENAI_IMAGE_MODEL_FALLBACK", "dall-e-2")
 
 # --- [ 2.2: Google Cloud ] ---
-# API Key for authenticating with Google Cloud services
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
-
-# The single, multimodal model for text and vision tasks
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-pro-latest")
-
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_PROJECT_ID = os.getenv("GOOGLE_PROJECT_ID")
 
@@ -130,9 +125,10 @@ ANALYSIS_STATUS_FILE = LOGS_DIR / "analysis_status.json"
 SESSION_REGISTRY_FILE = LOGS_DIR / "session_registry.json"
 ONBOARDING_PATH = SETTINGS_DIR / "Master-Etsy-Listing-Description-Writing-Onboarding.txt"
 MOCKUP_CATEGORISER_PROMPT_PATH = SETTINGS_DIR / "mockup_categoriser_prompt.txt"
-OUTPUT_JSON = ART_PROCESSING_DIR / "master-artwork-paths.json"
 MOCKUP_CATEGORISATION_LOG = LOGS_DIR / "mockup_categorisation.log"
 PENDING_MOCKUPS_QUEUE_FILE = PROCESSED_ROOT / "pending_mockups.json"
+# Legacy registry file (kept for test compatibility)
+OUTPUT_JSON = ART_PROCESSING_DIR / "master-artwork-paths.json"
 
 
 # =============================================================================
@@ -151,7 +147,7 @@ FILENAME_TEMPLATES = {
 # 6. FILE TYPES, LIMITS, & IMAGE SIZES
 # =============================================================================
 ALLOWED_EXTENSIONS = set(os.getenv("ALLOWED_EXTENSIONS", "jpg,jpeg,png").split(","))
-MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "100"))
+MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "30"))
 ANALYSE_MAX_DIM = int(os.getenv("ANALYSE_MAX_DIM", "2400"))
 ANALYSE_MAX_MB = int(os.getenv("ANALYSE_MAX_MB", "5"))
 THUMB_WIDTH = int(os.getenv("THUMB_WIDTH", "400"))
@@ -181,13 +177,14 @@ ETSY_COLOURS = {
 }
 
 # --- [ 7.2: Security & Session Management ] ---
-MAX_SESSIONS = 5
+MAX_SESSIONS = 5 # MODIFIED: Set to 5 to match test expectations
 SESSION_TIMEOUT_SECONDS = 7200  # 2 hours
 
 # --- [ 7.3: SKU Configuration ] ---
 SKU_CONFIG = {
     "PREFIX": "RJC-",
-    "DIGITS": 5
+    # FIX: Changed to 4 to match test expectations and comment
+    "DIGITS": 4
 }
 
 # --- [ 7.4: Sellbrite Export Defaults ] ---

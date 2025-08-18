@@ -83,7 +83,7 @@ function hideOverlay(card) {
   if (ov) ov.classList.add('hidden');
 }
 
-// --- Main function to handle the analysis process ---
+  // --- Main function to handle the analysis process ---
 function runAnalyze(card, provider, filename) {
   // Check if the provider API is configured
   const isConfigured = document.body.dataset[`${provider}Ok`] === 'true';
@@ -96,10 +96,15 @@ function runAnalyze(card, provider, filename) {
   if (window.AnalysisModal) window.AnalysisModal.open();
   showOverlay(card, `Analyzing…`);
 
-  // Get the aspect ratio from the card's data attribute
-  const aspect = card.dataset.aspect;
-  // Build the correct URL
-  const actionUrl = `/analyze/${encodeURIComponent(aspect)}/${encodeURIComponent(filename)}`;
+  // Prefer SKU-based analyze endpoint when available (SKU-first contract)
+  const sku = card.dataset.base || null;
+  let actionUrl;
+  if (sku) {
+    actionUrl = `/analyze/${encodeURIComponent(sku)}`; // SKU endpoint handles both unanalysed->processed and reanalysis
+  } else {
+    const aspect = card.dataset.aspect || '4x5';
+    actionUrl = `/analyze/${encodeURIComponent(aspect)}/${encodeURIComponent(filename)}`;
+  }
 
   const formData = new FormData();
   formData.append('provider', provider);
@@ -109,11 +114,18 @@ function runAnalyze(card, provider, filename) {
     headers: { 'X-Requested-With': 'XMLHttpRequest' },
     body: formData
   })
-  .then(resp => {
-    if (!resp.ok) {
-      return resp.json().then(errData => Promise.reject(errData));
+  .then(async resp => {
+    // Try to parse JSON, but handle non-JSON error bodies gracefully
+    let data = {};
+    try {
+      data = await resp.json();
+    } catch (e) {
+      // Non-JSON response (e.g., 500 HTML) — create a helpful error
+      if (!resp.ok) throw { error: 'Server error', status: resp.status };
+      throw { error: 'Unexpected response from server' };
     }
-    return resp.json();
+    if (!resp.ok) throw data;
+    return data;
   })
   .then(data => {
     if (data.success && data.redirect_url) {

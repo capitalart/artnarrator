@@ -35,6 +35,7 @@ from pathlib import Path
 
 # Third-party imports
 from PIL import Image
+from helpers.image_utils import make_working_copy, get_image_dimensions
 from dotenv import load_dotenv
 import google.generativeai as genai
 
@@ -79,8 +80,8 @@ if not google_logger.handlers:
 
 def get_aspect_ratio(image_path: Path) -> str:
     """Return closest aspect ratio label for a given image."""
-    with Image.open(image_path) as img:
-        w, h = img.size
+    # Use the lightweight dimension reader to avoid opening huge images
+    w, h = get_image_dimensions(image_path)
     aspect_map = [
         ("1x1", 1/1), ("2x3", 2/3), ("3x2", 3/2), ("3x4", 3/4), ("4x3", 4/3),
         ("4x5", 4/5), ("5x4", 5/4), ("5x7", 5/7), ("7x5", 7/5), ("9x16", 9/16),
@@ -104,15 +105,7 @@ def parse_text_fallback(text: str) -> dict:
     return data
 
 
-def make_optimized_image_for_ai(src_path: Path, out_dir: Path) -> Path:
-    """Return path to an optimized JPEG, creating it if necessary."""
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{src_path.stem}-GOOGLE-OPTIMIZED.jpg"
-    with Image.open(src_path) as im:
-        im = im.convert("RGB")
-        im.thumbnail((2048, 2048), Image.LANCZOS)
-        im.save(out_path, "JPEG", quality=85, optimize=True)
-    return out_path
+# Replaced by helpers.image_utils.make_working_copy for low-memory optimized copies
 
 
 # ===========================================================================
@@ -130,25 +123,28 @@ def analyze_with_google(image_path: Path):
             raise FileNotFoundError(f"Image file not found: {image_path}")
 
         google_logger.info(f"Starting Google analysis for {image_path.name}")
+
+        # Create an optimized working copy for the AI request
         temp_dir = config.UNANALYSED_ROOT / "temp"
-        opt_img_path = make_optimized_image_for_ai(image_path, temp_dir)
-        
+        opt_img_path = make_working_copy(image_path, temp_dir, long_edge=2048, quality=85)
+
         system_prompt = Path(config.ONBOARDING_PATH).read_text(encoding="utf-8")
         assigned_sku = peek_next_sku(config.SKU_TRACKER)
-        
+
         prompt = (
-            system_prompt.strip() +
-            f"\n\nThe assigned SKU for this artwork is {assigned_sku}. "
+            system_prompt.strip()
+            + f"\n\nThe assigned SKU for this artwork is {assigned_sku}. "
             "You MUST use this SKU in the 'sku' field and in the 'seo_filename'."
         )
-        
+
         model = genai.GenerativeModel(config.GEMINI_MODEL)
-        
-        response = model.generate_content([prompt, Image.open(opt_img_path)])
+
+        # Gemini client accepts images as file paths in many SDKs; pass the optimized path.
+        response = model.generate_content([prompt, str(opt_img_path)])
         content = response.text.strip()
         google_logger.info(f"Received response from Gemini API for {image_path.name}")
 
-        # ADD THIS BLOCK to remove markdown fences from the API response
+        # Remove markdown fences from the API response
         if content.startswith("```"):
             content = re.sub(r"```(json)?\s*(.*)\s*```", r"\2", content, flags=re.DOTALL)
 
@@ -162,7 +158,7 @@ def analyze_with_google(image_path: Path):
 
         log_entry.update({"status": "success", "duration_sec": (_dt.datetime.now(_dt.timezone.utc) - start_ts).total_seconds()})
         google_logger.info(json.dumps(sanitize_blob_data(log_entry)))
-        
+
         return result
 
     except Exception as e:
