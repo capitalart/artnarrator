@@ -33,6 +33,50 @@
   display: block;
 }
 
+/* Screen-reader-only helper */
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* prevent text wrap */
+}
+
+/* Overlay styles: hidden by default, shown when parent has .swapping */
+.mockup-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-in-out;
+}
+.mockup-card {
+  position: relative;
+}
+.mockup-card.swapping .mockup-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Swap status text inside the control area */
+.swap-status {
+  color: var(--color-text);
+  background: rgba(255,255,255,0.02);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* Spinner fallback for better contrast in dark mode */
+@media (prefers-color-scheme: dark) {
+  .mockup-overlay { background: rgba(0,0,0,0.65); }
+  .swap-spinner { border-top-color: #fff; border-color: rgba(255,255,255,0.25); }
+}
+
 /* --- NEW STYLES FOR STACKED LAYOUT --- */
 .swap-controls {
   display: flex;

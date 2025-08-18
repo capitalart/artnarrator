@@ -9,5 +9,6 @@
   </ul>
   <p class="warning" style="color:red" aria-live="polite" role="alert"{% if openai_configured %} hidden{% endif %}>OpenAI API Key missing!</p>
   <p class="warning" style="color:red" aria-live="polite" role="alert"{% if google_configured %} hidden{% endif %}>Google API Key missing!</p>
+  <li><a href="{{ url_for('audit.dashboard') }}">System Audit</a></li>
 </div>
 {% endblock %}

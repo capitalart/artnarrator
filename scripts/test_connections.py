@@ -22,7 +22,6 @@ INDEX
 import os
 import sys
 import base64
-import smtplib
 import requests
 from dotenv import load_dotenv
 
@@ -145,28 +144,6 @@ def test_sellbrite() -> None:
         print_status("Sellbrite", False, f"A network error occurred: {e}")
 
 
-# --- [ 4.4: SMTP Test ] ---
-def test_smtp() -> None:
-    """Tests the SMTP server connection and login credentials."""
-    print("\n--- Testing SMTP ---")
-    server, port = config.SMTP_SERVER, config.SMTP_PORT
-    username, password = config.SMTP_USERNAME, config.SMTP_PASSWORD
-
-    if not all([server, port, username, password]):
-        print_status("SMTP", False, "One or more SMTP variables are missing from config.")
-        return
-
-    try:
-        with smtplib.SMTP(server, port, timeout=10) as connection:
-            connection.starttls()
-            connection.login(username, password)
-        print_status("SMTP", True)
-    except smtplib.SMTPAuthenticationError:
-        print_status("SMTP", False, "AuthenticationError. Check username/password.")
-    except Exception as e:
-        print_status("SMTP", False, f"An unexpected error occurred: {e}")
-
-
 # ===========================================================================
 # 5. Main Execution
 # ===========================================================================
@@ -178,7 +155,6 @@ def main() -> None:
     test_openai()
     test_google_gemini()
     test_sellbrite()
-    # test_smtp() # Uncomment this line to test the SMTP connection
     
     print("\n--- ✅ All tests complete ---")
     logger.info("--- API Connection Test Suite Finished ---")

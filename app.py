@@ -44,6 +44,7 @@ from routes.gdws_admin_routes import bp as gdws_admin_bp
 from routes.test_routes import test_bp
 from routes.api_routes import bp as api_bp
 from routes.edit_listing_routes import bp as edit_listing_bp
+from routes.audit_routes import bp as audit_bp # <-- ADDED
 
 
 # ===========================================================================
@@ -57,13 +58,11 @@ app.config["MAX_CONTENT_LENGTH"] = config.MAX_UPLOAD_SIZE_MB * 1024 * 1024
 db.init_db()
 
 # --- [ 2.2: Setup Logging ] ---
-# Ensure logs directory and session registry file exist before logging
 config.LOGS_DIR.mkdir(parents=True, exist_ok=True)
 session_registry_file = config.LOGS_DIR / "session_registry.json"
 if not session_registry_file.exists():
     session_registry_file.write_text("{}", encoding="utf-8")
 
-# Note: This basic logging will be replaced by the centralized logging utility.
 logging.basicConfig(
     filename=config.LOGS_DIR / "composites-workflow.log",
     level=logging.INFO,
@@ -75,7 +74,6 @@ logging.basicConfig(
 # 3. Application Configuration
 # ===========================================================================
 
-# --- [ 3.1: Set API Key Config Flags ] ---
 app.config["OPENAI_CONFIGURED"] = bool(config.OPENAI_API_KEY)
 app.config["GOOGLE_CONFIGURED"] = bool(config.GOOGLE_API_KEY)
 if not app.config["OPENAI_CONFIGURED"]:
@@ -83,7 +81,6 @@ if not app.config["OPENAI_CONFIGURED"]:
 if not app.config["GOOGLE_CONFIGURED"]:
     logging.warning("GOOGLE_API_KEY not configured in environment/.env")
 
-# --- [ 3.2: Inject API Status into Templates ] ---
 @app.context_processor
 def inject_api_status():
     """Makes API configuration status available to all templates."""
@@ -99,17 +96,17 @@ def inject_api_status():
 
 @app.before_request
 def require_login() -> None:
-    """Enforce login for all routes except designated public endpoints."""
     public_endpoints = {"auth.login", "static"}
-    public_paths = {"/health", "/healthz"}
-
-    if request.path in public_paths or request.endpoint in public_endpoints:
+    public_path_prefixes = {
+        "/health", "/healthz",
+        f"/{config.UNANALYSED_IMG_URL_PREFIX}",
+        f"/{config.PROCESSED_URL_PATH}",
+        f"/{config.FINALISED_URL_PATH}",
+    }
+    if request.endpoint in public_endpoints or any(request.path.startswith(p) for p in public_path_prefixes):
         return
-
     if not session.get("logged_in") and security.login_required_enabled():
         return redirect(url_for("auth.login", next=request.path))
-
-    # Validate session for logged-in users
     username = session.get("username")
     sid = session.get("session_id")
     if username and sid and not session_tracker.touch_session(username, sid):
@@ -117,10 +114,8 @@ def require_login() -> None:
         if security.login_required_enabled():
             return redirect(url_for("auth.login", next=request.path))
 
-
 @app.after_request
 def apply_no_cache(response):
-    """Attach no-cache headers when admin mode requires it."""
     if security.force_no_cache_enabled():
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     return response
@@ -140,6 +135,7 @@ app.register_blueprint(gdws_admin_bp)
 app.register_blueprint(test_bp)
 app.register_blueprint(api_bp)
 app.register_blueprint(edit_listing_bp)
+app.register_blueprint(audit_bp) # <-- ADDED
 
 
 # ===========================================================================
@@ -151,23 +147,19 @@ def page_not_found(e):
     app.logger.error(f"Page not found (404): {request.url}")
     return render_template("404.html"), 404
 
-
 @app.errorhandler(500)
 def internal_server_error(e):
     app.logger.error(f"Internal Server Error (500): {e}")
     return render_template("500.html"), 500
-
 
 @app.errorhandler(BuildError)
 def handle_build_error(err):
     app.logger.error("BuildError (missing endpoint): %s", err)
     return render_template("missing_endpoint.html", error=err), 500
 
-
 @app.route("/health")
 @app.route("/healthz")
 def health_check():
-    """Basic health check endpoint for monitoring."""
     return "OK", 200
 
 
@@ -176,9 +168,7 @@ def health_check():
 # ===========================================================================
 
 def create_app() -> Flask:
-    """Factory function for application creation (e.g., for Gunicorn)."""
     return app
-
 
 if __name__ == "__main__":
     logging.info(f"ArtNarrator app starting up at {datetime.now()}")

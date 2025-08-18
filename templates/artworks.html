@@ -41,8 +41,8 @@
   {% if processed_artworks %}
     <h2 class="mb-3 mt-5">Processed Artworks</h2>
     <div class="artwork-grid">
-      {% for art in processed_artworks %}
-      <div class="gallery-card" data-filename="{{ art.filename }}" data-aspect="{{ art.aspect }}">
+  {% for art in processed_artworks %}
+  <div class="gallery-card" data-filename="{{ art.filename }}" data-aspect="{{ art.aspect }}" data-base="{{ art.seo_folder }}">
         <div class="card-thumb">
           <img class="card-img-top"
                src="{{ url_for('artwork.processed_image', filename=art.seo_folder ~ '/' ~ art.thumb) }}"
@@ -70,8 +70,8 @@
   {% if finalised_artworks %}
     <h2 class="mb-3 mt-5">Finalised Artworks</h2>
     <div class="artwork-grid">
-      {% for art in finalised_artworks %}
-      <div class="gallery-card" data-filename="{{ art.filename }}" data-aspect="{{ art.aspect }}">
+  {% for art in finalised_artworks %}
+  <div class="gallery-card" data-filename="{{ art.filename }}" data-aspect="{{ art.aspect }}" data-base="{{ art.seo_folder }}">
         <div class="card-thumb">
           <img class="card-img-top"
                src="{{ url_for('artwork.finalised_image', filename=art.seo_folder ~ '/' ~ art.thumb) }}"

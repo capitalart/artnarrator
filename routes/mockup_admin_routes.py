@@ -31,6 +31,7 @@ from flask import (
 )
 from PIL import Image
 import imagehash
+from helpers.image_utils import make_working_copy, get_image_dimensions
 
 # Local application imports
 import config
@@ -62,13 +63,30 @@ def generate_thumbnail(source_path: Path, aspect: str):
     thumb_path = thumb_dir / source_path.name
 
     if not thumb_path.exists():
+        temp_working = None
         try:
-            with Image.open(source_path) as img:
+            # Create a small working copy to avoid loading very large source images into memory
+            try:
+                temp_dir = config.MOCKUPS_STAGING_DIR / aspect / "temp"
+                temp_dir.mkdir(parents=True, exist_ok=True)
+                temp_working = make_working_copy(source_path, temp_dir, long_edge=max(config.THUMB_WIDTH, config.THUMB_HEIGHT) * 4, quality=80)
+                src_to_open = temp_working
+            except Exception:
+                # Fall back to original file if working-copy creation fails
+                src_to_open = source_path
+
+            with Image.open(src_to_open) as img:
                 # Use thumbnail dimensions from config
                 img.thumbnail((config.THUMB_WIDTH, config.THUMB_HEIGHT))
                 img.convert("RGB").save(thumb_path, "JPEG", quality=85)
         except Exception as e:
             logger.error(f"Could not create thumbnail for {source_path.name}: {e}")
+        finally:
+            if temp_working:
+                try:
+                    Path(temp_working).unlink(missing_ok=True)
+                except Exception:
+                    pass
 
 
 # ===========================================================================
@@ -135,9 +153,59 @@ def dashboard(aspect: str):
     
 @bp.route("/thumbnail/<aspect>/<path:filename>")
 def mockup_thumbnail(aspect, filename):
-    """Serves the generated thumbnail for a mockup."""
-    return send_from_directory(config.MOCKUP_THUMBNAIL_DIR / aspect, filename)
+    """Serve or generate a thumbnail for a mockup."""
+    thumb_dir = config.MOCKUP_THUMBNAIL_DIR / aspect
+    thumb_dir.mkdir(parents=True, exist_ok=True)
+    thumb_path = thumb_dir / filename
+    # If thumbnail doesn't exist, try to create it from staging or categorised dirs
+    if not thumb_path.exists():
+        src_staging = config.MOCKUPS_STAGING_DIR / aspect / filename
+        src_categorised = None
+        # search categorised dirs
+        if config.MOCKUPS_CATEGORISED_DIR.exists():
+            for d in config.MOCKUPS_CATEGORISED_DIR.iterdir():
+                candidate = d / filename
+                if candidate.exists():
+                    src_categorised = candidate
+                    break
 
+        source = src_staging if src_staging.exists() else (src_categorised if src_categorised and src_categorised.exists() else None)
+        if source:
+            temp_working = None
+            try:
+                try:
+                    temp_dir = config.MOCKUPS_STAGING_DIR / aspect / "temp"
+                    temp_dir.mkdir(parents=True, exist_ok=True)
+                    temp_working = make_working_copy(source, temp_dir, long_edge=max(config.THUMB_WIDTH, config.THUMB_HEIGHT) * 4, quality=80)
+                    src_to_open = temp_working
+                except Exception:
+                    src_to_open = source
+
+                with Image.open(src_to_open) as img:
+                    img.thumbnail((config.THUMB_WIDTH, config.THUMB_HEIGHT))
+                    img.convert("RGB").save(thumb_path, "JPEG", quality=85)
+            except Exception as e:
+                logger.warning(f"Failed to generate thumbnail for {filename}: {e}")
+            finally:
+                if temp_working:
+                    try:
+                        Path(temp_working).unlink(missing_ok=True)
+                    except Exception:
+                        pass
+    # Serve the thumbnail if present, otherwise attempt to serve original
+    if thumb_path.exists():
+        return send_from_directory(thumb_dir, filename)
+    # Fallback: try to serve the original image from staging/categorised
+    fallback = config.MOCKUPS_STAGING_DIR / aspect
+    if (fallback / filename).exists():
+        return send_from_directory(fallback, filename)
+    # Search categorised
+    if config.MOCKUPS_CATEGORISED_DIR.exists():
+        for cat in config.MOCKUPS_CATEGORISED_DIR.iterdir():
+            candidate = cat / aspect / filename if (config.MOCKUPS_CATEGORISED_DIR / aspect).exists() else None
+            if candidate and candidate.exists():
+                return send_from_directory(candidate.parent, candidate.name)
+    return ("Not found", 404)
 
 @bp.route("/image/<aspect>/<category>/<path:filename>")
 def mockup_image(aspect, category, filename):
@@ -181,17 +249,44 @@ def find_duplicates(aspect):
     all_paths.extend(list((config.MOCKUPS_CATEGORISED_DIR / aspect).rglob("*.*")))
 
     for path in all_paths:
-        if path.suffix.lower() not in ['.png', '.jpg', '.jpeg']: continue
+        if path.suffix.lower() not in ['.png', '.jpg', '.jpeg']:
+            continue
+
+        # Prefer using an existing thumbnail to avoid loading full-size images.
+        thumb_path = config.MOCKUP_THUMBNAIL_DIR / aspect / path.name
+        temp_working = None
         try:
-            with Image.open(path) as img:
+            source_for_hash = None
+            if thumb_path.exists():
+                source_for_hash = thumb_path
+            else:
+                # Create a small working copy to keep memory usage low while hashing
+                temp_dir = config.MOCKUPS_STAGING_DIR / aspect / "temp"
+                temp_dir.mkdir(parents=True, exist_ok=True)
+                try:
+                    temp_working = make_working_copy(path, temp_dir, long_edge=600, quality=80)
+                    source_for_hash = temp_working
+                except Exception:
+                    # Fall back to the original file if working copy fails
+                    source_for_hash = path
+
+            with Image.open(source_for_hash) as img:
                 h = str(imagehash.phash(img))
+                rel = str(path.relative_to(config.BASE_DIR))
                 if h in hashes:
-                    duplicates.append({"original": hashes[h], "duplicate": str(path.relative_to(config.BASE_DIR))})
+                    duplicates.append({"original": hashes[h], "duplicate": rel})
                 else:
-                    hashes[h] = str(path.relative_to(config.BASE_DIR))
+                    hashes[h] = rel
+
         except Exception as e:
             logger.warning(f"Could not hash image {path}: {e}")
-            
+        finally:
+            if temp_working:
+                try:
+                    Path(temp_working).unlink(missing_ok=True)
+                except Exception:
+                    pass
+
     return jsonify({"duplicates": duplicates})
 
 
@@ -246,8 +341,22 @@ def move_mockup():
     dest_dir.mkdir(parents=True, exist_ok=True)
     
     try:
-        shutil.move(str(source_path), str(dest_dir / filename))
-        logger.info(f"Moved mockup '{filename}' from '{original_category}' to '{new_category}' in aspect '{aspect}'.")
+        # Ensure staging dir exists
+        staging_path = config.MOCKUPS_STAGING_DIR / aspect
+        staging_path.mkdir(parents=True, exist_ok=True)
+        # Determine source path based on original category
+        source_path = (staging_path / filename) if original_category == "Uncategorised" else (config.MOCKUPS_CATEGORISED_DIR / aspect / original_category / filename)
+        if not source_path.exists():
+            return jsonify({"success": False, "error": "Source file not found."}), 404
+
+        dest_path = dest_dir / filename
+        shutil.move(str(source_path), str(dest_path))
+        # regenerate thumbnail for new location
+        try:
+            generate_thumbnail(dest_path, aspect)
+        except Exception:
+            logger.debug("Thumbnail generation failed after move, continuing.")
+
         return jsonify({"success": True})
     except Exception as e:
         logger.error(f"Failed to move mockup '{filename}': {e}")

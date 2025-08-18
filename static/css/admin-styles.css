@@ -1,0 +1,50 @@
+/* static/css/admin-styles.css */
+/* Styles for the admin audit trail page */
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.9em;
+}
+
+.audit-table th, .audit-table td {
+    border: 1px solid var(--card-border);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-all;
+}
+
+.audit-table th {
+    background-color: var(--color-card-bg);
+    font-weight: 600;
+}
+
+/* Column width classes */
+.col-timestamp { width: 15%; }
+.col-action { width: 10%; }
+.col-user { width: 10%; }
+.col-file { width: 15%; }
+.col-status { width: 10%; }
+
+/* Cell styling */
+.cell-centered {
+    text-align: center;
+    padding: 2rem;
+}
+
+.status-success {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-fail {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.log-detail {
+    font-family: monospace;
+    font-size: 0.95em;
+}

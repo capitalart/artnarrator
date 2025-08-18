@@ -90,6 +90,7 @@ from typing import List, Tuple, Dict, Optional
 
 from flask import session, url_for
 from PIL import Image
+from helpers.image_utils import get_image_dimensions, make_working_copy
 try:
     import cv2
 except ImportError:
@@ -100,6 +101,7 @@ import config
 from utils.sku_assigner import get_next_sku
 # FIX: Import helpers from the correct module to break the circular dependency
 from helpers.listing_utils import resolve_listing_paths, load_json_file_safe
+from helpers.image_utils import make_working_copy
 
 
 # --- [ 1b: Constants & Globals | utils-py-1b ] ---
@@ -120,70 +122,19 @@ ALLOWED_COLOURS_LOWER = {c.lower(): c for c in ALLOWED_COLOURS}
 # A collection of helper functions for manipulating and resolving file paths and URLs.
 # ---------------------------------------------------------------------------------
 
-# --- [ 2a: relative_to_base | utils-py-2a ] ---
-def relative_to_base(path: Path | str) -> str:
-    """
-    Converts an absolute filesystem path to a path string relative to the project's base directory.
-
-    Args:
-        path: The absolute Path object or string to convert.
-
-    Returns:
-        A string representing the path relative to the project root (e.g., "static/img/logo.png").
-    """
-    return str(Path(path).resolve().relative_to(config.BASE_DIR))
+# Legacy registry helpers (register_new_artwork, move_and_log, update_status,
+# get_record_by_base, get_record_by_seo_filename) have been removed as part of
+# the SKU-first migration. SKU is now the single source of truth and analysis
+# scripts manage movement and metadata. If you need to inspect historical
+# registry code it was intentionally removed; any remaining callers should be
+# migrated to use SKU-first helpers and the processed listing JSON files.
 
 
-# --- [ 2b: is_finalised_image | utils-py-2b ] ---
-def is_finalised_image(path: str | Path) -> bool:
-    """
-    Checks if a given file path exists within either the 'finalised-artwork' or 'artwork-vault' directories.
-
-    Args:
-        path: The file path string or Path object to check.
-
-    Returns:
-        True if the path is within a finalised or locked directory, False otherwise.
-    """
-    p = Path(path).resolve()
-    try:
-        p.relative_to(config.FINALISED_ROOT)
-        return True
-    except ValueError:
-        try:
-            p.relative_to(config.ARTWORK_VAULT_ROOT)
-            return True
-        except ValueError:
-            return False
-
-
-# --- [ 2c: resolve_image_url | utils-py-2c ] ---
-def resolve_image_url(path: Path) -> str:
-    """Convert a filesystem path to an absolute public URL.
-
-    Args:
-        path: Absolute :class:`Path` to an image on disk.
-
-    Returns:
-        Fully-qualified URL pointing to the image using the configured
-        ``BASE_URL`` and project ``BASE_DIR``.
-    """
-    relative_path = path.relative_to(config.BASE_DIR).as_posix()
-    return f"{config.BASE_URL}/{relative_path}"
-
-
-# === [ Section 3: Template & UI Helpers | utils-py-3 ] ===
-# Functions that provide data and context specifically for rendering Jinja2 templates.
-# ---------------------------------------------------------------------------------
-
-# --- [ 3a: get_menu | utils-py-3a ] ---
 def get_menu() -> List[Dict[str, str | None]]:
-    """
-    Generates the dynamic navigation menu items for the main layout template.
-    Includes a link to the most recently analyzed artwork for quick access.
+    """Return the top-level navigation menu used by templates.
 
-    Returns:
-        A list of dictionaries, where each dictionary represents a menu item.
+    This function is lightweight and intentionally calls other helpers at
+    runtime so that imports remain non-circular.
     """
     menu = [
         {"name": "Home", "url": url_for("artwork.home")},
@@ -198,10 +149,45 @@ def get_menu() -> List[Dict[str, str | None]]:
                 "url": url_for("artwork.edit_listing", aspect=latest["aspect"], filename=latest["filename"]),
             })
         except Exception:
-             menu.append({"name": "Review Latest Listing", "url": None})
+            menu.append({"name": "Review Latest Listing", "url": None})
     else:
         menu.append({"name": "Review Latest Listing", "url": None})
     return menu
+
+
+def is_finalised_image(path: str | Path) -> bool:
+    """Return True if the given path points to an image inside the finalised or vault folders.
+
+    This is a lightweight helper used in a few admin paths to validate that an
+    image being operated on lives in a finalised-artwork location.
+    """
+    p = Path(path)
+    try:
+        # Resolve to avoid issues with relative paths
+        p = p.resolve()
+    except Exception:
+        pass
+    final_root = getattr(config, "FINALISED_ROOT", None)
+    vault_root = getattr(config, "ARTWORK_VAULT_ROOT", None)
+    if final_root and p.is_relative_to(final_root):
+        return True
+    if vault_root and p.is_relative_to(vault_root):
+        return True
+    return False
+
+
+def relative_to_base(path: Path | str) -> str:
+    """Return a path relative to the project base directory (config.BASE_DIR) as a posix string.
+
+    This is a small convenience used by templates and APIs to produce web-friendly
+    relative URLs without exposing absolute filesystem paths.
+    """
+    try:
+        p = Path(path)
+        return p.relative_to(config.BASE_DIR).as_posix()
+    except Exception:
+        # If anything goes wrong, fall back to the stringified path
+        return str(path)
 
 
 # --- [ 3b: populate_artwork_data_from_json | utils-py-3b ] ---
@@ -335,26 +321,26 @@ def apply_perspective_transform(art_img: Image.Image, mockup_img: Image.Image, d
 
 # === [ Section 5: Artwork Data Retrieval | utils-py-5 ] ===
 # Functions for scanning the filesystem and retrieving lists of artworks in various states.
-# ---------------------------------------------------------------------------------
-
-# --- [ 5a: get_all_artworks | utils-py-5a ] ---
 def get_all_artworks() -> List[Dict]:
     """Scans all artwork locations (processed, finalised, locked) and returns a unified list."""
     items: List[Dict] = []
-    
+
     def process_directory(directory: Path, status: str):
-        if not directory.exists(): return
+        if not directory or not directory.exists():
+            return
         for folder in directory.iterdir():
-            if not folder.is_dir(): continue
-            
+            if not folder.is_dir():
+                continue
+
             slug = folder.name.replace("LOCKED-", "")
             listing_file = folder / f"{slug}-listing.json"
-            if not listing_file.exists(): continue
+            if not listing_file.exists():
+                continue
 
             try:
                 data = load_json_file_safe(listing_file)
-                thumb_img = folder / config.FILENAME_TEMPLATES["thumbnail"].format(seo_slug=slug)
-                
+                thumb_img = folder / config.FILENAME_TEMPLATES.get("thumbnail", "{seo_slug}-thumb.jpg").format(seo_slug=slug)
+
                 item = {
                     "status": status,
                     "seo_folder": folder.name,
@@ -372,7 +358,7 @@ def get_all_artworks() -> List[Dict]:
     process_directory(config.PROCESSED_ROOT, "processed")
     process_directory(config.FINALISED_ROOT, "finalised")
     process_directory(config.ARTWORK_VAULT_ROOT, "locked")
-    
+
     items.sort(key=lambda x: x["title"].lower())
     return items
 
@@ -435,9 +421,13 @@ def latest_analyzed_artwork() -> Optional[Dict[str, str]]:
         
         mtime = listing_path.stat().st_mtime
         if mtime > latest_time:
-            latest_time = mtime
             data = load_json_file_safe(listing_path)
-            latest_info = { "aspect": data.get("aspect_ratio"), "filename": data.get("seo_filename") }
+            aspect_val = data.get("aspect_ratio")
+            seo_fname = data.get("seo_filename")
+            # Only consider entries that include both an aspect and a seo filename
+            if aspect_val and seo_fname:
+                latest_time = mtime
+                latest_info = { "aspect": aspect_val, "filename": seo_fname }
     return latest_info
 
 
@@ -549,10 +539,23 @@ def swap_one_mockup(seo_folder: str, slot_idx: int, new_category: str, current_m
 
         with open(coords_path, "r", encoding="utf-8") as cf: c = json.load(cf)["corners"]
         dst = [[c[0]["x"], c[0]["y"]], [c[1]["x"], c[1]["y"]], [c[3]["x"], c[3]["y"]], [c[2]["x"], c[2]["y"]]]
-        with Image.open(art_path) as art_img, Image.open(new_mockup) as mock_img:
-            art_img = resize_image_for_long_edge(art_img.convert("RGBA"))
-            composite = apply_perspective_transform(art_img, mock_img.convert("RGBA"), dst)
-        composite.convert("RGB").save(output_path, "JPEG", quality=85)
+        # Use an optimized working copy for the artwork to avoid loading huge originals
+        temp_dir = Path(config.UNANALYSED_ROOT) / "temp"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        working_art = None
+        try:
+            working_art = make_working_copy(art_path, temp_dir, long_edge=6000, quality=90)
+            with Image.open(working_art) as art_img:
+                art_rgba = resize_image_for_long_edge(art_img.convert("RGBA"))
+                with Image.open(new_mockup) as mock_img:
+                    composite = apply_perspective_transform(art_rgba, mock_img.convert("RGBA"), dst)
+            composite.convert("RGB").save(output_path, "JPEG", quality=85)
+        finally:
+            if working_art:
+                try:
+                    Path(working_art).unlink(missing_ok=True)
+                except Exception:
+                    pass
 
         thumb_dir = folder / "THUMBS"; thumb_dir.mkdir(parents=True, exist_ok=True)
         thumb_name = f"{slug}-{new_mockup.stem}-thumb-{timestamp}.jpg"
@@ -731,97 +734,97 @@ def update_listing_paths(listing_file: Path, old_root: Path, new_root: Path) -> 
     logger.info(f"Updated all paths in {listing_file.name} from {old_root.name} to {new_root.name}.")
 
 
-# === [ Section 10: Legacy Registry Management | utils-py-10 ] ===
-# Functions for interacting with the old master-artwork-paths.json registry.
-# These are kept for backward compatibility but may be phased out.
-# ---------------------------------------------------------------------------------
+# === [ Section 10: Legacy Registry Management (STUBS) | utils-py-10 ] ===
+# The old master-artwork-paths.json registry and its helpers have been removed
+# as part of the SKU-first migration. We provide lightweight stubs so any
+# remaining callers across the codebase won't raise ImportError/NameError and
+# can be migrated incrementally.
 
-# --- [ 10a: _load_registry | utils-py-10a ] ---
+
 def _load_registry() -> dict:
-    """Loads the master artwork JSON registry file."""
-    return load_json_file_safe(config.OUTPUT_JSON)
+    import config
+    registry = getattr(config, 'OUTPUT_JSON', None)
+    if not registry:
+        logger.warning("Legacy registry not configured; _load_registry() returning empty dict")
+        return {}
+    from helpers.listing_utils import load_json_file_safe
+    return load_json_file_safe(registry)
 
 
-# --- [ 10b: _save_registry | utils-py-10b ] ---
 def _save_registry(reg: dict) -> None:
-    """Writes data to the master artwork JSON registry atomically."""
-    tmp = config.OUTPUT_JSON.with_suffix(".tmp")
-    tmp.write_text(json.dumps(reg, indent=2, ensure_ascii=False), encoding="utf-8")
-    os.replace(tmp, config.OUTPUT_JSON)
+    import config
+    registry = getattr(config, 'OUTPUT_JSON', None)
+    if not registry:
+        logger.warning("Legacy registry save requested but OUTPUT_JSON not configured; no-op")
+        return
+    try:
+        Path(registry).parent.mkdir(parents=True, exist_ok=True)
+        Path(registry).write_text(json.dumps(reg, indent=2), encoding="utf-8")
+    except Exception:
+        logger.exception("Failed to save legacy registry to %s", registry)
 
 
-# --- [ 10c: register_new_artwork | utils-py-10c ] ---
 def register_new_artwork(uid: str, filename: str, folder: Path, assets: list, status: str, base: str):
-    """Add a new artwork record to the legacy registry."""
-    ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    reg = _load_registry()
+    import config
+    registry_path = getattr(config, 'OUTPUT_JSON', None)
+    if not registry_path:
+        logger.warning("register_new_artwork() called for uid=%s but legacy registry is deprecated; no-op", uid)
+        return
+    reg = _load_registry() or {}
     reg[uid] = {
-        "seo_filename": filename,
         "base": base,
-        "current_folder": str(folder),
         "assets": assets,
+        "current_folder": str(folder),
         "status": status,
-        "history": [{"status": status, "folder": str(folder), "timestamp": ts}],
-        "upload_date": ts,
+        "created": datetime.datetime.utcnow().isoformat(),
     }
     _save_registry(reg)
+    logger.info("Registered new artwork %s in legacy registry", uid)
 
 
-# --- [ 10d: move_and_log | utils-py-10d ] ---
 def move_and_log(src: Path, dest: Path, uid: str, status: str):
-    """Move a file and update its record in the legacy registry."""
     dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(str(src), str(dest))
-    reg = _load_registry()
-    rec = reg.get(uid, {})
-    rec.setdefault("history", []).append({
-        "status": status,
-        "folder": str(dest.parent),
-        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    })
-    rec["current_folder"] = str(dest.parent)
-    rec["status"] = status
-    assets = set(rec.get("assets", []))
-    assets.add(dest.name)
-    rec["assets"] = sorted(assets)
-    reg[uid] = rec
-    _save_registry(reg)
+    try:
+        shutil.move(str(src), str(dest))
+    except Exception:
+        logger.exception("Failed to move %s to %s", src, dest)
+
+    # Update registry if configured
+    try:
+        import config
+        registry_path = getattr(config, 'OUTPUT_JSON', None)
+        if registry_path:
+            reg = _load_registry()
+            if uid in reg:
+                reg[uid]["current_folder"] = str(dest.parent)
+                reg[uid]["status"] = status
+                reg[uid].setdefault("history", []).append({"status": status, "folder": str(dest.parent), "timestamp": datetime.datetime.utcnow().isoformat()})
+                _save_registry(reg)
+    except Exception:
+        logger.exception("Failed to update registry during move_and_log for %s", uid)
 
 
-# --- [ 10e: update_status | utils-py-10e ] ---
 def update_status(uid: str, folder: Path, status: str):
-    """Update the status of an artwork in the legacy registry."""
+    import config
+    registry_path = getattr(config, 'OUTPUT_JSON', None)
+    if not registry_path:
+        logger.warning("update_status() called for uid=%s but legacy registry is deprecated; no-op", uid)
+        return
     reg = _load_registry()
-    rec = reg.get(uid)
-    if not rec: return
-    rec.setdefault("history", []).append({
-        "status": status,
-        "folder": str(folder),
-        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    })
-    rec["current_folder"] = str(folder)
-    rec["status"] = status
-    reg[uid] = rec
+    if uid not in reg:
+        logger.warning("update_status() called but uid=%s not found in registry", uid)
+        return
+    reg[uid]["current_folder"] = str(folder)
+    reg[uid]["status"] = status
+    reg[uid].setdefault("history", []).append({"status": status, "folder": str(folder), "timestamp": datetime.datetime.utcnow().isoformat()})
     _save_registry(reg)
 
 
-# --- [ 10f: get_record_by_base | utils-py-10f ] ---
 def get_record_by_base(base: str) -> tuple[str | None, dict | None]:
-    """Find a legacy registry record by its unique base name."""
-    reg = _load_registry()
-    for uid, rec in reg.items():
-        if rec.get("base") == base:
-            return uid, rec
     return None, None
 
 
-# --- [ 10g: get_record_by_seo_filename | utils-py-10g ] ---
 def get_record_by_seo_filename(filename: str) -> tuple[str | None, dict | None]:
-    """Find a legacy registry record by its SEO filename."""
-    reg = _load_registry()
-    for uid, rec in reg.items():
-        if rec.get("seo_filename") == filename:
-            return uid, rec
     return None, None
 
 

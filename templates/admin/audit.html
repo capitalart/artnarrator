@@ -1,0 +1,54 @@
+{# templates/admin/audit.html #}
+{% extends "main.html" %}
+{% block title %}System Audit Trail{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-title-row">
+        <h1>System Audit Trail</h1>
+    </div>
+    <p>This page shows a detailed log of all major artwork processing events, with the most recent events first. Use this to diagnose issues with uploads, analysis, and file paths.</p>
+
+    <table class="audit-table">
+        <thead>
+            <tr>
+                <th class="col-timestamp">Timestamp</th>
+                <th class="col-action">Action</th>
+                <th class="col-user">User</th>
+                <th class="col-file">File/SKU</th>
+                <th class="col-status">Status</th>
+                <th>Details & File Paths</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if logs %}
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td><strong>{{ log.action | upper }}</strong></td>
+                    <td>{{ log.user }}</td>
+                    <td class="log-detail">{{ log.file }}</td>
+                    <td>
+                        <span class="status-{{ log.status }}">{{ log.status | capitalize }}</span>
+                    </td>
+                    <td>
+                        <p>{{ log.detail }}</p>
+                        {% if log.error %}
+                            <p class="status-fail"><strong>Error:</strong> {{ log.error }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="cell-centered">No audit logs found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
