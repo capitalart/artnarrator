@@ -1,9 +1,0 @@
-== HTTP health checks ==
--- http://127.0.0.1:8000/healthz --
-HTTP 200
--- http://127.0.0.1:8000/health --
-HTTP 200
--- http://localhost:8000/health --
-HTTP 200
--- http://127.0.0.1/health --
-HTTP 000ERR

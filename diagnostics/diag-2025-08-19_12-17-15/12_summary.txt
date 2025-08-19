@@ -1,8 +1,0 @@
-== Summary ==
-Snapshot: diagnostics/diag-2025-08-19_12-17-15
-Created:  2025-08-19T12:17:18+09:30
-
-Key paths:
-UNANALYSED_ROOT: /home/artnarrator/artnarrator.com/art-processing/unanalysed-artwork
-PROCESSED_ROOT: /home/artnarrator/artnarrator.com/art-processing/processed-artwork
-PENDING_MOCKUPS:/home/artnarrator/artnarrator.com/art-processing/processed-artwork/pending_mockups.json

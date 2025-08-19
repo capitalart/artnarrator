@@ -1,9 +1,0 @@
-== System ==
-2025-08-19T12:17:15+09:30
-artnarrator
-Linux art 6.1.0-38-cloud-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.147-1 (2025-08-02) x86_64 GNU/Linux
-/home/artnarrator/artnarrator.com/venv/bin/python3
-Python 3.11.2
-/home/artnarrator/artnarrator.com/venv/bin/pip
-pip 25.2 from /home/artnarrator/artnarrator.com/venv/lib/python3.11/site-packages/pip (python 3.11)
-venv exists: /home/artnarrator/artnarrator.com/venv

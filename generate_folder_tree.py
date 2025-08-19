@@ -5,7 +5,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 ROOT_DIR = BASE_DIR
-OUTPUT_FILE = "folder_structure.txt"
+OUTPUT_FILE = "code-stacks/folder-stacks/folder_structure.txt"
 
 # Folders or files to ignore (case insensitive)
 # MODIFIED: Added user-specific and tool-specific dotfiles/folders to ignore
