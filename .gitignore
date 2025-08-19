@@ -60,3 +60,6 @@ art-processing/processed-artwork/pending_mockups.json
 # Pytest cache
 .pytest_cache/
 .env.production
+logs/analysis-events.jsonl
+logs/analysis-events.spool.jsonl
+telemetry/__pycache__/
