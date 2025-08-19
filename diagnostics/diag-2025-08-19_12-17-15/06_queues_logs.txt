@@ -1,0 +1,1147 @@
+== Queue + sessions + recent app logs ==
+--- art-processing/processed-artwork/pending_mockups.json ---
+[
+  "/home/artnarrator/artnarrator.com/art-processing/processed-artwork/artwork-rjc-0506-by-robin-custance-rjc-rjc-0506"
+]
+--- art-processing/pending_mockups.json ---
+(missing)
+
+--- logs/session_registry.json ---
+{}
+--- recent app logs (composites/gunicorn/other) ---
+### logs/composites-workflow.log
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1177, in _execute_mock_call
+    raise effect
+RuntimeError: A critical analysis error
+2025-08-18 19:17:56,951 [INFO] Removed session e799f1ac-bbc1-4ed9-88f9-07d0bf723cee for user 'robbie'.
+2025-08-18 19:17:57,046 [INFO] Registered new session 57adbfa2-96e2-4602-a6f0-b9330a8eeeea for user 'robbie'.
+2025-08-18 19:17:57,050 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:57,056 [INFO] Running AI analysis for target: /tmp/pytest-of-artnarrator/pytest-106/art_processing3/unanalysed-artwork/cassowary-test-01/cassowary-test-01.jpg with provider: openai
+2025-08-18 19:17:57,088 [INFO] Removed session 57adbfa2-96e2-4602-a6f0-b9330a8eeeea for user 'robbie'.
+2025-08-18 19:17:57,091 [INFO] Created temporary test structure at: /tmp/pytest-of-artnarrator/pytest-106/art_processing_test0
+2025-08-18 19:17:57,092 [INFO] --- STAGE 1: UPLOAD ---
+2025-08-18 19:17:57,092 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'upload': {'path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/unanalysed-artwork/eucalypt-woodland-original/eucalypt-woodland-open-dry-forest.jpg', 'folder': 'eucalypt-woodland-original', 'filename': 'eucalypt-woodland-open-dry-forest.jpg'}
+2025-08-18 19:17:57,092 [INFO] --- STAGE 2: ANALYSE ---
+2025-08-18 19:17:57,093 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'analyse': {'path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/processed-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/processed-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:17:57,093 [INFO] --- STAGE 3: FINALISED ---
+2025-08-18 19:17:57,093 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'finalised': {'path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/finalised-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/finalised-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:17:57,093 [INFO] --- STAGE 4: LOCKED ---
+2025-08-18 19:17:57,094 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'locked': {'path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:17:57,094 [INFO] --- STAGE 5: PUBLIC URL VERIFICATION ---
+2025-08-18 19:17:57,094 [INFO] Final file path: /tmp/pytest-of-artnarrator/pytest-106/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg
+2025-08-18 19:17:57,094 [INFO] Generated public URL: https://artnarrator.com/art-processing/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg
+2025-08-18 19:17:57,094 [INFO] ✅ Full artwork lifecycle test completed successfully!
+2025-08-18 19:17:57,095 [INFO] Cleaning up temporary test structure at: /tmp/pytest-of-artnarrator/pytest-106/art_processing_test0
+2025-08-18 19:17:57,105 [WARNING] Created new empty JSON file at /tmp/pytest-of-artnarrator/pytest-106/test_move_and_registry0/registry.json
+2025-08-18 19:17:57,105 [INFO] Registered new artwork test_uid_123 in legacy registry
+2025-08-18 19:17:57,203 [INFO] Registered new session 7a4cdc09-bbd6-47e9-a1c2-9be7e3e7918c for user 'robbie'.
+2025-08-18 19:17:57,208 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:57,894 [INFO] Sellbrite authentication succeeded
+2025-08-18 19:17:59,385 [INFO] Removed session 7a4cdc09-bbd6-47e9-a1c2-9be7e3e7918c for user 'robbie'.
+2025-08-18 19:17:59,387 [INFO] Running AI analysis for target: img.jpg with provider: openai
+2025-08-18 19:17:59,387 [ERROR] AI analysis timed out for target img.jpg: Command '['/home/artnarrator/artnarrator.com/venv/bin/python3', '/home/artnarrator/artnarrator.com/scripts/analyze_artwork.py', 'img.jpg', '--json-output']' timed out after 600 seconds
+2025-08-18 19:17:59,388 [INFO] Running AI analysis for target: img.jpg with provider: openai
+2025-08-18 19:17:59,388 [ERROR] Analysis script not found for target img.jpg: no such file
+2025-08-18 19:17:59,512 [INFO] Registered new session d8f1f8e2-25d3-42a0-9e33-1037d349ee6b for user 'robbie'.
+2025-08-18 19:17:59,516 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:59,626 [INFO] Registered new session dbc280ac-80b3-4d67-aabd-7ee3850adbe5 for user 'robbie'.
+2025-08-18 19:17:59,630 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:59,726 [INFO] Registered new session 13641808-2bf9-4a3f-a640-147d1d87fd6a for user 'robbie'.
+2025-08-18 19:17:59,730 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:59,836 [INFO] Registered new session 5db15a82-1b1c-4a24-b972-fd03d5e217ae for user 'robbie'.
+2025-08-18 19:17:59,840 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:17:59,937 [INFO] Registered new session 049f43c9-693d-467e-bf1f-d50c163d08d4 for user 'robbie'.
+2025-08-18 19:17:59,941 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:18:00,038 [WARNING] Session registration denied for 'robbie': limit of 5 reached.
+2025-08-18 19:18:00,038 [WARNING] Login attempt by 'robbie' failed: Maximum session limit reached.
+2025-08-18 19:18:00,043 [INFO] Removed session d8f1f8e2-25d3-42a0-9e33-1037d349ee6b for user 'robbie'.
+2025-08-18 19:18:00,044 [INFO] User 'robbie' logged out and session 'd8f1f8e2-25d3-42a0-9e33-1037d349ee6b' was removed.
+2025-08-18 19:18:00,138 [INFO] Registered new session e4c4ba14-6278-4b23-a9e8-30fae3e4f87a for user 'robbie'.
+2025-08-18 19:18:00,141 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:18:00,147 [INFO] Removed session dbc280ac-80b3-4d67-aabd-7ee3850adbe5 for user 'robbie'.
+2025-08-18 19:18:00,148 [INFO] Removed session 13641808-2bf9-4a3f-a640-147d1d87fd6a for user 'robbie'.
+2025-08-18 19:18:00,148 [INFO] Removed session 5db15a82-1b1c-4a24-b972-fd03d5e217ae for user 'robbie'.
+2025-08-18 19:18:00,148 [INFO] Removed session 049f43c9-693d-467e-bf1f-d50c163d08d4 for user 'robbie'.
+2025-08-18 19:18:00,149 [INFO] Removed session e4c4ba14-6278-4b23-a9e8-30fae3e4f87a for user 'robbie'.
+2025-08-18 19:18:00,150 [INFO] Assigned new SKU: RJC-0011. Tracker file updated.
+2025-08-18 19:18:00,151 [INFO] Assigned new SKU: RJC-0012. Tracker file updated.
+2025-08-18 19:18:00,152 [INFO] Assigned new SKU: RJC-0006. Tracker file updated.
+2025-08-18 19:18:00,155 [INFO] Assigned new SKU: RJC-0081. Tracker file updated.
+2025-08-18 19:18:00,293 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-106/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0081-by-robin-custance-rjc-rjc-0081
+2025-08-18 19:18:00,294 [INFO] Assigned new SKU: RJC-0082. Tracker file updated.
+2025-08-18 19:18:00,298 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-106/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0082-by-robin-custance-rjc-rjc-0082
+2025-08-18 19:18:00,298 [INFO] Assigned new SKU: RJC-0083. Tracker file updated.
+2025-08-18 19:18:00,299 [INFO] Assigned new SKU: RJC-0084. Tracker file updated.
+2025-08-18 19:18:00,300 [INFO] Assigned new SKU: RJC-0085. Tracker file updated.
+2025-08-18 19:18:00,304 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-106/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0085-by-robin-custance-rjc-rjc-0085
+2025-08-18 19:18:00,403 [INFO] Registered new session 81775984-ace3-4bee-b036-9e3e358a5914 for user 'robbie'.
+2025-08-18 19:18:00,407 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:18:00,415 [INFO] Assigned new SKU: RJC-0507. Tracker file updated.
+2025-08-18 19:18:00,428 [INFO] Removed session 81775984-ace3-4bee-b036-9e3e358a5914 for user 'robbie'.
+2025-08-18 19:31:59,486 [INFO] HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 200 OK"
+2025-08-18 19:31:59,487 [INFO] ✅ OpenAI API Key       Connection successful. Key is valid.
+2025-08-18 19:31:59,790 [INFO] HTTP Request: GET https://api.openai.com/v1/models/gpt-4o "HTTP/1.1 200 OK"
+2025-08-18 19:32:00,066 [INFO] HTTP Request: GET https://api.openai.com/v1/models/gpt-4o "HTTP/1.1 200 OK"
+2025-08-18 19:32:01,202 [INFO] ✅ Google Gemini        Connection successful. Key is valid and has access to gemini-1.5-pro-latest.
+2025-08-18 19:32:01,841 [INFO] ✅ Sellbrite            Connection successful. 
+2025-08-18 19:32:01,872 [INFO] Users table is empty. Creating default admin user.
+2025-08-18 19:32:01,969 [INFO] Default admin user 'robbie' created successfully.
+2025-08-18 19:32:02,092 [INFO] Successfully added new user 'viewer' with role 'viewer'.
+2025-08-18 19:32:02,188 [INFO] No site settings found in database; creating new default record.
+2025-08-18 19:32:02,195 [INFO] Registered new session 2e5fb5ec-8f61-4935-9afe-d8d5fcdd7158 for user 'viewer'.
+2025-08-18 19:32:02,200 [INFO] Successful login for user 'viewer' with role 'viewer'.
+2025-08-18 19:32:02,203 [WARNING] Role-based access denied for user 'viewer' (role: 'viewer') to endpoint 'admin.dashboard'. Required role: 'admin'.
+2025-08-18 19:32:02,205 [INFO] Removed session 2e5fb5ec-8f61-4935-9afe-d8d5fcdd7158 for user 'viewer'.
+2025-08-18 19:32:02,205 [INFO] User 'viewer' logged out and session '2e5fb5ec-8f61-4935-9afe-d8d5fcdd7158' was removed.
+2025-08-18 19:32:02,298 [INFO] Registered new session 7ae27eb5-2484-4111-95b0-7bd4741686ec for user 'robbie'.
+2025-08-18 19:32:02,302 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:02,320 [INFO] Removed session 7ae27eb5-2484-4111-95b0-7bd4741686ec for user 'robbie'.
+2025-08-18 19:32:02,346 [INFO] Users table is empty. Creating default admin user.
+2025-08-18 19:32:02,442 [INFO] Default admin user 'robbie' created successfully.
+2025-08-18 19:32:02,564 [INFO] No site settings found in database; creating new default record.
+2025-08-18 19:32:02,570 [INFO] Registered new session c2f6d85e-25a8-47e0-ab26-2a288dbf9afd for user 'robbie'.
+2025-08-18 19:32:02,575 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:02,580 [WARNING] ADMIN ACTION: Force 'no-cache' has been enabled for 1 minutes.
+2025-08-18 19:32:02,598 [INFO] Removed session c2f6d85e-25a8-47e0-ab26-2a288dbf9afd for user 'robbie'.
+2025-08-18 19:32:02,624 [INFO] Users table is empty. Creating default admin user.
+2025-08-18 19:32:02,719 [INFO] Default admin user 'robbie' created successfully.
+2025-08-18 19:32:02,841 [INFO] Successfully added new user 'viewer' with role 'viewer'.
+2025-08-18 19:32:02,935 [INFO] No site settings found in database; creating new default record.
+2025-08-18 19:32:02,942 [INFO] Registered new session 6e3fb1c2-1667-4412-ae48-715113236720 for user 'robbie'.
+2025-08-18 19:32:02,946 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:02,951 [WARNING] ADMIN ACTION: Login requirement has been disabled for 1 minutes.
+2025-08-18 19:32:02,953 [INFO] Removed session 6e3fb1c2-1667-4412-ae48-715113236720 for user 'robbie'.
+2025-08-18 19:32:02,953 [INFO] User 'robbie' logged out and session '6e3fb1c2-1667-4412-ae48-715113236720' was removed.
+2025-08-18 19:32:03,048 [WARNING] Login attempt by 'viewer' failed: Site is locked by admin.
+2025-08-18 19:32:03,064 [WARNING] Created new empty JSON file at /tmp/pytest-of-artnarrator/pytest-107/test_load_json_file_safe_missi0/missing.json
+2025-08-18 19:32:03,066 [WARNING] File at /tmp/pytest-of-artnarrator/pytest-107/test_load_json_file_safe_empty0/empty.json was empty; reset to {}
+2025-08-18 19:32:03,068 [ERROR] Invalid JSON in /tmp/pytest-of-artnarrator/pytest-107/test_load_json_file_safe_inval0/invalid.json, reset to {}. Error: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2025-08-18 19:32:03,167 [INFO] Registered new session 3c371c1a-3125-469d-96e1-6e245f7b7004 for user 'robbie'.
+2025-08-18 19:32:03,171 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:03,201 [INFO] Removed session 3c371c1a-3125-469d-96e1-6e245f7b7004 for user 'robbie'.
+2025-08-18 19:32:03,296 [INFO] Registered new session f09d079c-3177-42a8-a299-f1164e205600 for user 'robbie'.
+2025-08-18 19:32:03,300 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:03,308 [INFO] Removed session f09d079c-3177-42a8-a299-f1164e205600 for user 'robbie'.
+2025-08-18 19:32:03,401 [INFO] Registered new session 59293a65-9ea3-40e2-b860-e6271dfbbe13 for user 'robbie'.
+2025-08-18 19:32:03,406 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:03,413 [ERROR] Error running filename-based analysis: A critical analysis error
+Traceback (most recent call last):
+  File "/home/artnarrator/artnarrator.com/routes/artwork_routes.py", line 450, in analyze_by_filename
+    analysis_result = _run_ai_analysis(src, provider)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1177, in _execute_mock_call
+    raise effect
+RuntimeError: A critical analysis error
+2025-08-18 19:32:03,416 [INFO] Removed session 59293a65-9ea3-40e2-b860-e6271dfbbe13 for user 'robbie'.
+2025-08-18 19:32:03,510 [INFO] Registered new session 3e94f8cd-f88c-445b-8cd1-aa133d74e5cd for user 'robbie'.
+2025-08-18 19:32:03,514 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:03,519 [INFO] Running AI analysis for target: /tmp/pytest-of-artnarrator/pytest-107/art_processing3/unanalysed-artwork/cassowary-test-01/cassowary-test-01.jpg with provider: openai
+2025-08-18 19:32:03,552 [INFO] Removed session 3e94f8cd-f88c-445b-8cd1-aa133d74e5cd for user 'robbie'.
+2025-08-18 19:32:03,556 [INFO] Created temporary test structure at: /tmp/pytest-of-artnarrator/pytest-107/art_processing_test0
+2025-08-18 19:32:03,556 [INFO] --- STAGE 1: UPLOAD ---
+2025-08-18 19:32:03,557 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'upload': {'path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/unanalysed-artwork/eucalypt-woodland-original/eucalypt-woodland-open-dry-forest.jpg', 'folder': 'eucalypt-woodland-original', 'filename': 'eucalypt-woodland-open-dry-forest.jpg'}
+2025-08-18 19:32:03,557 [INFO] --- STAGE 2: ANALYSE ---
+2025-08-18 19:32:03,557 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'analyse': {'path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/processed-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/processed-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:32:03,557 [INFO] --- STAGE 3: FINALISED ---
+2025-08-18 19:32:03,558 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'finalised': {'path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/finalised-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/finalised-artwork/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:32:03,558 [INFO] --- STAGE 4: LOCKED ---
+2025-08-18 19:32:03,558 [INFO] STATE UPDATE for 'eucalypt-woodland-original' at stage 'locked': {'path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'folder': 'LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278', 'filename': 'moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg', 'json_path': '/tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278-listing.json'}
+2025-08-18 19:32:03,558 [INFO] --- STAGE 5: PUBLIC URL VERIFICATION ---
+2025-08-18 19:32:03,559 [INFO] Final file path: /tmp/pytest-of-artnarrator/pytest-107/art_processing_test0/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg
+2025-08-18 19:32:03,559 [INFO] Generated public URL: https://artnarrator.com/art-processing/artwork-vault/LOCKED-moon-over-fire-country-dot-art-by-robin-custance-RJC-0278/moon-over-fire-country-dot-art-by-robin-custance-RJC-0278.jpg
+2025-08-18 19:32:03,559 [INFO] ✅ Full artwork lifecycle test completed successfully!
+2025-08-18 19:32:03,559 [INFO] Cleaning up temporary test structure at: /tmp/pytest-of-artnarrator/pytest-107/art_processing_test0
+2025-08-18 19:32:03,569 [WARNING] Created new empty JSON file at /tmp/pytest-of-artnarrator/pytest-107/test_move_and_registry0/registry.json
+2025-08-18 19:32:03,570 [INFO] Registered new artwork test_uid_123 in legacy registry
+2025-08-18 19:32:03,669 [INFO] Registered new session 5de55b2e-385d-409d-9688-9f3810c5ddec for user 'robbie'.
+2025-08-18 19:32:03,674 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:04,363 [INFO] Sellbrite authentication succeeded
+2025-08-18 19:32:05,876 [INFO] Removed session 5de55b2e-385d-409d-9688-9f3810c5ddec for user 'robbie'.
+2025-08-18 19:32:05,877 [INFO] Running AI analysis for target: img.jpg with provider: openai
+2025-08-18 19:32:05,877 [ERROR] AI analysis timed out for target img.jpg: Command '['/home/artnarrator/artnarrator.com/venv/bin/python3', '/home/artnarrator/artnarrator.com/scripts/analyze_artwork.py', 'img.jpg', '--json-output']' timed out after 600 seconds
+2025-08-18 19:32:05,879 [INFO] Running AI analysis for target: img.jpg with provider: openai
+2025-08-18 19:32:05,879 [ERROR] Analysis script not found for target img.jpg: no such file
+2025-08-18 19:32:06,003 [INFO] Registered new session 7b5646dd-aee6-4a21-8da1-c48fbe0571b7 for user 'robbie'.
+2025-08-18 19:32:06,007 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,117 [INFO] Registered new session 486a248d-0b52-4012-830e-55bb1472e76b for user 'robbie'.
+2025-08-18 19:32:06,121 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,217 [INFO] Registered new session 84d7dbc1-197a-4a9e-8bbd-b8a27afeecf4 for user 'robbie'.
+2025-08-18 19:32:06,221 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,316 [INFO] Registered new session 1784d5ba-2a35-4935-9af0-9866a8a83e0a for user 'robbie'.
+2025-08-18 19:32:06,321 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,417 [INFO] Registered new session 28c856ae-2f25-4a17-afd8-c3813cd56a2a for user 'robbie'.
+2025-08-18 19:32:06,421 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,518 [WARNING] Session registration denied for 'robbie': limit of 5 reached.
+2025-08-18 19:32:06,518 [WARNING] Login attempt by 'robbie' failed: Maximum session limit reached.
+2025-08-18 19:32:06,523 [INFO] Removed session 7b5646dd-aee6-4a21-8da1-c48fbe0571b7 for user 'robbie'.
+2025-08-18 19:32:06,524 [INFO] User 'robbie' logged out and session '7b5646dd-aee6-4a21-8da1-c48fbe0571b7' was removed.
+2025-08-18 19:32:06,619 [INFO] Registered new session 55b72a5e-6a74-4955-86d8-02fa244fd956 for user 'robbie'.
+2025-08-18 19:32:06,623 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,628 [INFO] Removed session 486a248d-0b52-4012-830e-55bb1472e76b for user 'robbie'.
+2025-08-18 19:32:06,629 [INFO] Removed session 84d7dbc1-197a-4a9e-8bbd-b8a27afeecf4 for user 'robbie'.
+2025-08-18 19:32:06,629 [INFO] Removed session 1784d5ba-2a35-4935-9af0-9866a8a83e0a for user 'robbie'.
+2025-08-18 19:32:06,630 [INFO] Removed session 28c856ae-2f25-4a17-afd8-c3813cd56a2a for user 'robbie'.
+2025-08-18 19:32:06,630 [INFO] Removed session 55b72a5e-6a74-4955-86d8-02fa244fd956 for user 'robbie'.
+2025-08-18 19:32:06,631 [INFO] Assigned new SKU: RJC-0011. Tracker file updated.
+2025-08-18 19:32:06,632 [INFO] Assigned new SKU: RJC-0012. Tracker file updated.
+2025-08-18 19:32:06,634 [INFO] Assigned new SKU: RJC-0006. Tracker file updated.
+2025-08-18 19:32:06,636 [INFO] Assigned new SKU: RJC-0081. Tracker file updated.
+2025-08-18 19:32:06,779 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-107/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0081-by-robin-custance-rjc-rjc-0081
+2025-08-18 19:32:06,779 [INFO] Assigned new SKU: RJC-0082. Tracker file updated.
+2025-08-18 19:32:06,784 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-107/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0082-by-robin-custance-rjc-rjc-0082
+2025-08-18 19:32:06,784 [INFO] Assigned new SKU: RJC-0083. Tracker file updated.
+2025-08-18 19:32:06,785 [INFO] Assigned new SKU: RJC-0084. Tracker file updated.
+2025-08-18 19:32:06,785 [INFO] Assigned new SKU: RJC-0085. Tracker file updated.
+2025-08-18 19:32:06,789 [INFO] Queued mockup generation for: /tmp/pytest-of-artnarrator/pytest-107/test_sequential_sku_assignment0/processed-artwork/artwork-rjc-0085-by-robin-custance-rjc-rjc-0085
+2025-08-18 19:32:06,888 [INFO] Registered new session 73cf0d3d-3984-4528-a70b-15edfe611c0c for user 'robbie'.
+2025-08-18 19:32:06,893 [INFO] Successful login for user 'robbie' with role 'admin'.
+2025-08-18 19:32:06,902 [INFO] Assigned new SKU: RJC-0508. Tracker file updated.
+2025-08-18 19:32:06,914 [INFO] Removed session 73cf0d3d-3984-4528-a70b-15edfe611c0c for user 'robbie'.
+2025-08-19 12:01:48,216 [WARNING] Attempted to touch an invalid or expired session '9bc1bbb4-7453-4004-969c-5407631007c3' for user 'robbie'.
+
+### logs/cron-backup-2025-08-17_16-55-56.log
+2025-08-17 16:55:56 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-17 16:55:56 | [0;33mWARN:[0m Dry run mode is enabled. No actual changes will be made.
+2025-08-17 16:55:56 | [0;36mINFO:[0m Checking for required tools...
+2025-08-17 16:55:56 | [0;31mERROR:[0m Required command 'zip' is not installed. Aborting.
+
+### logs/cron-backup-2025-08-17_16-57-20.log
+2025-08-17 16:57:20 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-17 16:57:20 | [0;33mWARN:[0m Dry run mode is enabled. No actual changes will be made.
+2025-08-17 16:57:20 | [0;36mINFO:[0m Checking for required tools...
+2025-08-17 16:57:20 | [0;32mSUCCESS:[0m All required tools are present.
+2025-08-17 16:57:20 | [0;36mINFO:[0m Creating full project backup ZIP archive...
+2025-08-17 16:57:20 | [0;36mEXEC:[0m zip -r -q '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_16-57-20.zip' . -x '.git/*' -x 'venv/*' -x 'node_modules/*' -x '__pycache__/*' -x 'backups/*' -x 'logs/*' -x 'git-update-push-logs/*' -x 'dev-logs/*' -x 'reports/*' -x '*.DS_Store' -x '.env' -x 'inputs/*' -x 'outputs/*' -x 'exports/*' -x 'art-uploads/*' -x 'audit/*' -x 'assets/*' -x 'descriptions/*' -x 'gdws_content/*' -x 'mnt/*'
+2025-08-17 16:57:20 | [0;32mSUCCESS:[0m Backup ZIP created: /home/artnarrator/artnarrator.com/backups/backup_2025-08-17_16-57-20.zip
+2025-08-17 16:57:20 | [0;36mINFO:[0m Uploading backup to Google Drive (gdrive:artnarrator-backups)...
+2025-08-17 16:57:20 | [0;36mEXEC:[0m rclone copy '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_16-57-20.zip' 'gdrive:artnarrator-backups' --progress
+2025-08-17 16:57:20 | [0;32mSUCCESS:[0m Backup successfully uploaded.
+2025-08-17 16:57:20 | [0;36mINFO:[0m Applying cloud retention policy (keeping last 300 backups)...
+2025-08-17 16:57:28 | [0;36mINFO:[0m Fewer than 300 backups in the cloud. No cleanup needed.
+2025-08-17 16:57:28 | [0;36mINFO:[0m Cleaning up local backup file...
+2025-08-17 16:57:28 | [0;36mEXEC:[0m rm -f '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_16-57-20.zip'
+2025-08-17 16:57:28 | [0;32mSUCCESS:[0m 🎉 Automated backup workflow completed. 💚
+
+### logs/cron-backup-2025-08-17_17-01-23.log
+2025-08-17 17:01:23 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-17 17:01:23 | [0;33mWARN:[0m Dry run mode is enabled. No actual changes will be made.
+2025-08-17 17:01:23 | [0;36mINFO:[0m Checking for required tools...
+2025-08-17 17:01:23 | [0;32mSUCCESS:[0m All required tools are present.
+2025-08-17 17:01:23 | [0;36mINFO:[0m Creating full project backup ZIP archive...
+2025-08-17 17:01:23 | [0;36mEXEC:[0m zip -r -q '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-23.zip' . -x '.git/*' -x 'venv/*' -x 'node_modules/*' -x '__pycache__/*' -x 'backups/*' -x 'logs/*' -x 'git-update-push-logs/*' -x 'dev-logs/*' -x 'reports/*' -x '*.DS_Store' -x '.env' -x 'inputs/*' -x 'outputs/*' -x 'exports/*' -x 'art-uploads/*' -x 'audit/*' -x 'assets/*' -x 'descriptions/*' -x 'gdws_content/*' -x 'mnt/*'
+2025-08-17 17:01:23 | [0;32mSUCCESS:[0m Backup ZIP created: /home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-23.zip
+2025-08-17 17:01:23 | [0;36mINFO:[0m Uploading backup to Google Drive (gdrive:artnarrator-backups)...
+2025-08-17 17:01:23 | [0;36mEXEC:[0m rclone copy '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-23.zip' 'gdrive:artnarrator-backups' --progress
+2025-08-17 17:01:23 | [0;32mSUCCESS:[0m Backup successfully uploaded.
+2025-08-17 17:01:23 | [0;36mINFO:[0m Applying cloud retention policy (keeping last 300 backups)...
+2025-08-17 17:01:25 | [0;36mINFO:[0m Fewer than 300 backups in the cloud. No cleanup needed.
+2025-08-17 17:01:25 | [0;36mINFO:[0m Cleaning up local backup file...
+2025-08-17 17:01:25 | [0;36mEXEC:[0m rm -f '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-23.zip'
+2025-08-17 17:01:25 | [0;32mSUCCESS:[0m 🎉 Automated backup workflow completed. 💚
+
+### logs/cron-backup-2025-08-17_17-01-38.log
+2025-08-17 17:01:38 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-17 17:01:38 | [0;33mWARN:[0m Dry run mode is enabled. No actual changes will be made.
+2025-08-17 17:01:38 | [0;36mINFO:[0m Checking for required tools...
+2025-08-17 17:01:38 | [0;32mSUCCESS:[0m All required tools are present.
+2025-08-17 17:01:38 | [0;36mINFO:[0m Creating full project backup ZIP archive...
+2025-08-17 17:01:38 | [0;36mEXEC:[0m zip -r -q '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-38.zip' . -x '.git/*' -x 'venv/*' -x 'node_modules/*' -x '__pycache__/*' -x 'backups/*' -x 'logs/*' -x 'git-update-push-logs/*' -x 'dev-logs/*' -x 'reports/*' -x '*.DS_Store' -x '.env' -x 'inputs/*' -x 'outputs/*' -x 'exports/*' -x 'art-uploads/*' -x 'audit/*' -x 'assets/*' -x 'descriptions/*' -x 'gdws_content/*' -x 'mnt/*'
+2025-08-17 17:01:38 | [0;32mSUCCESS:[0m Backup ZIP created: /home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-38.zip
+2025-08-17 17:01:38 | [0;36mINFO:[0m Uploading backup to Google Drive (gdrive:artnarrator-backups)...
+2025-08-17 17:01:38 | [0;36mEXEC:[0m rclone copy '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-38.zip' 'gdrive:artnarrator-backups' --progress
+2025-08-17 17:01:38 | [0;32mSUCCESS:[0m Backup successfully uploaded.
+2025-08-17 17:01:38 | [0;36mINFO:[0m Applying cloud retention policy (keeping last 300 backups)...
+2025-08-17 17:01:39 | [0;36mINFO:[0m Fewer than 300 backups in the cloud. No cleanup needed.
+2025-08-17 17:01:39 | [0;36mINFO:[0m Cleaning up local backup file...
+2025-08-17 17:01:39 | [0;36mEXEC:[0m rm -f '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-01-38.zip'
+2025-08-17 17:01:39 | [0;32mSUCCESS:[0m 🎉 Automated backup workflow completed. 💚
+
+### logs/cron-backup-2025-08-17_17-05-23.log
+2025-08-17 17:05:23 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-17 17:05:23 | [0;36mINFO:[0m Checking for required tools...
+2025-08-17 17:05:23 | [0;32mSUCCESS:[0m All required tools are present.
+2025-08-17 17:05:23 | [0;36mINFO:[0m Calculating estimated backup size...
+2025-08-17 17:05:23 | [0;33mWARN:[0m Estimated uncompressed backup size is: 25MB
+2025-08-17 17:05:35 | [0;36mINFO:[0m User confirmed. Proceeding with backup...
+2025-08-17 17:05:35 | [0;36mINFO:[0m Creating full project backup ZIP archive...
+2025-08-17 17:05:35 | [0;36mEXEC:[0m zip -r -q '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-05-23.zip' . -x '.git/*' -x 'venv/*' -x 'node_modules/*' -x '__pycache__/*' -x 'backups/*' -x 'logs/*' -x 'git-update-push-logs/*' -x 'dev-logs/*' -x 'reports/*' -x '*.DS_Store' -x '.env' -x 'inputs/*' -x 'outputs/*' -x 'exports/*' -x 'art-uploads/*' -x 'audit/*' -x 'assets/*' -x 'descriptions/*' -x 'gdws_content/*' -x 'mnt/*'
+2025-08-17 17:05:36 | [0;32mSUCCESS:[0m Backup ZIP created: /home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-05-23.zip
+2025-08-17 17:05:36 | [0;36mINFO:[0m Uploading backup to Google Drive (gdrive:artnarrator-backups)...
+2025-08-17 17:05:36 | [0;36mEXEC:[0m rclone copy '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-05-23.zip' 'gdrive:artnarrator-backups' --progress
+Transferred:   	          0 B / 11.896 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         0.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:  0% /11.896Mi, 0/s, -Transferred:   	          0 B / 11.896 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         0.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:  0% /11.896Mi, 0/s, -Transferred:   	          0 B / 11.896 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         1.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:  0% /11.896Mi, 0/s, -Transferred:   	          0 B / 11.896 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         1.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:  0% /11.896Mi, 0/s, -Transferred:   	    1.152 MiB / 11.896 MiB, 10%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         2.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:  9% /11.896Mi, 0/s, -Transferred:   	        8 MiB / 11.896 MiB, 67%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         2.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip: 67% /11.896Mi, 0/s, -Transferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.667 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         3.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.667Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.667 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         3.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.667Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.974 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         4.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.974Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.974 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         4.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.974Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.379 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         5.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.379Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 2.379 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         5.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 2.379Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 1.983 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         6.2s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 1.983Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 1.983 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         6.7s
+Transferring:
+ *                backup_2025-08-17_17-05-23.zip:100% /11.896Mi, 1.983Mi/s, 0sTransferred:   	   11.896 MiB / 11.896 MiB, 100%, 1.699 MiB/s, ETA 0s
+Transferred:            1 / 1, 100%
+Elapsed time:         7.2s
+2025-08-17 17:05:45 | [0;32mSUCCESS:[0m Backup successfully uploaded.
+2025-08-17 17:05:45 | [0;36mINFO:[0m Applying cloud retention policy (keeping last 300 backups)...
+2025-08-17 17:05:47 | [0;36mINFO:[0m Fewer than 300 backups in the cloud. No cleanup needed.
+2025-08-17 17:05:47 | [0;36mINFO:[0m Cleaning up local backup file...
+2025-08-17 17:05:47 | [0;36mEXEC:[0m rm -f '/home/artnarrator/artnarrator.com/backups/backup_2025-08-17_17-05-23.zip'
+2025-08-17 17:05:47 | [0;32mSUCCESS:[0m 🎉 Automated backup workflow completed. 💚
+
+### logs/cron-backup-2025-08-18_18-21-26.log
+2025-08-18 18:21:26 | [0;36mINFO:[0m === 🛡️ ArtNarrator Automated Backup Initialized ===
+2025-08-18 18:21:26 | [0;36mINFO:[0m Checking for required tools...
+2025-08-18 18:21:26 | [0;32mSUCCESS:[0m All required tools are present.
+2025-08-18 18:21:26 | [0;36mINFO:[0m Calculating estimated backup size...
+2025-08-18 18:21:26 | [0;33mWARN:[0m Estimated uncompressed backup size is: 33MB
+2025-08-18 18:21:34 | [0;36mINFO:[0m User confirmed. Proceeding with backup...
+2025-08-18 18:21:34 | [0;36mINFO:[0m Creating full project backup ZIP archive...
+2025-08-18 18:21:34 | [0;36mEXEC:[0m zip -r -q '/home/artnarrator/artnarrator.com/backups/backup_2025-08-18_18-21-26.zip' . -x '.git/*' -x 'venv/*' -x 'node_modules/*' -x '__pycache__/*' -x 'backups/*' -x 'logs/*' -x 'git-update-push-logs/*' -x 'dev-logs/*' -x 'reports/*' -x '*.DS_Store' -x '.env' -x 'inputs/*' -x 'outputs/*' -x 'exports/*' -x 'art-uploads/*' -x 'audit/*' -x 'assets/*' -x 'descriptions/*' -x 'gdws_content/*' -x 'mnt/*'
+2025-08-18 18:21:35 | [0;32mSUCCESS:[0m Backup ZIP created: /home/artnarrator/artnarrator.com/backups/backup_2025-08-18_18-21-26.zip
+2025-08-18 18:21:35 | [0;36mINFO:[0m Uploading backup to Google Drive (gdrive:artnarrator-backups)...
+2025-08-18 18:21:35 | [0;36mEXEC:[0m rclone copy '/home/artnarrator/artnarrator.com/backups/backup_2025-08-18_18-21-26.zip' 'gdrive:artnarrator-backups' --progress
+Transferred:   	          0 B / 13.326 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         0.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:  0% /13.326Mi, 0/s, -Transferred:   	          0 B / 13.326 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         0.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:  0% /13.326Mi, 0/s, -Transferred:   	          0 B / 13.326 MiB, 0%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         1.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:  0% /13.326Mi, 0/s, -Transferred:   	        8 MiB / 13.326 MiB, 60%, 0 B/s, ETA -
+Transferred:            0 / 1, 0%
+Elapsed time:         1.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip: 60% /13.326Mi, 0/s, -Transferred:   	        8 MiB / 13.326 MiB, 60%, 4.000 MiB/s, ETA 1s
+Transferred:            0 / 1, 0%
+Elapsed time:         2.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip: 60% /13.326Mi, 4.000Mi/s, 1sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 4.000 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         2.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 4.000Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 4.442 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         3.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 4.442Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 4.442 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         3.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 4.442Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 3.331 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         4.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 3.331Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 3.331 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         4.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 3.331Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 2.665 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         5.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 2.665Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 2.665 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         5.6s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 2.665Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 2.221 MiB/s, ETA 0s
+Transferred:            0 / 1, 0%
+Elapsed time:         6.1s
+Transferring:
+ *                backup_2025-08-18_18-21-26.zip:100% /13.326Mi, 2.221Mi/s, 0sTransferred:   	   13.326 MiB / 13.326 MiB, 100%, 2.221 MiB/s, ETA 0s
+Transferred:            1 / 1, 100%
+Elapsed time:         6.4s
+2025-08-18 18:21:43 | [0;32mSUCCESS:[0m Backup successfully uploaded.
+2025-08-18 18:21:43 | [0;36mINFO:[0m Applying cloud retention policy (keeping last 300 backups)...
+2025-08-18 18:21:45 | [0;36mINFO:[0m Fewer than 300 backups in the cloud. No cleanup needed.
+2025-08-18 18:21:45 | [0;36mINFO:[0m Cleaning up local backup file...
+2025-08-18 18:21:45 | [0;36mEXEC:[0m rm -f '/home/artnarrator/artnarrator.com/backups/backup_2025-08-18_18-21-26.zip'
+2025-08-18 18:21:45 | [0;32mSUCCESS:[0m 🎉 Automated backup workflow completed. 💚
+
+### logs/gunicorn-access.log
+127.0.0.1 - - [18/Aug/2025:05:30:38 +0930] "GET //wp/wp-includes/wlwmanifest.xml HTTP/1.0" 302 273 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:38 +0930] "GET //news/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:39 +0930] "GET //2018/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:39 +0930] "GET //2019/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:39 +0930] "GET //shop/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:40 +0930] "GET //wp1/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:40 +0930] "GET //test/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:40 +0930] "GET //media/wp-includes/wlwmanifest.xml HTTP/1.0" 302 279 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:41 +0930] "GET //wp2/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:41 +0930] "GET //site/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:41 +0930] "GET //cms/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:05:30:42 +0930] "GET //sito/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:06:09:28 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36; compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot"
+127.0.0.1 - - [18/Aug/2025:08:51:27 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:08:51:28 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:09:45:23 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:09:45:25 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:10:55:43 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:10:55:50 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:11:39:23 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:11:39:26 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:12:38:35 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:12:38:37 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:12:57:33 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:34 +0930] "GET /login?next=/ HTTP/1.0" 200 8846 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:35 +0930] "GET /favicon.ico HTTP/1.0" 302 235 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:35 +0930] "GET /login?next=/favicon.ico HTTP/1.0" 200 8846 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:52 +0930] "POST /login?next=/ HTTP/1.0" 302 189 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:53 +0930] "GET / HTTP/1.0" 200 10633 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:53 +0930] "GET /favicon.ico HTTP/1.0" 404 568 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:57:56 +0930] "GET /upload HTTP/1.0" 200 9627 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:58:39 +0930] "POST /upload HTTP/1.0" 302 205 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:58:39 +0930] "GET /artworks HTTP/1.0" 200 14417 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:12:58:39 +0930] "GET /artworks HTTP/1.0" 200 14263 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:10 +0930] "GET /edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg HTTP/1.0" 302 353 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:11 +0930] "GET /login?next=/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg HTTP/1.0" 200 8846 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:24 +0930] "POST /login?next=/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg HTTP/1.0" 302 329 "https://artnarrator.com/login?next=/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:25 +0930] "GET /edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg HTTP/1.0" 200 37300 "https://artnarrator.com/login?next=/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:52 +0930] "GET /finalised HTTP/1.0" 200 9338 "https://artnarrator.com/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:06:59 +0930] "GET / HTTP/1.0" 200 10633 "https://artnarrator.com/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:07:02 +0930] "GET /finalised HTTP/1.0" 200 9338 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:07:25 +0930] "GET / HTTP/1.0" 200 10633 "https://artnarrator.com/edit-listing/4x5/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:07:27 +0930] "GET /artworks HTTP/1.0" 200 14263 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:16:58 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [18/Aug/2025:13:50:37 +0930] "GET /artworks HTTP/1.0" 302 229 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:50:38 +0930] "GET /login?next=/artworks HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:51:01 +0930] "POST /login?next=/artworks HTTP/1.0" 403 8684 "https://artnarrator.com/login?next=/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:51:12 +0930] "POST /login?next=/artworks HTTP/1.0" 403 8684 "https://artnarrator.com/login?next=/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:18 +0930] "POST /login?next=/artworks HTTP/1.0" 302 205 "https://artnarrator.com/login?next=/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:19 +0930] "GET /artworks HTTP/1.0" 200 13622 "https://artnarrator.com/login?next=/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:25 +0930] "POST /delete-artwork/artwork-rjc-00484-by-robin-custance-rjc-rjc-00484 HTTP/1.0" 302 205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:26 +0930] "GET /artworks HTTP/1.0" 200 12479 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:28 +0930] "POST /delete-artwork/artwork-rjc-00485-by-robin-custance-rjc-rjc-00485 HTTP/1.0" 302 205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:29 +0930] "GET /artworks HTTP/1.0" 200 11124 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:31 +0930] "POST /delete-artwork/artwork-rjc-00486-by-robin-custance-rjc-rjc-00486 HTTP/1.0" 302 205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:31 +0930] "GET /artworks HTTP/1.0" 200 9769 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:34 +0930] "POST /delete-artwork/artwork-rjc-0483-by-robin-custance-rjc-rjc-0483 HTTP/1.0" 302 205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:34 +0930] "GET /artworks HTTP/1.0" 200 8417 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:39 +0930] "GET / HTTP/1.0" 200 9928 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:52:42 +0930] "GET /upload HTTP/1.0" 200 8986 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:53:03 +0930] "POST /upload HTTP/1.0" 302 205 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:53:04 +0930] "GET /artworks HTTP/1.0" 200 9752 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:53:04 +0930] "GET /artworks HTTP/1.0" 200 9557 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:15 +0930] "GET / HTTP/1.0" 200 9990 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:18 +0930] "GET / HTTP/1.0" 200 9990 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:20 +0930] "GET /favicon.ico HTTP/1.0" 404 568 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:21 +0930] "GET /upload HTTP/1.0" 200 8986 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:39 +0930] "POST /upload HTTP/1.0" 302 205 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:39 +0930] "GET /artworks HTTP/1.0" 200 11093 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:54:39 +0930] "GET /artworks HTTP/1.0" 200 10898 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:58:15 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [18/Aug/2025:13:59:50 +0930] "GET /edit-listing/4x5/artwork-rjc-0489-by-robin-custance-rjc-rjc-0489.jpg HTTP/1.0" 302 349 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:13:59:51 +0930] "GET /login?next=/edit-listing/4x5/artwork-rjc-0489-by-robin-custance-rjc-rjc-0489.jpg HTTP/1.0" 200 8205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:14:00:05 +0930] "POST /login?next=/edit-listing/4x5/artwork-rjc-0489-by-robin-custance-rjc-rjc-0489.jpg HTTP/1.0" 403 8684 "https://artnarrator.com/login?next=/edit-listing/4x5/artwork-rjc-0489-by-robin-custance-rjc-rjc-0489.jpg" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:14:01:25 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:14:01:32 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:14:36:34 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:14:36:35 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:14:36:35 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:15:14:28 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:15:22 +0930] "GET /login HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:15:31 +0930] "GET /favicon.ico HTTP/1.0" 302 235 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:15:37 +0930] "GET /login?next=/favicon.ico HTTP/1.0" 200 8205 "https://artnarrator.com/favicon.ico" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:16:14 +0930] "GET /sitemap.xml HTTP/1.0" 302 235 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:30:41 +0930] "GET /favicon.ico HTTP/1.0" 302 235 "http://artnarrator.com/favicon.ico" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:30:43 +0930] "GET /login?next=/favicon.ico HTTP/1.0" 200 8205 "https://artnarrator.com/favicon.ico" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+127.0.0.1 - - [18/Aug/2025:15:39:27 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:15:39:28 +0930] "GET /admin/audit/ HTTP/1.0" 302 237 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:15:39:28 +0930] "GET /login?next=/admin/audit/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (compatible; MJ12bot/v2.0.4; http://mj12bot.com/)"
+127.0.0.1 - - [18/Aug/2025:16:17:34 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:16:17:35 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:16:18:05 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 9; ASUS_I005DA Build/PI; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.122 Mobile"
+127.0.0.1 - - [18/Aug/2025:16:18:06 +0930] "GET /login?next=%2F&next=%27 HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 9; ASUS_I005DA Build/PI; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.122 Mobile"
+127.0.0.1 - - [18/Aug/2025:16:18:07 +0930] "GET /login?next=%27 HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 9; ASUS_I005DA Build/PI; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.122 Mobile"
+127.0.0.1 - - [18/Aug/2025:16:18:07 +0930] "GET /login?next=%2F%27 HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 9; ASUS_I005DA Build/PI; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.122 Mobile"
+127.0.0.1 - - [18/Aug/2025:16:31:02 +0930] "GET /admin/audit/ HTTP/1.0" 302 237 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:16:31:04 +0930] "GET /login?next=/admin/audit/ HTTP/1.0" 200 8205 "https://artnarrator.com/admin/audit/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:17:54:26 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)"
+127.0.0.1 - - [18/Aug/2025:18:08:44 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (compatible; CMS-Checker/1.0; +https://example.com)"
+127.0.0.1 - - [18/Aug/2025:18:08:44 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (compatible; CMS-Checker/1.0; +https://example.com)"
+127.0.0.1 - - [18/Aug/2025:18:09:01 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:18:09:02 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:18:09:16 +0930] "POST /login?next=/ HTTP/1.0" 500 442 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:18:11:42 +0930] "POST /login?next=/ HTTP/1.0" 500 442 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:18:20:43 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [18/Aug/2025:19:13:42 +0930] "POST /login?next=/ HTTP/1.0" 302 189 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:13:43 +0930] "GET / HTTP/1.0" 200 9928 "https://artnarrator.com/login?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:13:45 +0930] "GET /upload HTTP/1.0" 200 8986 "https://artnarrator.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:14:07 +0930] "POST /upload HTTP/1.0" 302 205 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:14:08 +0930] "GET /artworks HTTP/1.0" 200 9752 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:14:08 +0930] "GET /artworks HTTP/1.0" 200 9557 "https://artnarrator.com/upload" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:17:48 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [18/Aug/2025:19:24:23 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:19:24:24 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:19:31:32 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:32 +0930] "GET //wp-includes/wlwmanifest.xml HTTP/1.0" 302 267 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:32 +0930] "GET //xmlrpc.php?rsd HTTP/1.0" 302 233 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:32 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:33 +0930] "GET //blog/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:33 +0930] "GET //web/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:33 +0930] "GET //wordpress/wp-includes/wlwmanifest.xml HTTP/1.0" 302 287 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:33 +0930] "GET //website/wp-includes/wlwmanifest.xml HTTP/1.0" 302 283 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:33 +0930] "GET //wp/wp-includes/wlwmanifest.xml HTTP/1.0" 302 273 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:34 +0930] "GET //news/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:34 +0930] "GET //2020/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:34 +0930] "GET //2019/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:34 +0930] "GET //shop/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:35 +0930] "GET //wp1/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:35 +0930] "GET //test/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:35 +0930] "GET //wp2/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:35 +0930] "GET //site/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:36 +0930] "GET //cms/wp-includes/wlwmanifest.xml HTTP/1.0" 302 275 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:36 +0930] "GET //sito/wp-includes/wlwmanifest.xml HTTP/1.0" 302 277 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:19:31:55 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [18/Aug/2025:19:39:25 +0930] "GET /admin/audit/ HTTP/1.0" 302 237 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:19:39:26 +0930] "GET /login?next=/admin/audit/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/admin/audit/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:19:41:02 +0930] "GET /_fragment?_path=what%3D-1%26_controller%3Dphpinfo&_hash=06FUBSaYeJaitiWT1MjPv1w4NF158IaxHV1E40U1upQ%3D HTTP/1.0" 302 231 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0"
+127.0.0.1 - - [18/Aug/2025:20:19:39 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:20:19:45 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:21:09:29 +0930] "GET /.git/config HTTP/1.0" 302 235 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:21:41:49 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+127.0.0.1 - - [18/Aug/2025:22:26:42 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:22:26:43 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:22:58:27 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)"
+127.0.0.1 - - [18/Aug/2025:23:21:13 +0930] "GET /.git/config HTTP/1.0" 302 235 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.19 Safari/537.36 OPR/64.0.3409.0 (Edition developer)"
+127.0.0.1 - - [18/Aug/2025:23:28:44 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [18/Aug/2025:23:28:46 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:00:11:45 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36; compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot"
+127.0.0.1 - - [19/Aug/2025:00:30:33 +0930] "GET /.git/config HTTP/1.0" 302 235 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.166 Safari/537.36 OPR/20.0.1396.73172"
+127.0.0.1 - - [19/Aug/2025:00:41:14 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:00:41:17 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:01:06:45 +0930] "HEAD / HTTP/1.0" 302 0 "-" "CheckMarkNetwork/1.0 (+http://www.checkmarknetwork.com/spider.html)"
+127.0.0.1 - - [19/Aug/2025:01:06:45 +0930] "HEAD /login?next=/ HTTP/1.0" 200 0 "-" "CheckMarkNetwork/1.0 (+http://www.checkmarknetwork.com/spider.html)"
+127.0.0.1 - - [19/Aug/2025:01:06:45 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "CheckMarkNetwork/1.0 (+http://www.checkmarknetwork.com/spider.html)"
+127.0.0.1 - - [19/Aug/2025:01:06:46 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "CheckMarkNetwork/1.0 (+http://www.checkmarknetwork.com/spider.html)"
+127.0.0.1 - - [19/Aug/2025:01:24:39 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:01:24:41 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:01:56:38 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)"
+127.0.0.1 - - [19/Aug/2025:02:46:40 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:02:46:45 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:03:38:51 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:03:38:53 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:05:46:38 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:05:46:39 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:07:20:52 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:20:53 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.183 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:20:54 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.183 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:18 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:18 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:19 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:19 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:21 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:23 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:24 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:25 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:07:21:36 +0930] "GET /favicon.ico HTTP/1.0" 302 235 "-" "Googlebot-Image/1.0"
+127.0.0.1 - - [19/Aug/2025:07:21:38 +0930] "GET /login?next=/favicon.ico HTTP/1.0" 200 8205 "-" "Googlebot-Image/1.0"
+127.0.0.1 - - [19/Aug/2025:07:46:25 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:07:46:27 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:07:59:27 +0930] "GET / HTTP/1.0" 302 213 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:07:59:28 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:08:50:38 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:08:50:39 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:09:45:27 +0930] "GET / HTTP/1.0" 302 213 "http://artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:09:45:29 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:11:02:52 +0930] "GET /robots.txt HTTP/1.0" 302 233 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:11:02:53 +0930] "GET /admin/security HTTP/1.0" 302 241 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.183 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:11:02:53 +0930] "GET /login?next=/admin/security HTTP/1.0" 200 8205 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.183 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+127.0.0.1 - - [19/Aug/2025:11:23:15 +0930] "GET / HTTP/1.0" 302 213 "https://www.google.co.in" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7; rv:125.0.1) Gecko/20100101 Firefox/125.0.1"
+127.0.0.1 - - [19/Aug/2025:11:23:15 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.google.co.in" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7; rv:125.0.1) Gecko/20100101 Firefox/125.0.1"
+127.0.0.1 - - [19/Aug/2025:11:29:12 +0930] "GET /.git/config HTTP/1.0" 302 235 "-" "Mozilla/5.0 (ZZ; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+127.0.0.1 - - [19/Aug/2025:11:38:36 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:11:38:38 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:12:01:48 +0930] "GET /favicon.ico HTTP/1.0" 302 235 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [19/Aug/2025:12:01:49 +0930] "GET /login?next=/favicon.ico HTTP/1.0" 200 8205 "https://artnarrator.com/artworks" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+127.0.0.1 - - [19/Aug/2025:12:02:40 +0930] "GET / HTTP/1.0" 302 213 "http://www.artnarrator.com" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:12:02:42 +0930] "GET /login?next=/ HTTP/1.0" 200 8205 "https://www.artnarrator.com/" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+127.0.0.1 - - [19/Aug/2025:12:09:27 +0930] "GET /healthz HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [19/Aug/2025:12:09:27 +0930] "GET /health HTTP/1.1" 200 2 "-" "curl/7.88.1"
+127.0.0.1 - - [19/Aug/2025:12:09:27 +0930] "GET /health HTTP/1.1" 200 2 "-" "curl/7.88.1"
+
+### logs/gunicorn-error.log
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f40330d0d60>
+  on_exit: <function OnExit.on_exit at 0x7f40330d0ea0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f40330d1080>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-08-16 14:19:44 +0930] [439967] [INFO] Starting gunicorn 23.0.0
+[2025-08-16 14:19:44 +0930] [439967] [DEBUG] Arbiter booted
+[2025-08-16 14:19:44 +0930] [439967] [INFO] Listening at: http://127.0.0.1:8000 (439967)
+[2025-08-16 14:19:44 +0930] [439967] [INFO] Using worker: sync
+[2025-08-16 14:19:44 +0930] [439971] [INFO] Booting worker with pid: 439971
+[2025-08-16 14:19:44 +0930] [439979] [INFO] Booting worker with pid: 439979
+[2025-08-16 14:19:44 +0930] [439978] [INFO] Booting worker with pid: 439978
+[2025-08-16 14:19:44 +0930] [439967] [DEBUG] 3 workers
+[2025-08-16 14:23:09 +0930] [439967] [INFO] Handling signal: int
+[2025-08-16 14:23:09 +0930] [439971] [INFO] Worker exiting (pid: 439971)
+[2025-08-16 14:23:09 +0930] [439978] [INFO] Worker exiting (pid: 439978)
+[2025-08-16 14:23:09 +0930] [439979] [INFO] Worker exiting (pid: 439979)
+[2025-08-16 14:23:10 +0930] [439967] [INFO] Shutting down: Master
+[2025-08-16 14:23:10 +0930] [440065] [INFO] Starting gunicorn 23.0.0
+[2025-08-16 14:23:10 +0930] [440065] [INFO] Listening at: http://127.0.0.1:8000 (440065)
+[2025-08-16 14:23:10 +0930] [440065] [INFO] Using worker: sync
+[2025-08-16 14:23:10 +0930] [440069] [INFO] Booting worker with pid: 440069
+[2025-08-16 14:23:10 +0930] [440070] [INFO] Booting worker with pid: 440070
+[2025-08-16 14:23:10 +0930] [440071] [INFO] Booting worker with pid: 440071
+[2025-08-17 12:57:49 +0930] [440069] [INFO] Worker exiting (pid: 440069)
+[2025-08-17 12:57:49 +0930] [440065] [INFO] Handling signal: term
+[2025-08-17 12:57:49 +0930] [440070] [INFO] Worker exiting (pid: 440070)
+[2025-08-17 12:57:49 +0930] [440071] [INFO] Worker exiting (pid: 440071)
+[2025-08-17 12:57:49 +0930] [440065] [ERROR] Worker (pid:440070) was sent SIGTERM!
+[2025-08-17 12:57:50 +0930] [440065] [INFO] Shutting down: Master
+[2025-08-17 12:57:50 +0930] [597150] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 12:57:50 +0930] [597150] [INFO] Listening at: http://127.0.0.1:8000 (597150)
+[2025-08-17 12:57:50 +0930] [597150] [INFO] Using worker: sync
+[2025-08-17 12:57:50 +0930] [597154] [INFO] Booting worker with pid: 597154
+[2025-08-17 12:57:50 +0930] [597164] [INFO] Booting worker with pid: 597164
+[2025-08-17 12:57:50 +0930] [597165] [INFO] Booting worker with pid: 597165
+[2025-08-17 12:57:55 +0930] [597150] [INFO] Handling signal: term
+[2025-08-17 12:57:55 +0930] [597154] [INFO] Worker exiting (pid: 597154)
+[2025-08-17 12:57:55 +0930] [597164] [INFO] Worker exiting (pid: 597164)
+[2025-08-17 12:57:55 +0930] [597165] [INFO] Worker exiting (pid: 597165)
+[2025-08-17 12:57:55 +0930] [597150] [ERROR] Worker (pid:597164) was sent SIGTERM!
+[2025-08-17 12:57:56 +0930] [597150] [INFO] Shutting down: Master
+[2025-08-17 12:57:56 +0930] [597193] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 12:57:56 +0930] [597193] [INFO] Listening at: http://127.0.0.1:8000 (597193)
+[2025-08-17 12:57:56 +0930] [597193] [INFO] Using worker: sync
+[2025-08-17 12:57:56 +0930] [597196] [INFO] Booting worker with pid: 597196
+[2025-08-17 12:57:56 +0930] [597197] [INFO] Booting worker with pid: 597197
+[2025-08-17 12:57:56 +0930] [597207] [INFO] Booting worker with pid: 597207
+[2025-08-17 15:16:29 +0930] [597193] [INFO] Handling signal: term
+[2025-08-17 15:16:29 +0930] [597196] [INFO] Worker exiting (pid: 597196)
+[2025-08-17 15:16:29 +0930] [597197] [INFO] Worker exiting (pid: 597197)
+[2025-08-17 15:16:29 +0930] [597207] [INFO] Worker exiting (pid: 597207)
+[2025-08-17 15:16:29 +0930] [597193] [ERROR] Worker (pid:597207) was sent SIGTERM!
+[2025-08-17 15:16:29 +0930] [597193] [ERROR] Worker (pid:597197) was sent SIGTERM!
+[2025-08-17 15:16:29 +0930] [597193] [INFO] Shutting down: Master
+[2025-08-17 15:16:29 +0930] [616034] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 15:16:29 +0930] [616034] [INFO] Listening at: http://127.0.0.1:8000 (616034)
+[2025-08-17 15:16:29 +0930] [616034] [INFO] Using worker: sync
+[2025-08-17 15:16:29 +0930] [616037] [INFO] Booting worker with pid: 616037
+[2025-08-17 15:16:29 +0930] [616038] [INFO] Booting worker with pid: 616038
+[2025-08-17 15:16:29 +0930] [616039] [INFO] Booting worker with pid: 616039
+[2025-08-17 15:48:56 +0930] [616034] [INFO] Handling signal: term
+[2025-08-17 15:48:56 +0930] [616039] [INFO] Worker exiting (pid: 616039)
+[2025-08-17 15:48:56 +0930] [616037] [INFO] Worker exiting (pid: 616037)
+[2025-08-17 15:48:56 +0930] [616038] [INFO] Worker exiting (pid: 616038)
+[2025-08-17 15:48:56 +0930] [616034] [ERROR] Worker (pid:616037) was sent SIGTERM!
+[2025-08-17 15:48:56 +0930] [616034] [ERROR] Worker (pid:616039) was sent SIGTERM!
+[2025-08-17 15:48:56 +0930] [616034] [INFO] Shutting down: Master
+[2025-08-17 15:48:56 +0930] [620221] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 15:48:56 +0930] [620221] [INFO] Listening at: http://127.0.0.1:8000 (620221)
+[2025-08-17 15:48:56 +0930] [620221] [INFO] Using worker: sync
+[2025-08-17 15:48:56 +0930] [620225] [INFO] Booting worker with pid: 620225
+[2025-08-17 15:48:57 +0930] [620226] [INFO] Booting worker with pid: 620226
+[2025-08-17 15:48:57 +0930] [620227] [INFO] Booting worker with pid: 620227
+[2025-08-17 15:58:51 +0930] [620221] [INFO] Handling signal: term
+[2025-08-17 15:58:51 +0930] [620225] [INFO] Worker exiting (pid: 620225)
+[2025-08-17 15:58:51 +0930] [620226] [INFO] Worker exiting (pid: 620226)
+[2025-08-17 15:58:51 +0930] [620227] [INFO] Worker exiting (pid: 620227)
+[2025-08-17 15:58:51 +0930] [620221] [ERROR] Worker (pid:620225) was sent SIGTERM!
+[2025-08-17 15:58:51 +0930] [620221] [ERROR] Worker (pid:620226) was sent SIGTERM!
+[2025-08-17 15:58:51 +0930] [620221] [INFO] Shutting down: Master
+[2025-08-17 15:58:51 +0930] [623291] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 15:58:51 +0930] [623291] [INFO] Listening at: http://127.0.0.1:8000 (623291)
+[2025-08-17 15:58:51 +0930] [623291] [INFO] Using worker: sync
+[2025-08-17 15:58:51 +0930] [623295] [INFO] Booting worker with pid: 623295
+[2025-08-17 15:58:52 +0930] [623296] [INFO] Booting worker with pid: 623296
+[2025-08-17 15:58:52 +0930] [623297] [INFO] Booting worker with pid: 623297
+[2025-08-17 16:14:48 +0930] [623291] [INFO] Handling signal: term
+[2025-08-17 16:14:48 +0930] [623296] [INFO] Worker exiting (pid: 623296)
+[2025-08-17 16:14:48 +0930] [623295] [INFO] Worker exiting (pid: 623295)
+[2025-08-17 16:14:48 +0930] [623297] [INFO] Worker exiting (pid: 623297)
+[2025-08-17 16:14:48 +0930] [623291] [ERROR] Worker (pid:623296) was sent SIGTERM!
+[2025-08-17 16:14:48 +0930] [623291] [ERROR] Worker (pid:623295) was sent SIGTERM!
+[2025-08-17 16:14:49 +0930] [623291] [INFO] Shutting down: Master
+[2025-08-17 16:14:49 +0930] [625369] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 16:14:49 +0930] [625369] [INFO] Listening at: http://127.0.0.1:8000 (625369)
+[2025-08-17 16:14:49 +0930] [625369] [INFO] Using worker: sync
+[2025-08-17 16:14:49 +0930] [625373] [INFO] Booting worker with pid: 625373
+[2025-08-17 16:14:49 +0930] [625374] [INFO] Booting worker with pid: 625374
+[2025-08-17 16:14:49 +0930] [625375] [INFO] Booting worker with pid: 625375
+[2025-08-17 17:46:25 +0930] [625369] [INFO] Handling signal: term
+[2025-08-17 17:46:25 +0930] [625375] [INFO] Worker exiting (pid: 625375)
+[2025-08-17 17:46:25 +0930] [625373] [INFO] Worker exiting (pid: 625373)
+[2025-08-17 17:46:25 +0930] [625374] [INFO] Worker exiting (pid: 625374)
+[2025-08-17 17:46:26 +0930] [625369] [INFO] Shutting down: Master
+[2025-08-17 17:46:26 +0930] [640135] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 17:46:26 +0930] [640135] [INFO] Listening at: http://127.0.0.1:8000 (640135)
+[2025-08-17 17:46:26 +0930] [640135] [INFO] Using worker: sync
+[2025-08-17 17:46:26 +0930] [640149] [INFO] Booting worker with pid: 640149
+[2025-08-17 17:46:26 +0930] [640150] [INFO] Booting worker with pid: 640150
+[2025-08-17 17:46:26 +0930] [640151] [INFO] Booting worker with pid: 640151
+[2025-08-17 18:13:52 +0930] [640135] [INFO] Handling signal: term
+[2025-08-17 18:13:52 +0930] [640149] [INFO] Worker exiting (pid: 640149)
+[2025-08-17 18:13:52 +0930] [640150] [INFO] Worker exiting (pid: 640150)
+[2025-08-17 18:13:52 +0930] [640151] [INFO] Worker exiting (pid: 640151)
+[2025-08-17 18:13:53 +0930] [640135] [INFO] Shutting down: Master
+[2025-08-17 18:13:53 +0930] [643076] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 18:13:53 +0930] [643076] [INFO] Listening at: http://127.0.0.1:8000 (643076)
+[2025-08-17 18:13:53 +0930] [643076] [INFO] Using worker: sync
+[2025-08-17 18:13:53 +0930] [643095] [INFO] Booting worker with pid: 643095
+[2025-08-17 18:13:53 +0930] [643096] [INFO] Booting worker with pid: 643096
+[2025-08-17 18:13:53 +0930] [643097] [INFO] Booting worker with pid: 643097
+[2025-08-17 18:46:42 +0930] [643076] [INFO] Handling signal: term
+[2025-08-17 18:46:42 +0930] [643095] [INFO] Worker exiting (pid: 643095)
+[2025-08-17 18:46:42 +0930] [643096] [INFO] Worker exiting (pid: 643096)
+[2025-08-17 18:46:42 +0930] [643097] [INFO] Worker exiting (pid: 643097)
+[2025-08-17 18:46:42 +0930] [643076] [ERROR] Worker (pid:643095) was sent SIGTERM!
+[2025-08-17 18:46:43 +0930] [643076] [INFO] Shutting down: Master
+[2025-08-17 18:46:43 +0930] [648091] [INFO] Starting gunicorn 23.0.0
+[2025-08-17 18:46:43 +0930] [648091] [INFO] Listening at: http://127.0.0.1:8000 (648091)
+[2025-08-17 18:46:43 +0930] [648091] [INFO] Using worker: sync
+[2025-08-17 18:46:43 +0930] [648098] [INFO] Booting worker with pid: 648098
+[2025-08-17 18:46:43 +0930] [648099] [INFO] Booting worker with pid: 648099
+[2025-08-17 18:46:43 +0930] [648100] [INFO] Booting worker with pid: 648100
+[2025-08-18 13:50:14 +0930] [648098] [INFO] Worker exiting (pid: 648098)
+[2025-08-18 13:50:14 +0930] [648091] [INFO] Handling signal: term
+[2025-08-18 13:50:14 +0930] [648099] [INFO] Worker exiting (pid: 648099)
+[2025-08-18 13:50:14 +0930] [648100] [INFO] Worker exiting (pid: 648100)
+[2025-08-18 13:50:14 +0930] [648091] [ERROR] Worker (pid:648098) was sent SIGTERM!
+[2025-08-18 13:50:15 +0930] [648091] [INFO] Shutting down: Master
+[2025-08-18 13:50:15 +0930] [741685] [INFO] Starting gunicorn 23.0.0
+[2025-08-18 13:50:15 +0930] [741685] [INFO] Listening at: http://127.0.0.1:8000 (741685)
+[2025-08-18 13:50:15 +0930] [741685] [INFO] Using worker: sync
+[2025-08-18 13:50:15 +0930] [741692] [INFO] Booting worker with pid: 741692
+[2025-08-18 13:50:15 +0930] [741693] [INFO] Booting worker with pid: 741693
+[2025-08-18 13:50:15 +0930] [741694] [INFO] Booting worker with pid: 741694
+[2025-08-18 18:21:03 +0930] [741693] [INFO] Worker exiting (pid: 741693)
+[2025-08-18 18:21:03 +0930] [741685] [INFO] Handling signal: term
+[2025-08-18 18:21:03 +0930] [741692] [INFO] Worker exiting (pid: 741692)
+[2025-08-18 18:21:03 +0930] [741694] [INFO] Worker exiting (pid: 741694)
+[2025-08-18 18:21:04 +0930] [741685] [INFO] Shutting down: Master
+[2025-08-18 18:21:04 +0930] [774575] [INFO] Starting gunicorn 23.0.0
+[2025-08-18 18:21:04 +0930] [774575] [INFO] Listening at: http://127.0.0.1:8000 (774575)
+[2025-08-18 18:21:04 +0930] [774575] [INFO] Using worker: sync
+[2025-08-18 18:21:04 +0930] [774583] [INFO] Booting worker with pid: 774583
+[2025-08-18 18:21:04 +0930] [774584] [INFO] Booting worker with pid: 774584
+[2025-08-18 18:21:04 +0930] [774585] [INFO] Booting worker with pid: 774585
+[2025-08-18 19:13:29 +0930] [774575] [INFO] Handling signal: term
+[2025-08-18 19:13:29 +0930] [774583] [INFO] Worker exiting (pid: 774583)
+[2025-08-18 19:13:29 +0930] [774584] [INFO] Worker exiting (pid: 774584)
+[2025-08-18 19:13:29 +0930] [774585] [INFO] Worker exiting (pid: 774585)
+[2025-08-18 19:13:30 +0930] [774575] [ERROR] Worker (pid:774584) was sent SIGTERM!
+[2025-08-18 19:13:30 +0930] [774575] [ERROR] Worker (pid:774585) was sent SIGTERM!
+[2025-08-18 19:13:30 +0930] [774575] [ERROR] Worker (pid:774583) was sent SIGTERM!
+[2025-08-18 19:13:30 +0930] [774575] [INFO] Shutting down: Master
+[2025-08-18 19:13:30 +0930] [780343] [INFO] Starting gunicorn 23.0.0
+[2025-08-18 19:13:30 +0930] [780343] [INFO] Listening at: http://127.0.0.1:8000 (780343)
+[2025-08-18 19:13:30 +0930] [780343] [INFO] Using worker: sync
+[2025-08-18 19:13:30 +0930] [780347] [INFO] Booting worker with pid: 780347
+[2025-08-18 19:13:30 +0930] [780348] [INFO] Booting worker with pid: 780348
+[2025-08-18 19:13:30 +0930] [780349] [INFO] Booting worker with pid: 780349
+[2025-08-18 19:31:18 +0930] [780343] [INFO] Handling signal: term
+[2025-08-18 19:31:18 +0930] [780349] [INFO] Worker exiting (pid: 780349)
+[2025-08-18 19:31:18 +0930] [780348] [INFO] Worker exiting (pid: 780348)
+[2025-08-18 19:31:18 +0930] [780347] [INFO] Worker exiting (pid: 780347)
+[2025-08-18 19:31:18 +0930] [780343] [ERROR] Worker (pid:780349) was sent SIGTERM!
+[2025-08-18 19:31:18 +0930] [780343] [ERROR] Worker (pid:780348) was sent SIGTERM!
+[2025-08-18 19:31:19 +0930] [780343] [INFO] Shutting down: Master
+[2025-08-18 19:31:19 +0930] [783561] [INFO] Starting gunicorn 23.0.0
+[2025-08-18 19:31:19 +0930] [783561] [INFO] Listening at: http://127.0.0.1:8000 (783561)
+[2025-08-18 19:31:19 +0930] [783561] [INFO] Using worker: sync
+[2025-08-18 19:31:19 +0930] [783564] [INFO] Booting worker with pid: 783564
+[2025-08-18 19:31:19 +0930] [783565] [INFO] Booting worker with pid: 783565
+[2025-08-18 19:31:19 +0930] [783566] [INFO] Booting worker with pid: 783566
+
+### logs/project-toolkit-2025-08-16_17-57-12.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SAT-16-AUGUST-2025-05-57-PM.md
+[1;36m[INFO][0m Running test suite...
+[1;31m[ERROR][0m Tests failed
+
+### logs/project-toolkit-2025-08-16_19-15-15.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SAT-16-AUGUST-2025-07-15-PM.md
+
+### logs/project-toolkit-2025-08-17_15-00-32.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-00-PM.md
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-01-20.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-01-PM.md
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-17-06.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-48-31.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-49-07.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-49-17.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-49-25.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running test suite...
+[1;32m[SUCCESS][0m All tests passed.
+[1;36m[INFO][0m Cleaning up test folders...
+[1;32m[SUCCESS][0m Test artefacts cleaned.
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-49-PM.md
+[1;36m[INFO][0m Running File & Import Scanner...
+[1;31m[ERROR][0m Scanner failed
+[1;32m[SUCCESS][0m Import scan complete
+[1;36m[INFO][0m Running Reverse Dependency Mapper...
+[1;31m[ERROR][0m Reverse mapper failed
+[1;32m[SUCCESS][0m Dependency map complete
+[1;36m[INFO][0m Running File & Import Scanner...
+[1;31m[ERROR][0m Scanner failed
+[1;32m[SUCCESS][0m Import scan complete
+[1;36m[INFO][0m Running Reverse Dependency Mapper...
+[1;31m[ERROR][0m Reverse mapper failed
+[1;32m[SUCCESS][0m Dependency map complete
+[1;36m[INFO][0m Running Codex System Summary...
+[1;31m[ERROR][0m Codex audit failed
+[1;32m[SUCCESS][0m Codex audit complete
+[1;36m[INFO][0m Running Path & Link Validator...
+[1;31m[ERROR][0m Path/link validator failed
+[1;32m[SUCCESS][0m Path & Link validation complete
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-50-PM.md
+
+### logs/project-toolkit-2025-08-17_15-58-17.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_15-59-12.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /healthz not responding
+
+### logs/project-toolkit-2025-08-17_16-00-50.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;31m[ERROR][0m /health not responding
+
+### logs/project-toolkit-2025-08-17_16-15-05.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running [PUSH] workflow...
+[1;36m[INFO][0m Running health check...
+[1;32m[SUCCESS][0m All system checks passed.
+[1;36m[INFO][0m Running test suite...
+[1;32m[SUCCESS][0m All tests passed.
+[1;31m[ERROR][0m Missing includes file: backup_includes.txt
+
+### logs/project-toolkit-2025-08-17_16-17-16.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Checking artnarrator service status...
+[1;36m[INFO][0m Enabling artnarrator service to start on boot...
+[1;32m[SUCCESS][0m Service enabled on boot.
+[1;36m[INFO][0m Reloading systemd daemon...
+[1;32m[SUCCESS][0m Systemd daemon reloaded.
+[1;36m[INFO][0m Running folder tree generator...
+[1;32m[SUCCESS][0m Log snapshot saved: code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-04-19-PM.md
+[1;36m[INFO][0m Cleaning up test folders...
+[1;32m[SUCCESS][0m Test artefacts cleaned.
+[1;36m[INFO][0m Running test suite...
+[1;32m[SUCCESS][0m All tests passed.
+[1;31m[ERROR][0m Missing includes file: backup_includes.txt
+
+### logs/project-toolkit-2025-08-17_16-26-51.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+
+### logs/project-toolkit-2025-08-17_16-30-09.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+
+### logs/project-toolkit-2025-08-17_16-30-59.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;32m[SUCCESS][0m Local backup created: backups/backup_Sun-17-Aug-2025-04-31-PM.tar.gz
+
+### logs/project-toolkit-2025-08-17_16-41-53.log
+[1;36m[INFO][0m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO][0m Running cron backup simulation...
+[1;31m[ERROR][0m cron-backup.sh not found or not executable.
+
+### logs/project-toolkit-2025-08-17_16-49-30.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+[1;31m[ERROR](B[m 'cron-backup.sh' not found or is not executable.
+
+### logs/project-toolkit-2025-08-17_16-52-24.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+[1;31m[ERROR](B[m Cron backup script simulation failed.
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+[1;31m[ERROR](B[m Cron backup script simulation failed.
+
+### logs/project-toolkit-2025-08-17_16-57-11.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+[1;36m[INFO](B[m Running cron backup simulation (manual trigger)...
+
+### logs/project-toolkit-2025-08-17_17-05-04.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running ACTUAL cloud backup (manual trigger)...
+[1;33m[WARN](B[m Invalid option ''
+
+### logs/project-toolkit-2025-08-17_17-07-45.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Finding and tailing the latest analysis script log...
+
+### logs/project-toolkit-2025-08-17_17-12-54.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running test suite...
+[1;32m[SUCCESS](B[m All tests passed.
+[1;36m[INFO](B[m Finding and tailing the latest analysis script log...
+[1;33m[WARN](B[m No analysis script log files found in 'logs/ANALYZE_SCRIPT'.
+[1;36m[INFO](B[m Tailing Gunicorn error log... (Press Ctrl+C to exit)
+
+### logs/project-toolkit-2025-08-17_17-20-02.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Attempting to reset login lockout...
+[1;31m[ERROR](B[m 'sqlite3' command not found. Please install it (e.g., 'sudo apt-get install sqlite3').
+
+### logs/project-toolkit-2025-08-17_17-22-45.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating folder tree...
+
+### logs/project-toolkit-2025-08-17_17-46-03.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Restarting 'artnarrator' service...
+[1;32m[SUCCESS](B[m Service 'restart' command issued successfully.
+
+### logs/project-toolkit-2025-08-17_18-10-47.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Attempting to reset login lockout...
+[1;33m[WARN](B[m This will clear all records of failed login attempts from the 'login_attempts' table.
+
+### logs/project-toolkit-2025-08-17_18-13-38.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Restarting all services...
+[1;36m[INFO](B[m Restarting 'artnarrator' service...
+[1;32m[SUCCESS](B[m Service 'restart' command issued successfully.
+[1;32m[SUCCESS](B[m All services have been issued a restart command.
+
+### logs/project-toolkit-2025-08-17_18-17-23.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Sun-17-August-2025-06-17-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+
+### logs/project-toolkit-2025-08-17_18-24-45.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Attempting to clear all active user sessions...
+[1;33m[WARN](B[m This will immediately log out ALL users from the application. This is useful if you are locked out due to the session limit.
+[1;32m[SUCCESS](B[m Session registry file has been deleted. All users have been logged out.
+[1;33m[WARN](B[m Invalid option ''
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Sun-17-August-2025-06-30-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+[1;36m[INFO](B[m Restarting all services...
+[1;36m[INFO](B[m Restarting 'artnarrator' service...
+[1;32m[SUCCESS](B[m Service 'restart' command issued successfully.
+[1;32m[SUCCESS](B[m All services have been issued a restart command.
+
+### logs/project-toolkit-2025-08-17_19-02-00.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Sun-17-August-2025-07-02-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+
+### logs/project-toolkit-2025-08-18_13-05-48.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-01-05-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-01-12-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+[1;36m[INFO](B[m Running [FULL PUSH] workflow...
+[1;36m[INFO](B[m Running system health and dependency checks...
+[1;32m[SUCCESS](B[m All system health checks passed.
+[1;36m[INFO](B[m Running test suite...
+[1;31m[ERROR](B[m Pytest test suite failed.
+
+### logs/project-toolkit-2025-08-18_13-50-02.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Restarting all services...
+[1;36m[INFO](B[m Restarting 'artnarrator' service...
+[1;32m[SUCCESS](B[m Service 'restart' command issued successfully.
+[1;32m[SUCCESS](B[m All services have been issued a restart command.
+[1;36m[INFO](B[m Checking 'artnarrator' service status...
+
+### logs/project-toolkit-2025-08-18_13-51-54.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Attempting to clear all active user sessions...
+[1;33m[WARN](B[m This will immediately log out ALL users from the application. This is useful if you are locked out due to the session limit.
+[1;32m[SUCCESS](B[m Session registry file has been deleted. All users have been logged out.
+[1;33m[WARN](B[m Invalid option ''
+[1;33m[WARN](B[m Invalid option '5'
+[1;36m[INFO](B[m Running [FULL PUSH] workflow...
+[1;36m[INFO](B[m Running system health and dependency checks...
+[1;32m[SUCCESS](B[m All system health checks passed.
+[1;36m[INFO](B[m Running test suite...
+[1;31m[ERROR](B[m Pytest test suite failed.
+
+### logs/project-toolkit-2025-08-18_14-01-51.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-02-02-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+
+### logs/project-toolkit-2025-08-18_18-20-35.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running [FULL PUSH] workflow...
+[1;36m[INFO](B[m Running system health and dependency checks...
+[1;32m[SUCCESS](B[m All system health checks passed.
+[1;36m[INFO](B[m Running test suite...
+[1;32m[SUCCESS](B[m All tests passed.
+[1;32m[SUCCESS](B[m Local backup created: backups/local_backup_Mon-18-Aug-2025-06-20-PM.tar.gz
+[1;36m[INFO](B[m Committing and pushing to branch: 'main'...
+[1;32m[SUCCESS](B[m Changes committed.
+[1;32m[SUCCESS](B[m Git push to 'main' successful.
+[1;36m[INFO](B[m Restarting 'artnarrator' service...
+[1;32m[SUCCESS](B[m Service 'restart' command issued successfully.
+[1;32m[SUCCESS](B[m [FULL PUSH] workflow completed successfully.
+[1;32m[SUCCESS](B[m Local backup created: backups/local_backup_Mon-18-Aug-2025-06-21-PM.tar.gz
+[1;36m[INFO](B[m Running ACTUAL cloud backup (manual trigger)...
+[1;33m[WARN](B[m Invalid option ''
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-06-22-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+
+### logs/project-toolkit-2025-08-18_19-17-22.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-07-17-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+[1;36m[INFO](B[m Running [FULL PUSH] workflow...
+[1;36m[INFO](B[m Running system health and dependency checks...
+[1;32m[SUCCESS](B[m All system health checks passed.
+[1;36m[INFO](B[m Running test suite...
+[1;32m[SUCCESS](B[m All tests passed.
+[1;32m[SUCCESS](B[m Local backup created: backups/local_backup_Mon-18-Aug-2025-07-18-PM.tar.gz
+[1;36m[INFO](B[m Committing and pushing to branch: 'main'...
+[1;32m[SUCCESS](B[m Changes committed.
+
+### logs/project-toolkit-2025-08-18_19-18-55.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Generating all audit files: Code Stack, Folder Tree, and Log Snapshot...
+[1;36m[INFO](B[m Generating folder tree...
+[1;32m[SUCCESS](B[m Log snapshot saved to: code-stacks/log-snapshots/log-stack-Mon-18-August-2025-07-20-PM.md
+[1;32m[SUCCESS](B[m All audit files have been generated.
+
+### logs/project-toolkit-2025-08-18_19-31-52.log
+[1;36m[INFO](B[m Project Toolkit Initialised – Launching Main Menu...
+[1;36m[INFO](B[m Running [FULL PUSH] workflow...
+[1;36m[INFO](B[m Running system health and dependency checks...
+[1;32m[SUCCESS](B[m All system health checks passed.
+[1;36m[INFO](B[m Running test suite...
+[1;32m[SUCCESS](B[m All tests passed.
+[1;32m[SUCCESS](B[m Local backup created: backups/local_backup_Mon-18-Aug-2025-07-32-PM.tar.gz
+[1;36m[INFO](B[m Committing and pushing to branch: 'main'...
+[1;32m[SUCCESS](B[m Changes committed.
+

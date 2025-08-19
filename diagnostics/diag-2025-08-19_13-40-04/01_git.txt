@@ -1,0 +1,167 @@
+== Git ==
+/home/artnarrator/artnarrator.com
+## main...origin/main [ahead 3]
+ D .env.bak.2025-08-18-184202
+ D .env.bak.2025-08-18-184404
+ D .env.bak.2025-08-18-191112
+ D code-stacks/full-code-stack/code-stack-FRI-15-AUGUST-2025-06-34-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-01-05-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-01-12-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-01-16-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-02-02-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-06-20-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-06-22-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-07-17-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-07-18-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-07-20-PM.md
+ D code-stacks/full-code-stack/code-stack-MON-18-AUGUST-2025-07-32-PM.md
+ D code-stacks/full-code-stack/code-stack-SAT-16-AUGUST-2025-06-06-PM.md
+ D code-stacks/full-code-stack/code-stack-SAT-16-AUGUST-2025-12-02-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-02-59-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-03-51-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-04-15-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-04-18-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-05-23-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-06-17-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-06-30-PM.md
+ D code-stacks/full-code-stack/code-stack-SUN-17-AUGUST-2025-07-02-PM.md
+ D code-stacks/log-snapshots/log-stack-FRI-15-AUGUST-2025-06-27-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-01-05-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-01-12-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-02-02-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-06-22-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-07-17-PM.md
+ D code-stacks/log-snapshots/log-stack-Mon-18-August-2025-07-20-PM.md
+ D code-stacks/log-snapshots/log-stack-SAT-16-AUGUST-2025-05-57-PM.md
+ D code-stacks/log-snapshots/log-stack-SAT-16-AUGUST-2025-07-15-PM.md
+ D code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-00-PM.md
+ D code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-01-PM.md
+ D code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-49-PM.md
+ D code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-03-50-PM.md
+ D code-stacks/log-snapshots/log-stack-SUN-17-AUGUST-2025-04-19-PM.md
+ D code-stacks/log-snapshots/log-stack-Sun-17-August-2025-06-17-PM.md
+ D code-stacks/log-snapshots/log-stack-Sun-17-August-2025-06-30-PM.md
+ D code-stacks/log-snapshots/log-stack-Sun-17-August-2025-07-02-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-FRI-15-AUGUST-2025-06-34-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-01-05-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-01-12-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-01-16-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-02-02-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-06-20-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-06-22-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-07-17-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-07-18-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-07-20-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-MON-18-AUGUST-2025-07-32-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SAT-16-AUGUST-2025-06-06-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SAT-16-AUGUST-2025-12-02-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-02-59-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-03-51-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-04-15-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-04-18-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-05-23-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-06-17-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-06-30-PM.md
+ D code-stacks/root-files-code-stack/root-files-code-stack-SUN-17-AUGUST-2025-07-02-PM.md
+ D config.py.bak.2025-08-18-184202
+ D config.py.bak.2025-08-18-184404
+ D config.py.bak.2025-08-18-191112
+ D config.py.bak.2025-08-18-191329
+ M data/artnarrator.sqlite3
+ M folder_structure.txt
+ M routes/artwork_routes.py
+ M scripts/analyze_artwork.py
+ M settings/sku_tracker.json
+ D tmp_test_vips.png
+ D tmp_test_vips_thumb.jpg
+?? art-processing/unanalysed-artwork/
+?? code-stacks/full-code-stack/code-stack-TUE-19-AUGUST-2025-01-37-PM.md
+?? code-stacks/log-snapshots/log-stack-Tue-19-August-2025-01-37-PM.md
+?? code-stacks/root-files-code-stack/root-files-code-stack-TUE-19-AUGUST-2025-01-37-PM.md
+?? collect_diagnostics.sh
+?? cookies.txt
+?? diagnostics/
+a2917e8 chore(telemetry): add analysis telemetry sidecar and client
+f12f84c Toolkit push on 2025-08-18 07:32 PM
+bc95c58 Toolkit push on 2025-08-18 07:18 PM
+ff600dc Toolkit push on 2025-08-18 06:20 PM
+e0bd89a chore: keep processed-artwork/ dir
+35b666f chore: ignore test/processed artifacts & pending lists
+3e9d6d5 Reapply local changes after rebase
+b915027 tests: clean both pending_mockups.json locations; drop tmp/pytest entries
+33e9a6f Update tests.yml
+48252e9 Update tests.yml
+8139887 Update tests.yml
+63b7d2a Update README.md
+f6e8b19 Update tests.yml
+2095a8e CI: junit + coverage + concurrency; strict teardown
+d439989 tests: reset session tracker at session start/end to avoid initial cap; keep per-test cleanup
+a2917e8d17e25b5e521bc682cb15f305f2ddd927
+https://github.com/capitalart/artnarrator
+
+--- .gitignore ---
+# .gitignore for ArtNarrator
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Environment & Sensitive Files ---
+.env
+
+# --- Database ---
+# We are intentionally TRACKING the database for this project's backup.
+# If you want to ignore it, uncomment the line below.
+# *.sqlite3
+
+# --- Logs & Temporary Files ---
+*.log
+logs/
+CODEX-LOGS/
+.cache/
+*.tmp
+*.bak
+*.swp
+
+# --- OS & Editor Specific ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Build & Distribution ---
+dist/
+build/
+*.egg-info/
+
+# --- Large Generated Folders ---
+# We ignore the contents of these, but keep the folders themselves
+# by tracking a .gitkeep file inside them.
+outputs/*
+art-processing/processed-artwork/*
+art-processing/finalised-artwork/*
+art-processing/artwork-vault/*
+
+# Keep the empty directory structures by not ignoring .gitkeep files
+!*/.gitkeep# Test/CI artifacts
+art-processing/processed-artwork/**
+!art-processing/processed-artwork/.keep
+
+# Pending lists created by tests
+art-processing/pending_mockups.json
+art-processing/processed-artwork/pending_mockups.json
+
+# Pytest cache
+.pytest_cache/
+.env.production
+logs/analysis-events.jsonl
+logs/analysis-events.spool.jsonl
+telemetry/__pycache__/

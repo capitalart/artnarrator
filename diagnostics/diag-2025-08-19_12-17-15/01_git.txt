@@ -1,0 +1,90 @@
+== Git ==
+/home/artnarrator/artnarrator.com
+## main...origin/main [ahead 3]
+?? .env.bak.2025-08-19_12-10-22
+?? collect_diagnostics.sh
+?? diagnostics/
+a2917e8 chore(telemetry): add analysis telemetry sidecar and client
+f12f84c Toolkit push on 2025-08-18 07:32 PM
+bc95c58 Toolkit push on 2025-08-18 07:18 PM
+ff600dc Toolkit push on 2025-08-18 06:20 PM
+e0bd89a chore: keep processed-artwork/ dir
+35b666f chore: ignore test/processed artifacts & pending lists
+3e9d6d5 Reapply local changes after rebase
+b915027 tests: clean both pending_mockups.json locations; drop tmp/pytest entries
+33e9a6f Update tests.yml
+48252e9 Update tests.yml
+8139887 Update tests.yml
+63b7d2a Update README.md
+f6e8b19 Update tests.yml
+2095a8e CI: junit + coverage + concurrency; strict teardown
+d439989 tests: reset session tracker at session start/end to avoid initial cap; keep per-test cleanup
+a2917e8d17e25b5e521bc682cb15f305f2ddd927
+https://github.com/capitalart/artnarrator
+
+--- .gitignore ---
+# .gitignore for ArtNarrator
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Environment & Sensitive Files ---
+.env
+
+# --- Database ---
+# We are intentionally TRACKING the database for this project's backup.
+# If you want to ignore it, uncomment the line below.
+# *.sqlite3
+
+# --- Logs & Temporary Files ---
+*.log
+logs/
+CODEX-LOGS/
+.cache/
+*.tmp
+*.bak
+*.swp
+
+# --- OS & Editor Specific ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Build & Distribution ---
+dist/
+build/
+*.egg-info/
+
+# --- Large Generated Folders ---
+# We ignore the contents of these, but keep the folders themselves
+# by tracking a .gitkeep file inside them.
+outputs/*
+art-processing/processed-artwork/*
+art-processing/finalised-artwork/*
+art-processing/artwork-vault/*
+
+# Keep the empty directory structures by not ignoring .gitkeep files
+!*/.gitkeep# Test/CI artifacts
+art-processing/processed-artwork/**
+!art-processing/processed-artwork/.keep
+
+# Pending lists created by tests
+art-processing/pending_mockups.json
+art-processing/processed-artwork/pending_mockups.json
+
+# Pytest cache
+.pytest_cache/
+.env.production
+logs/analysis-events.jsonl
+logs/analysis-events.spool.jsonl
+telemetry/__pycache__/

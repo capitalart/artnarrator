@@ -1,8 +1,5 @@
 artnarrator.com
 ├── .env
-├── .env.bak.2025-08-18-184202
-├── .env.bak.2025-08-18-184404
-├── .env.bak.2025-08-18-191112
 ├── .github
 │   └── workflows
 │       └── tests.yml
@@ -46,85 +43,40 @@ artnarrator.com
 │   ├── master-artwork-paths.json
 │   ├── processed-artwork
 │   │   ├── .keep
-│   │   ├── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506
-│   │   │   ├── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506-listing.json
-│   │   │   └── artwork-rjc-0506-by-robin-custance-rjc-rjc-0506.jpg
-│   │   └── pending_mockups.json
+│   │   ├── pending_mockups.json
+│   │   └── serenity-in-bloom--fine-art-wall-print-by-robin-custance-rjc-rjc-0521
+│   │       ├── serenity-in-bloom--fine-art-wall-print-by-robin-custance-rjc-rjc-0521-listing.json
+│   │       └── serenity-in-bloom--fine-art-wall-print-by-robin-custance-rjc-rjc-0521.jpg
 │   └── unanalysed-artwork
+│       ├── RJC-0522
+│       │   ├── RJC-0522-analyse.jpg
+│       │   ├── RJC-0522-source.jpg
+│       │   ├── RJC-0522-thumb.jpg
+│       │   └── RJC-0522.qc.json
+│       └── temp
+│           └── RJC-0521-source-optimized.jpg
 ├── backup_excludes.txt
 ├── backup_includes.txt
 ├── backups
 │   ├── backup_Sun-17-Aug-2025-04-31-PM.tar.gz
 │   ├── local_backup_Mon-18-Aug-2025-06-20-PM.tar.gz
 │   ├── local_backup_Mon-18-Aug-2025-06-21-PM.tar.gz
-│   └── local_backup_Mon-18-Aug-2025-07-18-PM.tar.gz
+│   ├── local_backup_Mon-18-Aug-2025-07-18-PM.tar.gz
+│   └── local_backup_Mon-18-Aug-2025-07-32-PM.tar.gz
 ├── code-stacker.sh
 ├── code-stacks
 │   ├── full-code-stack
-│   │   ├── code-stack-FRI-15-AUGUST-2025-06-34-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-01-05-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-01-12-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-01-16-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-02-02-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-06-20-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-06-22-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-07-17-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-07-18-PM.md
-│   │   ├── code-stack-MON-18-AUGUST-2025-07-20-PM.md
-│   │   ├── code-stack-SAT-16-AUGUST-2025-06-06-PM.md
-│   │   ├── code-stack-SAT-16-AUGUST-2025-12-02-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-02-59-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-03-51-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-04-15-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-04-18-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-05-23-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-06-17-PM.md
-│   │   ├── code-stack-SUN-17-AUGUST-2025-06-30-PM.md
-│   │   └── code-stack-SUN-17-AUGUST-2025-07-02-PM.md
+│   │   ├── code-stack-TUE-19-AUGUST-2025-01-37-PM.md
+│   │   └── code-stack-TUE-19-AUGUST-2025-02-12-PM.md
 │   ├── log-snapshots
-│   │   ├── log-stack-FRI-15-AUGUST-2025-06-27-PM.md
-│   │   ├── log-stack-Mon-18-August-2025-01-05-PM.md
-│   │   ├── log-stack-Mon-18-August-2025-01-12-PM.md
-│   │   ├── log-stack-Mon-18-August-2025-02-02-PM.md
-│   │   ├── log-stack-Mon-18-August-2025-06-22-PM.md
-│   │   ├── log-stack-Mon-18-August-2025-07-17-PM.md
-│   │   ├── log-stack-SAT-16-AUGUST-2025-05-57-PM.md
-│   │   ├── log-stack-SAT-16-AUGUST-2025-07-15-PM.md
-│   │   ├── log-stack-SUN-17-AUGUST-2025-03-00-PM.md
-│   │   ├── log-stack-SUN-17-AUGUST-2025-03-01-PM.md
-│   │   ├── log-stack-SUN-17-AUGUST-2025-03-49-PM.md
-│   │   ├── log-stack-SUN-17-AUGUST-2025-03-50-PM.md
-│   │   ├── log-stack-SUN-17-AUGUST-2025-04-19-PM.md
-│   │   ├── log-stack-Sun-17-August-2025-06-17-PM.md
-│   │   ├── log-stack-Sun-17-August-2025-06-30-PM.md
-│   │   └── log-stack-Sun-17-August-2025-07-02-PM.md
+│   │   └── log-stack-Tue-19-August-2025-01-37-PM.md
 │   └── root-files-code-stack
-│       ├── root-files-code-stack-FRI-15-AUGUST-2025-06-34-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-01-05-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-01-12-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-01-16-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-02-02-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-06-20-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-06-22-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-17-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-18-PM.md
-│       ├── root-files-code-stack-MON-18-AUGUST-2025-07-20-PM.md
-│       ├── root-files-code-stack-SAT-16-AUGUST-2025-06-06-PM.md
-│       ├── root-files-code-stack-SAT-16-AUGUST-2025-12-02-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-02-59-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-03-51-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-04-15-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-04-18-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-05-23-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-06-17-PM.md
-│       ├── root-files-code-stack-SUN-17-AUGUST-2025-06-30-PM.md
-│       └── root-files-code-stack-SUN-17-AUGUST-2025-07-02-PM.md
+│       ├── root-files-code-stack-TUE-19-AUGUST-2025-01-37-PM.md
+│       └── root-files-code-stack-TUE-19-AUGUST-2025-02-12-PM.md
+├── collect_diagnostics.sh
 ├── config.py
-├── config.py.bak.2025-08-18-184202
-├── config.py.bak.2025-08-18-184404
-├── config.py.bak.2025-08-18-191112
-├── config.py.bak.2025-08-18-191329
 ├── conftest.py
+├── cookies.txt
 ├── cron-backup.sh
 ├── data
 │   ├── artnarrator.sqlite3
@@ -545,6 +497,52 @@ artnarrator.com
 │   └── sellbrite
 │       └── test_sellbrite_listing.json
 ├── db.py
+├── diagnostics
+│   ├── diag-2025-08-19_12-09-23
+│   │   ├── 00_sys.txt
+│   │   ├── 01_git.txt
+│   │   ├── 02_env.txt
+│   │   ├── 03_config_effective.txt
+│   │   ├── 04_routes.txt
+│   │   ├── 05_tree.txt
+│   │   ├── 06_queues_logs.txt
+│   │   ├── 07_db.txt
+│   │   ├── 08_python.txt
+│   │   ├── 09_services_ports.txt
+│   │   ├── 10_analyze_cli.txt
+│   │   ├── 11_health.txt
+│   │   └── 12_summary.txt
+│   ├── diag-2025-08-19_12-09-23.tar.gz
+│   ├── diag-2025-08-19_12-17-15
+│   │   ├── 00_sys.txt
+│   │   ├── 01_git.txt
+│   │   ├── 02_env.txt
+│   │   ├── 03_config_effective.txt
+│   │   ├── 04_routes.txt
+│   │   ├── 05_tree.txt
+│   │   ├── 06_queues_logs.txt
+│   │   ├── 07_db.txt
+│   │   ├── 08_python.txt
+│   │   ├── 09_services_ports.txt
+│   │   ├── 10_analyze_cli.txt
+│   │   ├── 11_health.txt
+│   │   └── 12_summary.txt
+│   ├── diag-2025-08-19_12-17-15.tar.gz
+│   ├── diag-2025-08-19_13-40-04
+│   │   ├── 00_sys.txt
+│   │   ├── 01_git.txt
+│   │   ├── 02_env.txt
+│   │   ├── 03_config_effective.txt
+│   │   ├── 04_routes.txt
+│   │   ├── 05_tree.txt
+│   │   ├── 06_queues_logs.txt
+│   │   ├── 07_db.txt
+│   │   ├── 08_python.txt
+│   │   ├── 09_services_ports.txt
+│   │   ├── 10_analyze_cli.txt
+│   │   ├── 11_health.txt
+│   │   └── 12_summary.txt
+│   └── diag-2025-08-19_13-40-04.tar.gz
 ├── folder_structure.txt
 ├── generate_folder_tree.py
 ├── generic_texts
@@ -1296,6 +1294,7 @@ artnarrator.com
 │   ├── ANALYZE_SCRIPT
 │   ├── analyse-google
 │   ├── analyse-openai
+│   ├── analysis-events.jsonl
 │   ├── analysis_status.json
 │   ├── cleanup
 │   ├── composite-generation-logs
@@ -1317,6 +1316,7 @@ artnarrator.com
 │   ├── analyze_routes.py
 │   ├── api_routes.py
 │   ├── artwork_routes.py
+│   ├── artwork_routes.py.bak.1755577576
 │   ├── audit_routes.py
 │   ├── auth_routes.py
 │   ├── coordinate_admin_routes.py
@@ -2913,6 +2913,9 @@ artnarrator.com
 │   │   └── upload.js
 │   └── logos
 │       └── logo-vector.svg
+├── telemetry
+│   ├── telemetry_client.py
+│   └── telemetry_service.py
 ├── templates
 │   ├── 404.html
 │   ├── 500.html
@@ -2994,8 +2997,6 @@ artnarrator.com
 │   ├── test_teardown_report.py
 │   ├── test_upload.py
 │   └── test_utils_cleaning.py
-├── tmp_test_vips.png
-├── tmp_test_vips_thumb.jpg
 ├── tools.sh
 ├── unanalysed-artwork
 └── utils

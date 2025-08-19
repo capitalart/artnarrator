@@ -40,6 +40,7 @@ Table of Contents (ToC)
 
 [artwork-routes-py-7] Artwork Analysis Trigger Routes
     [artwork-routes-py-7a] analyze_artwork_route
+    [artwork-routes-py-7b] analyze_by_filename
 
 [artwork-routes-py-8] Artwork Editing and Listing Management
     [artwork-routes-py-8a] edit_listing
@@ -86,7 +87,7 @@ Table of Contents (ToC)
 
 # === [ Section 1: Imports & Initialisation | artwork-routes-py-1 ] ===
 from __future__ import annotations
-import json, subprocess, uuid, random, logging, shutil, os, traceback, datetime, time, sys
+import json, subprocess, uuid, random, logging, shutil, os, traceback, datetime, time, sys, re
 from pathlib import Path
 from PIL import Image
 from helpers.image_utils import make_working_copy, get_image_dimensions
@@ -95,7 +96,6 @@ from flask import (
     Blueprint, render_template, request, redirect, url_for,
     session, flash, send_from_directory, abort, Response, jsonify,
 )
-import re
 import config
 from helpers.listing_utils import (
     resolve_listing_paths,
@@ -316,7 +316,12 @@ def upload_artwork():
             return jsonify(results)
         
         if any(r["success"] for r in results):
-            flash(f"Uploaded {sum(1 for r in results if r['success'])} file(s) successfully. Analysis has started in the background.", "success")
+            auto = os.getenv("AUTO_ANALYZE_ON_UPLOAD", "0") == "1"
+            n = sum(1 for r in results if r["success"])
+            if auto:
+                flash(f"Uploaded {n} file(s) successfully. Analysis has started in the background.", "success")
+            else:
+                flash(f"Uploaded {n} file(s) successfully. Ready to analyze — click an item to run analysis.", "success")
         for r in [r for r in results if not r["success"]]:
             flash(f"{r['original']}: {r['error']}", "danger")
 
@@ -436,25 +441,32 @@ def analyze_artwork_route(sku: str):
 # based handler by locating the unanalysed file and passing its SKU/folder.
 @bp.route("/analyze/<aspect>/<filename>", methods=["POST"], endpoint="analyze_artwork")
 def analyze_by_filename(aspect, filename):
-    # Try to find an unanalysed copy first
+    """
+    Accepts /analyze/<aspect>/<filename> where 'filename' is the ORIGINAL name the user uploaded.
+    Since uploads are stored SKU-first (RJC-xxxx), we will:
+      1) Try direct path lookup by filename in UNANALYSED_ROOT (legacy).
+      2) If not found, map original filename -> SKU via each folder's QC JSON.
+      3) Run analysis by SKU and redirect to the edit page.
+    """
     import config as _config
     from pathlib import Path as _P
+
+    provider = request.form.get("provider", "openai").lower()
+    is_ajax = "XMLHttpRequest" in request.headers.get("X-Requested-With", "")
+
     base = _P(filename).name
+
+    # --- (1) Legacy direct path lookup ---
     src = next((p for p in _config.UNANALYSED_ROOT.rglob(base) if p.is_file()), None)
     if src:
-        # Run analysis directly on the image path so test fakes that expect
-        # an image path are exercised and produce the mocked SEO name.
-        provider = request.form.get("provider", "openai").lower()
-        is_ajax = "XMLHttpRequest" in request.headers.get("X-Requested-With", "")
         try:
             analysis_result = _run_ai_analysis(src, provider)
-            # Reuse the same success/listing handling as the SKU-based route
+
+            # normalise result shapes
             if isinstance(analysis_result, list) and len(analysis_result) == 1 and isinstance(analysis_result[0], dict):
                 analysis_result = analysis_result[0]
-
             if isinstance(analysis_result, dict) and analysis_result.get("success") is False:
                 raise RuntimeError(analysis_result.get("error", "Unknown analysis error"))
-
             if isinstance(analysis_result, dict) and "listing" in analysis_result and isinstance(analysis_result["listing"], dict):
                 listing = analysis_result["listing"]
             elif isinstance(analysis_result, dict) and "seo_filename" in analysis_result:
@@ -471,6 +483,7 @@ def analyze_by_filename(aspect, filename):
                 safe_listing = {k: v for k, v in listing.items() if not isinstance(v, (bytes, bytearray))}
                 return jsonify({"success": True, "redirect_url": redirect_url, "listing": safe_listing})
             return redirect(redirect_url)
+
         except Exception as exc:
             logger.error("Error running filename-based analysis: %s", exc, exc_info=True)
             if is_ajax:
@@ -478,7 +491,52 @@ def analyze_by_filename(aspect, filename):
             flash("❌ Error running analysis.", "danger")
             return redirect(url_for("artwork.artworks"))
 
-    # Fallback: attempt to find processed SEO folder and redirect to edit page
+    # --- (2) Map original filename -> SKU via QC JSON (RJC-xxxx.qc.json) ---
+    try:
+        import json as _json
+        for qc in _config.UNANALYSED_ROOT.glob("RJC-*/RJC-*.qc.json"):
+            try:
+                data = _json.loads(qc.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if str(data.get("original_filename","")).strip() == base:
+                sku = data.get("sku") or qc.stem  # qc like RJC-00510.qc.json
+                # Delegate to the SKU-based analysis logic inline
+                try:
+                    analysis_result = _run_ai_analysis(sku, provider)
+
+                    if isinstance(analysis_result, list) and len(analysis_result) == 1 and isinstance(analysis_result[0], dict):
+                        analysis_result = analysis_result[0]
+                    if isinstance(analysis_result, dict) and analysis_result.get("success") is False:
+                        raise RuntimeError(analysis_result.get("error", "Unknown analysis error"))
+
+                    if isinstance(analysis_result, dict) and "listing" in analysis_result and isinstance(analysis_result["listing"], dict):
+                        listing = analysis_result["listing"]
+                    elif isinstance(analysis_result, dict) and "seo_filename" in analysis_result:
+                        listing = analysis_result
+                    else:
+                        listing = {}
+
+                    final_aspect = listing.get("aspect_ratio", aspect)
+                    redirect_filename = listing.get("seo_filename", "") or listing.get("filename", "")
+                    if not redirect_filename:
+                        raise RuntimeError("Analysis completed but did not return a valid seo_filename.")
+                    redirect_url = url_for("artwork.edit_listing", aspect=final_aspect, filename=redirect_filename)
+                    if is_ajax:
+                        safe_listing = {k: v for k, v in listing.items() if not isinstance(v, (bytes, bytearray))}
+                        return jsonify({"success": True, "redirect_url": redirect_url, "listing": safe_listing})
+                    return redirect(redirect_url)
+
+                except Exception as exc:
+                    logger.error("Error running SKU-based analysis via QC map: %s", exc, exc_info=True)
+                    if is_ajax:
+                        return jsonify({"success": False, "error": str(exc)}), 500
+                    flash("❌ Error running analysis.", "danger")
+                    return redirect(url_for("artwork.artworks"))
+    except Exception as exc:
+        logger.error("QC mapping failed: %s", exc, exc_info=True)
+
+    # --- (3) Fallback: try processed SEO folder, else 404 ---
     try:
         seo = resolve_listing_paths(aspect, filename)[0]
         listing = load_json_file_safe(_config.PROCESSED_ROOT / seo / f"{seo}-listing.json")
@@ -486,8 +544,6 @@ def analyze_by_filename(aspect, filename):
         return redirect(url_for("artwork.edit_listing", aspect=aspect, filename=redirect_filename))
     except Exception:
         abort(404)
-
-
 # === [ Section 8: Artwork Editing and Listing Management | artwork-routes-py-8 ] ===
 @bp.route("/edit-listing/<aspect>/<filename>", methods=["GET", "POST"])
 def edit_listing(aspect, filename):
@@ -852,14 +908,17 @@ def preview_next_sku():
 
 def _process_upload_file(file_storage):
     """
-    SKU-first upload workflow: assigns SKU, creates derivatives in 'unanalysed',
-    and triggers the analysis script as a non-blocking background process.
+    SKU-first upload workflow: assigns SKU, creates derivatives in 'unanalysed'.
+    Analysis is *not* auto-started; it must be triggered via POST /analyze.
+    You can opt-in by setting AUTO_ANALYZE_ON_UPLOAD=1 in .env.
     """
+    import os
     original_filename = file_storage.filename
     if not original_filename:
         return {"original": "", "success": False, "error": "No filename provided."}
-    
-    ext = Path(original_filename).suffix.lower().lstrip(".")
+
+    from pathlib import Path as _P
+    ext = _P(original_filename).suffix.lower().lstrip(".")
     if ext not in config.ALLOWED_EXTENSIONS:
         return {"original": original_filename, "success": False, "error": f"Invalid file type: {ext}"}
 
@@ -871,25 +930,22 @@ def _process_upload_file(file_storage):
         source_path = dest_folder / f"{sku}-source.jpg"
         file_storage.save(source_path)
 
-        # Generate derivatives
+        # Derivatives
         thumb_path = dest_folder / f"{sku}-thumb.jpg"
         analyse_path = dest_folder / f"{sku}-analyse.jpg"
-        
+
         temp_dir = dest_folder / "temp"
         temp_dir.mkdir(exist_ok=True)
-        
-        with Image.open(source_path) as img:
-            # Create THUMB version (2000px on long edge)
+
+        with Image.open(source_path) as _:
             thumb_copy = make_working_copy(source_path, temp_dir, long_edge=2000, quality=90)
             shutil.move(str(thumb_copy), str(thumb_path))
-            
-            # Create ANALYSE version (3800px on long edge)
             analyse_copy = make_working_copy(source_path, temp_dir, long_edge=3800, quality=90)
             shutil.move(str(analyse_copy), str(analyse_path))
-        
-        shutil.rmtree(temp_dir) # Clean up temp sub-directory
 
-        # Generate QC JSON
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+        # QC JSON
         width, height = get_image_dimensions(source_path)
         aspect = aa.get_aspect_ratio(source_path)
         qc_data = {
@@ -900,20 +956,24 @@ def _process_upload_file(file_storage):
             "aspect_ratio": aspect,
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         }
-        (dest_folder / f"{sku}.qc.json").write_text(json.dumps(qc_data, indent=2))
+        (dest_folder / f"{sku}.qc.json").write_text(json.dumps(qc_data, indent=2), encoding="utf-8")
 
-        # Trigger analysis script in the background (non-blocking)
-        subprocess.Popen([sys.executable, str(config.ANALYZE_SCRIPT_PATH), sku], cwd=str(config.BASE_DIR))
-        log_action("upload", sku, session.get("username", "system"), f"Queued for analysis. Files created in {dest_folder.name}")
+        # Optional auto-run (default OFF)
+        auto = os.getenv("AUTO_ANALYZE_ON_UPLOAD", "0").lower() in ("1", "true", "yes")
+        if auto:
+            subprocess.Popen([sys.executable, str(config.ANALYZE_SCRIPT_PATH), sku], cwd=str(config.BASE_DIR))
+            msg = f"Queued for analysis (AUTO_ANALYZE_ON_UPLOAD=1). Files in {dest_folder.name}"
+        else:
+            msg = f"Ready to analyze (manual). Files in {dest_folder.name}"
+
+        log_action("upload", sku, session.get("username", "system"), msg)
 
     except Exception as exc:
         logger.error(f"Upload processing for SKU {sku} failed: {exc}", exc_info=True)
-        shutil.rmtree(dest_folder, ignore_errors=True) # Cleanup on failure
+        shutil.rmtree(dest_folder, ignore_errors=True)
         return {"original": original_filename, "success": False, "error": "Image processing failed"}
 
     return {"success": True, "base": sku, "original": original_filename}
-
-
 # === [ Section 15: Artwork Signing Route | artwork-routes-py-15 ] ===
 @bp.post("/sign-artwork/<base_name>")
 def sign_artwork_route(base_name: str):

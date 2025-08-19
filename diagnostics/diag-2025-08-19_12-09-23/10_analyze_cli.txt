@@ -1,0 +1,63 @@
+== Analyze CLI presence ==
+ANALYZE_SCRIPT_PATH: /home/artnarrator/artnarrator.com/scripts/analyze_artwork.py
+-- head of analyze script --
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Minimal analyze_artwork worker (cleaned).
+Provides low-memory helpers used by routes and a CLI entrypoint.
+"""
+from __future__ import annotations
+import argparse
+import json
+import logging
+import sys
+from pathlib import Path
+import datetime as _dt
+import shutil
+import traceback
+
+# Ensure repo root on path for local imports
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import config
+from utils.logger_utils import setup_logger
+from helpers.image_utils import make_working_copy, get_image_dimensions
+from helpers.listing_utils import assemble_gdws_description
+from utils.sku_assigner import get_next_sku
+
+# --- MODIFICATION: Initialize logger at the module level ---
+# This ensures a logger is always available, even if main() crashes early.
+logger = setup_logger("analyze_artwork_script", "ANALYZE_SCRIPT")
+
+# Minimal client stub to satisfy tests that patch `aa.client.chat.completions.create`
+class _DummyCompletions:
+    def create(self, *args, **kwargs):
+        raise NotImplementedError("Client not configured in stub")
+
+class _DummyChat:
+    def __init__(self):
+        self.completions = _DummyCompletions()
+
+class _DummyClient:
+    def __init__(self):
+        self.chat = _DummyChat()
+
+client = _DummyClient()
+
+def _write_status(step: str, percent: int, filename: str) -> None:
+    try:
+        config.ANALYSIS_STATUS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        config.ANALYSIS_STATUS_FILE.write_text(json.dumps({"step": step, "percent": percent, "file": filename}))
+    except Exception:
+        logger.debug("Could not write analysis status file.")
+
+def get_aspect_ratio(image_path: Path) -> str:
+    try:
+        w, h = get_image_dimensions(image_path)
+    except Exception:
+        w, h = (1, 1)
+    aspect_map = [
+        ("1x1", 1 / 1), ("2x3", 2 / 3), ("3x2", 3 / 2), ("3x4", 3 / 4),
+        ("4x3", 4 / 3), ("4x5", 4 / 5), ("5x4", 5 / 4), ("5x7", 5 / 7),
+        ("7x5", 7 / 5), ("9x16", 9 / 16), ("16x9", 16 / 9),
+    ]
